@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Notifications;
+namespace App\Notifications\Auth;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Carbon;
@@ -10,7 +10,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class CustomVerifyEmail extends Notification implements ShouldQueue
+class VerificationEmailNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 

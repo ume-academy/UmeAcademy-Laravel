@@ -34,13 +34,13 @@ class CreateRepositoryCommand extends Command
 
     protected function createRepository($name)
     {
-        $repositoryPath = app_path("Repositories/{$name}/{$name}Repository.php");
+        $repositoryPath = app_path("Repositories/{$name}Repository.php");
         $this->createFile($repositoryPath, $this->getRepositoryStub($name));
     }
 
     protected function createRepositoryInterface($name)
     {
-        $interfacePath = app_path("Repositories/{$name}/{$name}RepositoryInterface.php");
+        $interfacePath = app_path("Repositories/Interfaces/{$name}RepositoryInterface.php");
         $this->createFile($interfacePath, $this->getInterfaceStub($name));
     }
 
@@ -58,11 +58,11 @@ class CreateRepositoryCommand extends Command
 
     protected function getRepositoryStub($name)
     {
-        return "<?php\n\nnamespace App\Repositories\\$name;\n\nuse App\Repositories\\$name\\{$name}RepositoryInterface;\n\nclass {$name}Repository implements {$name}RepositoryInterface\n{\n    // \n}\n";
+        return "<?php\n\nnamespace App\Repositories;\n\nuse App\Repositories\Interfaces\\{$name}RepositoryInterface;\n\nclass {$name}Repository implements {$name}RepositoryInterface\n{\n    // \n}\n";
     }
 
     protected function getInterfaceStub($name)
     {
-        return "<?php\n\nnamespace App\Repositories\\$name;\n\ninterface {$name}RepositoryInterface\n{\n    // \n}\n";
+        return "<?php\n\nnamespace App\Repositories\Interfaces;\n\ninterface {$name}RepositoryInterface\n{\n    // \n}\n";
     }
 }

@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class RegisterRequest extends FormRequest
+class LoginRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,7 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'fullname' => 'required|string|max:64',
-            'email' => 'required|email|unique:users',
+            'email' => 'required|email',
             'password' => 'required',
         ];
     }
@@ -33,11 +32,8 @@ class RegisterRequest extends FormRequest
     public function messages()
     {
         return [
-            'fullname.required' => 'Trường họ là bắt buộc.',
-            'fullname.max' => 'Trường họ tối đa :max.',
             'email.required' => 'Trường email là bắt buộc',
             'email.email' => 'Email không đúng định dạng',
-            'email.unique' => 'Email đã được sử dụng. Hãy thử lại với email khác!',
             'password.required' => 'Mật khẩu là bắt buộc.',
         ];
     }
@@ -45,7 +41,7 @@ class RegisterRequest extends FormRequest
     protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
-            'errors' => $validator->errors()->toArray(),
+            'errors' => $validator->errors(),
         ], 422));
     }
 }
