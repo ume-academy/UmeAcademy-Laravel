@@ -25,30 +25,18 @@ class CreateCourseService implements CreateCourseServiceInterface
         DB::beginTransaction();  
 
         try {
-            $user = JWTAuth::parseToken()->authenticate();
+            $user = $this->validateTeacher();
 
-            if(!$user->teacher()->exists()) {
-                throw new NotTeacherException();
-            }
-
-            $file = $data['thumbnail'];
-
-            $fileName = HandleFileTrait::generateName($file); // Tạo tên cho file ảnh
-
-            $data['thumbnail'] = $fileName;
+            // Xử lý ảnh thumbnail
+            $data['thumbnail'] = $this->handleThumbnail($data['thumbnail']);
             $data['teacher_id'] = $user->teacher->id;
-            
+
+            // Tạo khóa học
             $course = $this->courseRepo->create($data);
 
-            if($course) {
-                HandleFileTrait::uploadFile($file, $fileName, 'courses');
-
-                $dataChapter = [
-                    'name' => 'Giới Thiệu',
-                    'course_id' => $course->id
-                ];
-
-                $this->chapterRepo->create($dataChapter);
+            if ($course) {
+                // Tạo chương giới thiệu cho khóa học
+                $this->createIntroductionChapter($course->id);
             }
 
             DB::commit(); 
@@ -58,5 +46,37 @@ class CreateCourseService implements CreateCourseServiceInterface
             DB::rollBack(); 
             throw new Exception('Lỗi khi tạo khóa học: ' . $e->getMessage());
         }
+    }
+
+    // Kiểm tra người dùng có phải là giáo viên không
+    private function validateTeacher()
+    {
+        $user = JWTAuth::parseToken()->authenticate();
+
+        if (!$user->teacher()->exists()) {
+            throw new NotTeacherException();
+        }
+
+        return $user;
+    }
+
+    // Xử lý ảnh thumbnail
+    private function handleThumbnail($file)
+    {
+        $fileName = HandleFileTrait::generateName($file);
+        HandleFileTrait::uploadFile($file, $fileName, 'courses');
+        
+        return $fileName;
+    }
+
+    // Tạo chương giới thiệu cho khóa học
+    private function createIntroductionChapter($courseId)
+    {
+        $dataChapter = [
+            'name' => 'Giới Thiệu',
+            'course_id' => $courseId
+        ];
+
+        return $this->chapterRepo->create($dataChapter);
     }
 }

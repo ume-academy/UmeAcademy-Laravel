@@ -11,4 +11,8 @@ class ChapterRepository implements ChapterRepositoryInterface
     {
         return Chapter::create($data);
     }
+
+    public function find(int $id) {
+        return Chapter::findOrFail($id);
+    }
 }

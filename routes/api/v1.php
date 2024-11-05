@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\V1\Auth\RegistrationController;
 use App\Http\Controllers\Api\V1\Auth\VerificationController;
 use App\Http\Controllers\Api\V1\Chapter\ChapterController;
 use App\Http\Controllers\Api\V1\Course\CourseController;
+use App\Http\Controllers\Api\V1\Lesson\LessonController;
 use App\Http\Controllers\Api\V1\Teacher\TeacherRegistrationController;
 
 Route::prefix('/auth')
@@ -29,5 +30,6 @@ Route::middleware('jwt.auth')->group(function () {
     Route::prefix('/teacher')->group(function () {
         Route::post('/courses', [CourseController::class, 'createCourse']);
         Route::post('/course/{id}/chapters', [ChapterController::class, 'createChapter']);
+        Route::post('/course/{id}/chapter/{chapterId}/lessons', [LessonController::class, 'createLesson']);
     });
 });

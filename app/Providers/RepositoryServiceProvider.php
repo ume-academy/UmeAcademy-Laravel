@@ -6,6 +6,7 @@ use App\Repositories\ChapterRepository;
 use App\Repositories\CourseRepository;
 use App\Repositories\Interfaces\ChapterRepositoryInterface;
 use App\Repositories\Interfaces\CourseRepositoryInterface;
+use App\Repositories\Interfaces\LessonRepositoryInterface;
 use App\Repositories\UserRepository;
 use Illuminate\Support\ServiceProvider;
 use App\Repositories\RefreshTokenRepository;
@@ -13,6 +14,7 @@ use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Repositories\Interfaces\RefreshTokenRepositoryInterface;
 use App\Repositories\Interfaces\TeacherRepositoryInterface;
 use App\Repositories\Interfaces\TeacherWalletRepositoryInterface;
+use App\Repositories\LessonRepository;
 use App\Repositories\TeacherRepository;
 use App\Repositories\TeacherWalletRepository;
 
@@ -29,6 +31,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(TeacherWalletRepositoryInterface::class, TeacherWalletRepository::class);
         $this->app->bind(CourseRepositoryInterface::class, CourseRepository::class);
         $this->app->bind(ChapterRepositoryInterface::class, ChapterRepository::class);
+        $this->app->bind(LessonRepositoryInterface::class, LessonRepository::class);
     }
 
     /**
