@@ -13,6 +13,8 @@ use App\Services\Auth\LoginViaEmailService;
 use App\Contracts\EmailVerificationInterface;
 use App\Services\Auth\EmailVerificationService;
 use App\Services\Auth\RegistrationViaEmailService;
+use App\Repositories\Category\CategoryRepository;
+use App\Repositories\Category\CategoryRepositoryInterface;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,6 +28,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(EmailVerificationInterface::class, EmailVerificationService::class);
         $this->app->bind(LoginInterface::class, LoginViaEmailService::class);
         $this->app->bind(TokenInterface::class, TokenService::class);
+        $this->app->bind(CategoryRepositoryInterface::class, CategoryRepository::class);
+
     }
 
     /**

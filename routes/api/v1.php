@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\Auth\LoginController;
 use App\Http\Controllers\Api\V1\Auth\RegistrationController;
 use App\Http\Controllers\Api\V1\Auth\VerificationController;
+use App\Http\Controllers\API\V1\Category\CategoryController;
 
 Route::prefix('/auth')
 ->middleware(['api', 'jwt.auth'])
@@ -18,3 +19,6 @@ Route::prefix('/auth')
     Route::post('/login', [LoginController::class, 'loginWithEmail'])->withoutMiddleware('api');
     // Route::post('/logout', [AuthController::class, 'logout']);
 });
+// Category
+Route::get('/categories', [CategoryController::class, 'listCategory']);
+
