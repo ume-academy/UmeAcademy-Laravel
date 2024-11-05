@@ -15,19 +15,35 @@ class CreateChapterService implements CreateChapterServiceInterface
         private CourseRepositoryInterface $courseRepo
     ){}
 
-    public function createChapter(array $data) {
-        $user = JWTAuth::parseToken()->authenticate();
-        
-        if(!$user->teacher()->exists()) {
-            throw new NotTeacherException();
-        }
+    public function createChapter(array $data)
+    {
+        $user = $this->validateTeacher();
 
-        // Kiểm tra nếu khóa học không thuộc về giáo viên
-        $course = $this->courseRepo->find($data['course_id']);
-        if (!$course || $course->teacher_id !== $user->teacher->id) {
-            throw new \Exception("Bạn không có quyền tạo chương cho khóa học này.");
-        }
+        // Kiểm tra quyền sở hữu của khóa học
+        $this->validateCourse($user, $data['course_id']);
 
         return $this->chapterRepo->create($data);
     }
+
+    private function validateTeacher()
+    {
+        $user = JWTAuth::parseToken()->authenticate();
+
+        if (!$user->teacher()->exists()) {
+            throw new NotTeacherException();
+        }
+
+        return $user;
+    }
+
+    // Kiểm tra nếu khóa học không tồn tại hoặc không thuộc về giáo viên
+    private function validateCourse($user, $courseId)
+    {
+        $course = $this->courseRepo->find($courseId);
+
+        if (!$course || $course->teacher_id !== $user->teacher->id) {
+            throw new \Exception("Bạn không có quyền tạo chương cho khóa học này.");
+        }
+    }
+
 }

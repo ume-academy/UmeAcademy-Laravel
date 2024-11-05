@@ -15,6 +15,7 @@ class OverviewCourseResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id' => $this->id ?? null,
             'name' => $this->name ?? null,
             'summary' => $this->summary ?? null,
             'thumbnail' => $this->thumbnail ? url('images/courses/'. $this->thumbnail) : null,
