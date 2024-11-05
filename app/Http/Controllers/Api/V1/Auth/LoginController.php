@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Api\V1\Auth;
 
 use App\Contracts\LoginInterface;
+use App\Exceptions\Auth\InvalidCredentialsException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use Tymon\JWTAuth\Exceptions\JWTException;
-use App\Exceptions\EmailNotVerifiedException;
-use App\Exceptions\InvalidCredentialsException;
+use App\Exceptions\Auth\EmailNotVerifiedException;
 
 class LoginController extends Controller
 {
