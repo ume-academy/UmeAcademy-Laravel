@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Contracts\CreateCourseServiceInterface;
 use Illuminate\Support\ServiceProvider;
 use App\Contracts\LoginInterface;
 use App\Contracts\TokenInterface;
@@ -16,6 +17,7 @@ use App\Contracts\TeacherRegistrationInterface;
 use App\Services\Auth\EmailVerificationService;
 use App\Services\Auth\RefreshTokenService;
 use App\Services\Auth\RegistrationViaEmailService;
+use App\Services\Course\CreateCourseService;
 use App\Services\Teacher\TeacherRegistrationService;
 
 class AppServiceProvider extends ServiceProvider
@@ -32,6 +34,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(TokenInterface::class, TokenService::class);
         $this->app->bind(RefreshTokenInterface::class, RefreshTokenService::class);
         $this->app->bind(TeacherRegistrationInterface::class, TeacherRegistrationService::class);
+        $this->app->bind(CreateCourseServiceInterface::class, CreateCourseService::class);
     }
 
     /**

@@ -20,4 +20,8 @@ class Teacher extends Model
         return $this->hasOne(TeacherWallet::class);
     }
 
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
+
 }
