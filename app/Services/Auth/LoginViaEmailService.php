@@ -6,8 +6,8 @@ use App\Contracts\LoginInterface;
 use App\Contracts\TokenInterface;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Contracts\EmailVerificationInterface;
-use App\Exceptions\EmailNotVerifiedException;
-use App\Exceptions\InvalidCredentialsException;
+use App\Exceptions\Auth\EmailNotVerifiedException;
+use App\Exceptions\Auth\InvalidCredentialsException;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 
 class LoginViaEmailService implements LoginInterface
@@ -15,7 +15,6 @@ class LoginViaEmailService implements LoginInterface
     public function __construct(
         private UserRepositoryInterface $userRepository, 
         private EmailVerificationInterface $emailVerification, 
-        private LoginInterface $login, 
         private TokenInterface $token, 
     ) {}
 

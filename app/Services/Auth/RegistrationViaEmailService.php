@@ -6,7 +6,7 @@ use App\Contracts\EmailSenderInterface;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Contracts\RegistrationInterface;
 
-class RegistrationViaEmailService 
+class RegistrationViaEmailService implements RegistrationInterface
 {
     public function __construct(
         private UserRepositoryInterface $userRepository, 
