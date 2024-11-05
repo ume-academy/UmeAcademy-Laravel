@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\Auth\LoginController;
 use App\Http\Controllers\Api\V1\Auth\RegistrationController;
 use App\Http\Controllers\Api\V1\Auth\VerificationController;
+use App\Http\Controllers\Api\V1\Course\CourseController;
 use App\Http\Controllers\Api\V1\Teacher\TeacherRegistrationController;
 
 Route::prefix('/auth')
@@ -20,4 +21,11 @@ Route::prefix('/auth')
     // Route::post('/logout', [AuthController::class, 'logout']);
 });
 
-Route::post('/register/teacher', [TeacherRegistrationController::class, 'registerTeacher']);
+Route::middleware('jwt.auth')->group(function () {
+    Route::post('/register/teacher', [TeacherRegistrationController::class, 'registerTeacher']);
+
+    // Create course
+    Route::prefix('/teacher')->group(function () {
+        Route::post('/courses', [CourseController::class, 'createCourse']);
+    });
+});

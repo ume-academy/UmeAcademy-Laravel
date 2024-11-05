@@ -1,0 +1,14 @@
+<?php
+
+namespace App\Repositories;
+
+use App\Models\Chapter;
+use App\Repositories\Interfaces\ChapterRepositoryInterface;
+
+class ChapterRepository implements ChapterRepositoryInterface
+{
+    public function create(array $data)
+    {
+        return Chapter::create($data);
+    }
+}
