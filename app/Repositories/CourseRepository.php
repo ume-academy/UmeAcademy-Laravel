@@ -11,4 +11,8 @@ class CourseRepository implements CourseRepositoryInterface
     {
         return Course::create($data);
     }
+
+    public function find(int $id) {
+        return Course::findOrFail($id);
+    }
 }
