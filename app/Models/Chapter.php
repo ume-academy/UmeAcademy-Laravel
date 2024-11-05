@@ -11,4 +11,8 @@ class Chapter extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = ['name', 'course_id'];
+
+    public function course() {
+        return $this->belongsTo(Course::class);
+    }
 }
