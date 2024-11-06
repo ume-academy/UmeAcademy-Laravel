@@ -16,6 +16,7 @@ use App\Contracts\EmailSenderInterface;
 use App\Contracts\RegistrationInterface;
 use App\Services\Auth\LoginViaEmailService;
 use App\Contracts\EmailVerificationInterface;
+use App\Contracts\GetAllVoucherServiceInterface;
 use App\Contracts\RefreshTokenInterface;
 use App\Contracts\TeacherRegistrationInterface;
 use App\Services\Auth\EmailVerificationService;
@@ -27,6 +28,7 @@ use App\Services\Lesson\CreateVideoService;
 use App\Services\Lesson\CreateLessonService;
 use App\Services\Teacher\TeacherRegistrationService;
 use App\Services\Voucher\CreateVoucherService;
+use App\Services\Voucher\GetAllVoucherService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -47,6 +49,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(CreateLessonServiceInterface::class, CreateLessonService::class);
         $this->app->bind(CreateVideoServiceInterface::class, CreateVideoService::class);
         $this->app->bind(CreateVoucherServiceInterface::class, CreateVoucherService::class);
+        $this->app->bind(GetAllVoucherServiceInterface::class, GetAllVoucherService::class);
     }
 
     /**

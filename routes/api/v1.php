@@ -8,7 +8,7 @@ use App\Http\Controllers\Api\V1\Chapter\ChapterController;
 use App\Http\Controllers\Api\V1\Course\CourseController;
 use App\Http\Controllers\Api\V1\Lesson\LessonController;
 use App\Http\Controllers\Api\V1\Teacher\TeacherRegistrationController;
-use App\Http\Controllers\Voucher\VoucherController;
+use App\Http\Controllers\Api\V1\Voucher\VoucherController;
 
 Route::prefix('/auth')
 ->middleware(['api', 'jwt.auth'])
@@ -38,5 +38,6 @@ Route::middleware('jwt.auth')->group(function () {
         Route::post('/course/{id}/chapter/{chapterId}/lesson/{lessonId}/videos', [LessonController::class, 'createVideo']);
 
         Route::post('/course/{id}/vouchers', [VoucherController::class, 'createVoucher']);
+        Route::get('/course/{id}/vouchers', [VoucherController::class, 'getAllVoucher']);
     });
 });
