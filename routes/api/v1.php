@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\Auth\LoginController;
 use App\Http\Controllers\Api\V1\Auth\RegistrationController;
 use App\Http\Controllers\Api\V1\Auth\VerificationController;
+use App\Http\Controllers\API\V1\Category\CategoryController;
 use App\Http\Controllers\Api\V1\Chapter\ChapterController;
 use App\Http\Controllers\Api\V1\Course\CourseController;
 use App\Http\Controllers\Api\V1\Lesson\LessonController;
@@ -37,3 +38,5 @@ Route::middleware('jwt.auth')->group(function () {
         Route::post('/course/{id}/chapter/{chapterId}/lesson/{lessonId}/videos', [LessonController::class, 'createVideo']);
     });
 });
+// category
+Route::get('/categories', [CategoryController::class, 'listCategories']);
