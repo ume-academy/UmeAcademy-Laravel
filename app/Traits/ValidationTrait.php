@@ -22,7 +22,7 @@ trait ValidationTrait
     {
         $course = $this->courseRepo->find($courseId);
         if (!$course || $course->teacher_id !== $user->teacher->id) {
-            throw new \Exception("Bạn không có quyền tạo bài học cho khóa học này.");
+            throw new \Exception("Bạn không có quyền cho khóa học này.");
         }
 
         return $course;
