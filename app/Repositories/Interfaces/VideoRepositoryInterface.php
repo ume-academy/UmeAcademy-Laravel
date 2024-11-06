@@ -2,8 +2,7 @@
 
 namespace App\Repositories\Interfaces;
 
-interface LessonRepositoryInterface
+interface VideoRepositoryInterface
 {
     public function create(array $data);
-    public function find(int $id);
 }

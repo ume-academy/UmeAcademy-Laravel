@@ -29,7 +29,11 @@ Route::middleware('jwt.auth')->group(function () {
     // Create course
     Route::prefix('/teacher')->group(function () {
         Route::post('/courses', [CourseController::class, 'createCourse']);
+
         Route::post('/course/{id}/chapters', [ChapterController::class, 'createChapter']);
+
         Route::post('/course/{id}/chapter/{chapterId}/lessons', [LessonController::class, 'createLesson']);
+        
+        Route::post('/course/{id}/chapter/{chapterId}/lesson/{lessonId}/videos', [LessonController::class, 'createVideo']);
     });
 });
