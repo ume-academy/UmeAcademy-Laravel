@@ -6,8 +6,6 @@ use App\Contracts\CreateChapterServiceInterface;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Chapter\StoreChapterRequest;
 use App\Http\Resources\Chapter\ChapterResource;
-use Exception;
-use Illuminate\Http\Request;
 
 class ChapterController extends Controller
 {
@@ -25,7 +23,7 @@ class ChapterController extends Controller
             $chapter = $this->createChapterService->createChapter($data);
 
             return new ChapterResource($chapter);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }

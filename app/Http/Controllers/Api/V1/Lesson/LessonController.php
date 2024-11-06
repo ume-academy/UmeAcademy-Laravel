@@ -9,8 +9,6 @@ use App\Http\Requests\Lesson\StoreLessonRequest;
 use App\Http\Requests\Video\StoreVideoRequest;
 use App\Http\Resources\Lesson\LessonResource;
 use App\Http\Resources\Video\VideoResource;
-use Exception;
-use Illuminate\Http\Request;
 
 class LessonController extends Controller
 {
@@ -30,7 +28,7 @@ class LessonController extends Controller
             $lesson = $this->createLessonService->createLesson($data);
 
             return new LessonResource($lesson);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
@@ -47,7 +45,7 @@ class LessonController extends Controller
             $video = $this->createVideoService->createVideo($data);
 
             return new VideoResource($video);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }

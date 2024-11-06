@@ -3,20 +3,19 @@
 namespace App\Services\Lesson;
 
 use App\Contracts\CreateVideoServiceInterface;
-use App\Exceptions\Teacher\NotTeacherException;
 use App\Repositories\Interfaces\ChapterRepositoryInterface;
 use App\Repositories\Interfaces\CourseRepositoryInterface;
 use App\Repositories\Interfaces\LessonRepositoryInterface;
 use App\Repositories\Interfaces\VideoRepositoryInterface;
 use App\Traits\HandleFileTrait;
+use App\Traits\ValidationTrait;
 use FFMpeg\FFMpeg;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 class CreateVideoService implements CreateVideoServiceInterface
 {
-    use HandleFileTrait;
+    use HandleFileTrait, ValidationTrait;
 
     public function __construct(
         private VideoRepositoryInterface $videoRepo,
@@ -72,64 +71,20 @@ class CreateVideoService implements CreateVideoServiceInterface
     
             // Kiểm tra mã lỗi để xử lý riêng lỗi unique
             if ($e->errorInfo[1] == 1062) { 
-                throw new \Exception('Video đã tồn tại cho bài học này.');
+                throw new \Exception('Video đã tồn tại trong bài học này.');
             }
     
             throw new \Exception('Lỗi khi tạo video: ' . $e->getMessage());
     
         } catch (\Exception $e) {
             DB::rollBack();
+            
             if (isset($path) && file_exists($path)) {
                 unlink($path);
             }
+
             throw new \Exception('Lỗi khi tạo video: ' . $e->getMessage());
         }
-    }
-
-
-    private function validateTeacher()
-    {
-        $user = JWTAuth::parseToken()->authenticate();
-
-        if (!$user->teacher()->exists()) {
-            throw new NotTeacherException();
-        }
-
-        return $user;
-    }
-
-    // Kiểm tra nếu khóa học không tồn tại hoặc không thuộc về giáo viên
-    private function validateCourse($user, $courseId)
-    {
-        $course = $this->courseRepo->find($courseId);
-        if (!$course || $course->teacher_id !== $user->teacher->id) {
-            throw new \Exception("Bạn không có quyền tạo bài học cho khóa học này.");
-        }
-
-        return $course;
-    }
-
-    // Kiểm tra nếu chapter không thuộc về khóa học
-    private function validateChapter($course, $chapterId)
-    {
-        $chapter = $this->chapterRepo->find($chapterId);
-        if (!$chapter || $chapter->course_id !== $course->id) {
-            throw new \Exception("Chapter này không thuộc về khóa học mà bạn đang thao tác.");
-        }
-
-        return $chapter;
-    }
-
-    // Kiểm tra lesson có thuộc về chapter không
-    private function validateLesson($chapter, $lessonId)
-    {
-        $lesson = $this->lessonRepo->find($lessonId);
-
-        if (!$lesson || $lesson->chapter_id !== $chapter->id) {
-            throw new \Exception("Lesson này không thuộc về chapter mà bạn đang thao tác.");
-        }
-
-        return $lesson;
     }
 
     // Lưu video tạm thời

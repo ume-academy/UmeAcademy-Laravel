@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\V1\Teacher;
 
 use App\Contracts\TeacherRegistrationInterface;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 
 class TeacherRegistrationController extends Controller
 {
