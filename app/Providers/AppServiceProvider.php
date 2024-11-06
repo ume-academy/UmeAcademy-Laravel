@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Contracts\CreateChapterServiceInterface;
 use App\Contracts\CreateCourseServiceInterface;
 use App\Contracts\CreateLessonServiceInterface;
+use App\Contracts\CreateVideoServiceInterface;
 use Illuminate\Support\ServiceProvider;
 use App\Contracts\LoginInterface;
 use App\Contracts\TokenInterface;
@@ -21,6 +22,7 @@ use App\Services\Auth\RefreshTokenService;
 use App\Services\Auth\RegistrationViaEmailService;
 use App\Services\Chapter\CreateChapterService;
 use App\Services\Course\CreateCourseService;
+use App\Services\Lesson\CreateVideoService;
 use App\Services\Lesson\CreateLessonService;
 use App\Services\Teacher\TeacherRegistrationService;
 
@@ -41,6 +43,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(CreateCourseServiceInterface::class, CreateCourseService::class);
         $this->app->bind(CreateChapterServiceInterface::class, CreateChapterService::class);
         $this->app->bind(CreateLessonServiceInterface::class, CreateLessonService::class);
+        $this->app->bind(CreateVideoServiceInterface::class, CreateVideoService::class);
     }
 
     /**
