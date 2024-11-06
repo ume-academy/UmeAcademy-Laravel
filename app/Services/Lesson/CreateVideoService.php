@@ -2,7 +2,7 @@
 
 namespace App\Services\Lesson;
 
-use App\Contracts\CreateVideoServiceInterface;
+use App\Contracts\CreateVideoInterface;
 use App\Repositories\Interfaces\ChapterRepositoryInterface;
 use App\Repositories\Interfaces\CourseRepositoryInterface;
 use App\Repositories\Interfaces\LessonRepositoryInterface;
@@ -13,7 +13,7 @@ use FFMpeg\FFMpeg;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 
-class CreateVideoService implements CreateVideoServiceInterface
+class CreateVideoService implements CreateVideoInterface
 {
     use HandleFileTrait, ValidationTrait;
 

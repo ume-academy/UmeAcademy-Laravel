@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api\V1\Lesson;
 
-use App\Contracts\CreateLessonServiceInterface;
-use App\Contracts\CreateVideoServiceInterface;
+use App\Contracts\CreateLessonInterface;
+use App\Contracts\CreateVideoInterface;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Lesson\StoreLessonRequest;
 use App\Http\Requests\Video\StoreVideoRequest;
@@ -13,8 +13,8 @@ use App\Http\Resources\Video\VideoResource;
 class LessonController extends Controller
 {
     public function __construct(
-        private CreateLessonServiceInterface $createLessonService,
-        private CreateVideoServiceInterface $createVideoService
+        private CreateLessonInterface $createLessonService,
+        private CreateVideoInterface $createVideoService
     ){}
 
     public function createLesson(StoreLessonRequest $req, $id, $chapterId) {

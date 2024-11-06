@@ -2,12 +2,12 @@
 
 namespace App\Services\Voucher;
 
-use App\Contracts\GetAllVoucherServiceInterface;
+use App\Contracts\GetAllVoucherInterface;
 use App\Repositories\Interfaces\CourseRepositoryInterface;
 use App\Repositories\Interfaces\VoucherRepositoryInterface;
 use App\Traits\ValidationTrait;
 
-class GetAllVoucherService implements GetAllVoucherServiceInterface
+class GetAllVoucherService implements GetAllVoucherInterface
 {
     use ValidationTrait;
 
@@ -22,6 +22,6 @@ class GetAllVoucherService implements GetAllVoucherServiceInterface
         // Kiểm tra quyền sở hữu của khóa học
         $this->validateCourse($user, $courseId);
 
-        return $this->voucherRepo->getAllByCourseId($courseId);
+        return $this->voucherRepo->getAllByCourse($courseId);
     }
 }

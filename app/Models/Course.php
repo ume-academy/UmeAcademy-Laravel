@@ -33,4 +33,29 @@ class Course extends Model
     public function level() {
         return $this->belongsTo(Level::class);
     }
+
+    public function chapters() {
+        return $this->hasMany(Chapter::class);
+    }
+
+    public function lessons() {
+        return $this->hasManyThrough(Lesson::class, Chapter::class);
+    }
+
+    // Tính tổng số chương của khóa học
+    public function getTotalChapterAttribute() {
+        return $this->chapters()->count();
+    }
+
+    // Tính tổng số bài học của khóa học
+    public function getTotalLessonAttribute() {
+        return $this->lessons()->count();
+    }
+
+    // Tính tổng thời gian của khóa học
+    public function getDurationAttribute() {
+        return $this->lessons()->with('video')->get()->sum(function($lesson) {
+            return $lesson->video ? $lesson->video->duration : 0;
+        });
+    }
 }

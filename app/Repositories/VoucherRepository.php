@@ -11,7 +11,7 @@ class VoucherRepository implements VoucherRepositoryInterface
         return Voucher::create($data);
     }
 
-    public function getAllByCourseId(int $id) {
+    public function getAllByCourse(int $id) {
         return Voucher::where('course_id', $id)->get();
     }
 }

@@ -29,6 +29,7 @@ Route::middleware('jwt.auth')->group(function () {
 
     // Create course
     Route::prefix('/teacher')->group(function () {
+        Route::get('/courses', [CourseController::class, 'getCoursesOfTeacher']);
         Route::post('/courses', [CourseController::class, 'createCourse']);
 
         Route::post('/course/{id}/chapters', [ChapterController::class, 'createChapter']);

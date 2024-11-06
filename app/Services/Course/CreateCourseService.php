@@ -2,14 +2,14 @@
 
 namespace App\Services\Course;
 
-use App\Contracts\CreateCourseServiceInterface;
+use App\Contracts\CreateCourseInterface;
 use App\Repositories\Interfaces\ChapterRepositoryInterface;
 use App\Repositories\Interfaces\CourseRepositoryInterface;
 use App\Traits\HandleFileTrait;
 use App\Traits\ValidationTrait;
 use Illuminate\Support\Facades\DB;
 
-class CreateCourseService implements CreateCourseServiceInterface
+class CreateCourseService implements CreateCourseInterface
 {
     use HandleFileTrait, ValidationTrait;
 

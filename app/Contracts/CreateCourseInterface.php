@@ -2,6 +2,6 @@
 
 namespace App\Contracts;
 
-interface CreateCourseServiceInterface {
+interface CreateCourseInterface {
     public function createCourse(array $data);
 }

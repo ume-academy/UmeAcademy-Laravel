@@ -19,4 +19,8 @@ class Lesson extends Model
     public function chapter() {
         return $this->belongsTo(Chapter::class);
     }
+
+    public function video() {
+        return $this->hasOne(Video::class);
+    }
 }

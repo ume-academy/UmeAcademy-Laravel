@@ -2,13 +2,13 @@
 
 namespace App\Services\Lesson;
 
-use App\Contracts\CreateLessonServiceInterface;
+use App\Contracts\CreateLessonInterface;
 use App\Repositories\Interfaces\ChapterRepositoryInterface;
 use App\Repositories\Interfaces\CourseRepositoryInterface;
 use App\Repositories\Interfaces\LessonRepositoryInterface;
 use App\Traits\ValidationTrait;
 
-class CreateLessonService implements CreateLessonServiceInterface
+class CreateLessonService implements CreateLessonInterface
 {
     use ValidationTrait;
 
