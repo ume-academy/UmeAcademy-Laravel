@@ -2,12 +2,12 @@
 
 namespace App\Services\Voucher;
 
-use App\Contracts\CreateVoucherServiceInterface;
+use App\Contracts\CreateVoucherInterface;
 use App\Repositories\Interfaces\CourseRepositoryInterface;
 use App\Repositories\Interfaces\VoucherRepositoryInterface;
 use App\Traits\ValidationTrait;
 
-class CreateVoucherService implements CreateVoucherServiceInterface
+class CreateVoucherService implements CreateVoucherInterface
 {
     use ValidationTrait;
 

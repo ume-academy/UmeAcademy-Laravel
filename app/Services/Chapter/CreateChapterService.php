@@ -2,12 +2,12 @@
 
 namespace App\Services\Chapter;
 
-use App\Contracts\CreateChapterServiceInterface;
+use App\Contracts\CreateChapterInterface;
 use App\Repositories\Interfaces\ChapterRepositoryInterface;
 use App\Repositories\Interfaces\CourseRepositoryInterface;
 use App\Traits\ValidationTrait;
 
-class CreateChapterService implements CreateChapterServiceInterface
+class CreateChapterService implements CreateChapterInterface
 {
     use ValidationTrait;
 

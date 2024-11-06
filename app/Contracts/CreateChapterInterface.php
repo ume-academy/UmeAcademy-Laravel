@@ -2,6 +2,6 @@
 
 namespace App\Contracts;
 
-interface CreateChapterServiceInterface {
+interface CreateChapterInterface {
     public function createChapter(array $data);
 }

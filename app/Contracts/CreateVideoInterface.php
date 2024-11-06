@@ -2,6 +2,6 @@
 
 namespace App\Contracts;
 
-interface CreateVideoServiceInterface {
+interface CreateVideoInterface {
     public function createVideo(array $data);
 }

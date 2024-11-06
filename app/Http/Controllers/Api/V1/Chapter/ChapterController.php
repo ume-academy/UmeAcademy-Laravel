@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Chapter;
 
-use App\Contracts\CreateChapterServiceInterface;
+use App\Contracts\CreateChapterInterface;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Chapter\StoreChapterRequest;
 use App\Http\Resources\Chapter\ChapterResource;
@@ -10,7 +10,7 @@ use App\Http\Resources\Chapter\ChapterResource;
 class ChapterController extends Controller
 {
     public function __construct(
-        private CreateChapterServiceInterface $createChapterService,
+        private CreateChapterInterface $createChapterService,
     ){}
 
     public function createChapter(StoreChapterRequest $req, $id) {

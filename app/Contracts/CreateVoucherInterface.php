@@ -2,6 +2,6 @@
 
 namespace App\Contracts;
 
-interface CreateVoucherServiceInterface {
+interface CreateVoucherInterface {
     public function createVoucher(array $data);
 }

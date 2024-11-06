@@ -2,6 +2,6 @@
 
 namespace App\Contracts;
 
-interface GetAllVoucherServiceInterface {
+interface GetAllVoucherInterface {
     public function getAllVoucher(int $id);
 }

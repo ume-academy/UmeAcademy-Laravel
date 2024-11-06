@@ -15,4 +15,8 @@ class CourseRepository implements CourseRepositoryInterface
     public function find(int $id) {
         return Course::findOrFail($id);
     }
+
+    public function getByTeacher(int $id, int $perPage) {
+        return Course::where('teacher_id', $id)->paginate($perPage);
+    }
 }
