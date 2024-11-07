@@ -82,6 +82,10 @@ class CourseService
         return $this->courseRepo->getInfoById($id); 
     }
 
+    public function getContentCourse($id) {
+        return $this->courseRepo->getInfoById($id); 
+    }
+
     // Xử lý ảnh thumbnail
     private function handleThumbnail($file)
     {

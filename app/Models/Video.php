@@ -20,4 +20,8 @@ class Video extends Model
     public function lesson() {
         return $this->belongsTo(Lesson::class);
     }
+
+    protected $casts = [
+        'is_preview' => 'boolean',
+    ];
 }
