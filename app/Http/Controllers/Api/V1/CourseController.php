@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Course\StoreCourseRequest;
+use App\Http\Resources\Course\ContentCourseResource;
 use App\Http\Resources\Course\OverviewCourseResource;
 use App\Http\Resources\Course\StatisticCourseResource;
 use App\Services\CourseService;
@@ -63,6 +64,16 @@ class CourseController extends Controller
             $course = $this->courseService->getStatisticCourse($id);
             
             return new StatisticCourseResource($course);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function getContentCourse($id) {
+        try {
+            $course = $this->courseService->getContentCourse($id);
+            
+            return new ContentCourseResource($course);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
