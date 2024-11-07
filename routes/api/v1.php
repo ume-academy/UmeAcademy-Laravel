@@ -4,11 +4,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\Auth\LoginController;
 use App\Http\Controllers\Api\V1\Auth\RegistrationController;
 use App\Http\Controllers\Api\V1\Auth\VerificationController;
-use App\Http\Controllers\Api\V1\Chapter\ChapterController;
-use App\Http\Controllers\Api\V1\Course\CourseController;
-use App\Http\Controllers\Api\V1\Lesson\LessonController;
-use App\Http\Controllers\Api\V1\Teacher\TeacherRegistrationController;
-use App\Http\Controllers\Api\V1\Voucher\VoucherController;
+use App\Http\Controllers\Api\V1\ChapterController;
+use App\Http\Controllers\Api\V1\CourseController;
+use App\Http\Controllers\Api\V1\LessonController;
+use App\Http\Controllers\Api\V1\TeacherController;
+use App\Http\Controllers\Api\V1\VoucherController;
 
 Route::prefix('/auth')
 ->middleware(['api', 'jwt.auth'])
@@ -25,9 +25,12 @@ Route::prefix('/auth')
 });
 
 Route::middleware('jwt.auth')->group(function () {
-    Route::post('/register/teacher', [TeacherRegistrationController::class, 'registerTeacher']);
+    // Student
+    Route::post('/register/teacher', [TeacherController::class, 'registerTeacher']);
+    Route::get('/course/{id}/information', [CourseController::class, 'getInfoCourse'])->withoutMiddleware('jwt.auth');
+    Route::get('/course/{id}/statistic', [CourseController::class, 'getStatisticCourse'])->withoutMiddleware('jwt.auth');
 
-    // Create course
+    // Teacher
     Route::prefix('/teacher')->group(function () {
         Route::get('/courses', [CourseController::class, 'getCoursesOfTeacher']);
         Route::post('/courses', [CourseController::class, 'createCourse']);

@@ -1,15 +1,16 @@
 <?php
 
-namespace App\Services\Course;
+namespace App\Services;
 
-use App\Contracts\CreateCourseInterface;
 use App\Repositories\Interfaces\ChapterRepositoryInterface;
 use App\Repositories\Interfaces\CourseRepositoryInterface;
 use App\Traits\HandleFileTrait;
 use App\Traits\ValidationTrait;
 use Illuminate\Support\Facades\DB;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
-class CreateCourseService implements CreateCourseInterface
+class CourseService
 {
     use HandleFileTrait, ValidationTrait;
 
@@ -44,6 +45,41 @@ class CreateCourseService implements CreateCourseInterface
             DB::rollBack(); 
             throw new \Exception('Lỗi khi tạo khóa học: ' . $e->getMessage());
         }
+    }
+
+    public function getCoursesOfTeacher($perPage)
+    {
+        $user = $this->validateTeacher();
+
+        return $this->courseRepo->getByTeacher($user->teacher->id, $perPage);
+    }
+
+    public function getInfoCourse($id) {
+        try {
+            $user = JWTAuth::parseToken()->authenticate();
+    
+            $course = $this->courseRepo->getInfoById($id);
+    
+            $is_wishlist = $course->wishlist()->where('user_id', $user->id)->exists();
+            $is_enrolled = $course->courseEnrolled()->where('user_id', $user->id)->exists();
+            
+            $course['is_wishlist'] = $is_wishlist;
+            $course['is_enrolled'] = $is_enrolled;
+
+            return $course;
+    
+        } catch (JWTException $e) {
+            $course = $this->courseRepo->getInfoById($id); 
+    
+            $course['is_wishlist'] = false;
+            $course['is_enrolled'] = false;
+
+            return $course;
+        }
+    }
+
+    public function getStatisticCourse($id) {
+        return $this->courseRepo->getInfoById($id); 
     }
 
     // Xử lý ảnh thumbnail

@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Services\Voucher;
+namespace App\Services;
 
-use App\Contracts\GetAllVoucherInterface;
 use App\Repositories\Interfaces\CourseRepositoryInterface;
 use App\Repositories\Interfaces\VoucherRepositoryInterface;
 use App\Traits\ValidationTrait;
 
-class GetAllVoucherService implements GetAllVoucherInterface
+class VoucherService
 {
     use ValidationTrait;
 
@@ -15,6 +14,16 @@ class GetAllVoucherService implements GetAllVoucherInterface
         private VoucherRepositoryInterface $voucherRepo,
         private CourseRepositoryInterface $courseRepo
     ) {}
+
+    public function createVoucher(array $data) {
+
+        $user = $this->validateTeacher();
+
+        // Kiểm tra quyền sở hữu của khóa học
+        $this->validateCourse($user, $data['course_id']);
+
+        return $this->voucherRepo->create($data);
+    }
 
     public function getAllVoucher(int $courseId) {
         $user = $this->validateTeacher();

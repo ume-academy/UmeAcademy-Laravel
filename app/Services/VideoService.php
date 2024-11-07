@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Services\Lesson;
+namespace App\Services;
 
-use App\Contracts\CreateVideoInterface;
 use App\Repositories\Interfaces\ChapterRepositoryInterface;
 use App\Repositories\Interfaces\CourseRepositoryInterface;
 use App\Repositories\Interfaces\LessonRepositoryInterface;
@@ -13,7 +12,7 @@ use FFMpeg\FFMpeg;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 
-class CreateVideoService implements CreateVideoInterface
+class VideoService
 {
     use HandleFileTrait, ValidationTrait;
 

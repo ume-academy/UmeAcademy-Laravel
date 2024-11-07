@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1\Teacher;
+namespace App\Http\Controllers\Api\V1;
 
-use App\Contracts\TeacherRegistrationInterface;
 use App\Http\Controllers\Controller;
+use App\Services\TeacherService;
 
-class TeacherRegistrationController extends Controller
+class TeacherController extends Controller
 {
     public function __construct(
-        private TeacherRegistrationInterface $teacherRegistration
+        private TeacherService $teacherService
     ){}
 
     public function registerTeacher() {
         try {
-            $this->teacherRegistration->registerTeacher();
+            $this->teacherService->registerTeacher();
             return response()->json(['message' => 'Đăng ký trở thành giảng viên thành công.'], 200);
 
         } catch (\Exception $e) {

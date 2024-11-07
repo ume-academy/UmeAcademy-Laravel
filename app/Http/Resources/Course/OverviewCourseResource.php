@@ -25,6 +25,7 @@ class OverviewCourseResource extends JsonResource
             'duration' => $this->duration ?? null,
             'total_lesson' => $this->total_lesson ?? null,
             'total_chapter' => $this->total_chapter ?? null,
+            'rating' => $this->rating ?? null,
             'status' => $this->status ?? null,
             'category' => [
                 'id' => $this->category->id ?? null,

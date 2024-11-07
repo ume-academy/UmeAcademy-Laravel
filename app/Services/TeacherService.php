@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Services\Teacher;
+namespace App\Services;
 
-use App\Contracts\TeacherRegistrationInterface;
 use App\Exceptions\Teacher\AlreadyTeacherException;
 use App\Repositories\Interfaces\TeacherRepositoryInterface;
 use App\Repositories\Interfaces\TeacherWalletRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
-class TeacherRegistrationService implements TeacherRegistrationInterface
+class TeacherService
 {
     public function __construct(
         private TeacherRepositoryInterface $teacherRepo,
@@ -42,5 +41,4 @@ class TeacherRegistrationService implements TeacherRegistrationInterface
             throw $e;
         }
     }
-    
 }

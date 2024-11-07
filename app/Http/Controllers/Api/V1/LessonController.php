@@ -1,20 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1\Lesson;
+namespace App\Http\Controllers\Api\V1;
 
-use App\Contracts\CreateLessonInterface;
-use App\Contracts\CreateVideoInterface;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Lesson\StoreLessonRequest;
 use App\Http\Requests\Video\StoreVideoRequest;
 use App\Http\Resources\Lesson\LessonResource;
 use App\Http\Resources\Video\VideoResource;
+use App\Services\LessonService;
+use App\Services\VideoService;
 
 class LessonController extends Controller
 {
     public function __construct(
-        private CreateLessonInterface $createLessonService,
-        private CreateVideoInterface $createVideoService
+        private LessonService $lessonService,
+        private VideoService $videoService
     ){}
 
     public function createLesson(StoreLessonRequest $req, $id, $chapterId) {
@@ -25,7 +25,7 @@ class LessonController extends Controller
             $data['chapter_id'] = $chapterId;
             $data['course_id'] = $id;
 
-            $lesson = $this->createLessonService->createLesson($data);
+            $lesson = $this->lessonService->createLesson($data);
 
             return new LessonResource($lesson);
         } catch (\Exception $e) {
@@ -42,7 +42,7 @@ class LessonController extends Controller
                 'lesson_id' => $lessonId,
             ];
 
-            $video = $this->createVideoService->createVideo($data);
+            $video = $this->videoService->createVideo($data);
 
             return new VideoResource($video);
         } catch (\Exception $e) {

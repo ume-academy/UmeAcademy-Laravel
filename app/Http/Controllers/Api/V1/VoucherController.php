@@ -1,18 +1,16 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1\Voucher;
+namespace App\Http\Controllers\Api\V1;
 
-use App\Contracts\CreateVoucherInterface;
-use App\Contracts\GetAllVoucherInterface;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Voucher\StoreVoucherRequest;
 use App\Http\Resources\Voucher\VoucherResource;
+use App\Services\VoucherService;
 
 class VoucherController extends Controller
 {
     public function __construct(
-        private CreateVoucherInterface $createVoucherService,
-        private GetAllVoucherInterface $getAllVoucherService
+        private VoucherService $voucherService,
     ){}
 
     public function createVoucher(StoreVoucherRequest $req, $id) {
@@ -26,7 +24,7 @@ class VoucherController extends Controller
             ]);
             $data['course_id'] = $id;
 
-            $voucher = $this->createVoucherService->createVoucher($data);
+            $voucher = $this->voucherService->createVoucher($data);
 
             return new VoucherResource($voucher);
         } catch (\Exception $e) {
@@ -36,7 +34,7 @@ class VoucherController extends Controller
 
     public function getAllVoucher($id) {
         try {
-            $vouchers = $this->getAllVoucherService->getAllVoucher($id);
+            $vouchers = $this->voucherService->getAllVoucher($id);
 
             return VoucherResource::collection($vouchers);
         } catch (\Exception $e) {

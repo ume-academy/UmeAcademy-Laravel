@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Services\Lesson;
+namespace App\Services;
 
-use App\Contracts\CreateLessonInterface;
 use App\Repositories\Interfaces\ChapterRepositoryInterface;
 use App\Repositories\Interfaces\CourseRepositoryInterface;
 use App\Repositories\Interfaces\LessonRepositoryInterface;
 use App\Traits\ValidationTrait;
 
-class CreateLessonService implements CreateLessonInterface
+class LessonService
 {
     use ValidationTrait;
 

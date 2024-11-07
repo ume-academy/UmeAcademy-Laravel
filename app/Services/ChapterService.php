@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Services\Chapter;
+namespace App\Services;
 
-use App\Contracts\CreateChapterInterface;
 use App\Repositories\Interfaces\ChapterRepositoryInterface;
 use App\Repositories\Interfaces\CourseRepositoryInterface;
 use App\Traits\ValidationTrait;
 
-class CreateChapterService implements CreateChapterInterface
+class ChapterService
 {
     use ValidationTrait;
 
@@ -25,5 +24,4 @@ class CreateChapterService implements CreateChapterInterface
 
         return $this->chapterRepo->create($data);
     }
-
 }
