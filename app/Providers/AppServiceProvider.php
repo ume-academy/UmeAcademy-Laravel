@@ -2,11 +2,6 @@
 
 namespace App\Providers;
 
-use App\Contracts\CreateChapterInterface;
-use App\Contracts\CreateCourseInterface;
-use App\Contracts\CreateLessonInterface;
-use App\Contracts\CreateVideoInterface;
-use App\Contracts\CreateVoucherInterface;
 use Illuminate\Support\ServiceProvider;
 use App\Contracts\LoginInterface;
 use App\Contracts\TokenInterface;
@@ -16,21 +11,10 @@ use App\Contracts\EmailSenderInterface;
 use App\Contracts\RegistrationInterface;
 use App\Services\Auth\LoginViaEmailService;
 use App\Contracts\EmailVerificationInterface;
-use App\Contracts\GetAllVoucherInterface;
-use App\Contracts\GetCoursesOfTeacherInterface;
 use App\Contracts\RefreshTokenInterface;
-use App\Contracts\TeacherRegistrationInterface;
 use App\Services\Auth\EmailVerificationService;
 use App\Services\Auth\RefreshTokenService;
 use App\Services\Auth\RegistrationViaEmailService;
-use App\Services\Chapter\CreateChapterService;
-use App\Services\Course\CreateCourseService;
-use App\Services\Course\GetCoursesOfTeacherService;
-use App\Services\Lesson\CreateVideoService;
-use App\Services\Lesson\CreateLessonService;
-use App\Services\Teacher\TeacherRegistrationService;
-use App\Services\Voucher\CreateVoucherService;
-use App\Services\Voucher\GetAllVoucherService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -45,14 +29,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(LoginInterface::class, LoginViaEmailService::class);
         $this->app->bind(TokenInterface::class, TokenService::class);
         $this->app->bind(RefreshTokenInterface::class, RefreshTokenService::class);
-        $this->app->bind(TeacherRegistrationInterface::class, TeacherRegistrationService::class);
-        $this->app->bind(CreateCourseInterface::class, CreateCourseService::class);
-        $this->app->bind(CreateChapterInterface::class, CreateChapterService::class);
-        $this->app->bind(CreateLessonInterface::class, CreateLessonService::class);
-        $this->app->bind(CreateVideoInterface::class, CreateVideoService::class);
-        $this->app->bind(CreateVoucherInterface::class, CreateVoucherService::class);
-        $this->app->bind(GetAllVoucherInterface::class, GetAllVoucherService::class);
-        $this->app->bind(GetCoursesOfTeacherInterface::class, GetCoursesOfTeacherService::class);
     }
 
     /**

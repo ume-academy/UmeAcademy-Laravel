@@ -6,27 +6,22 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Teacher extends Model
+class Review extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'bio',
+        'content',
         'rating',
-        'job_title',
-        'facebook',
-        'twitter',
-        'linkedin',
-        'youtube',
-        'user_id'
+        'user_id',
+        'course_id'
     ];
-
-    public function teacherWallet() {
-        return $this->hasOne(TeacherWallet::class);
-    }
 
     public function user() {
         return $this->belongsTo(User::class);
     }
 
+    public function course() {
+        return $this->belongsTo(Course::class);
+    }
 }

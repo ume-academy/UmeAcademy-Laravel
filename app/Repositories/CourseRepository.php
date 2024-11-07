@@ -12,11 +12,17 @@ class CourseRepository implements CourseRepositoryInterface
         return Course::create($data);
     }
 
+    // Tìm được cả khóa học nháp ...
     public function find(int $id) {
         return Course::findOrFail($id);
     }
 
     public function getByTeacher(int $id, int $perPage) {
         return Course::where('teacher_id', $id)->paginate($perPage);
+    }
+
+    // Chỉ tìm được khóa học đã xuất bản
+    public function getInfoById(int $id) {
+        return Course::where('status', 2)->findOrFail($id);
     }
 }

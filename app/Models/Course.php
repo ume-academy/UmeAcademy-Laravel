@@ -20,6 +20,7 @@ class Course extends Model
         'duration',
         'total_lesson',
         'total_chapter',
+        'rating',
         'status',
         'category_id',
         'level_id',
@@ -38,8 +39,22 @@ class Course extends Model
         return $this->hasMany(Chapter::class);
     }
 
+    public function reviews() {
+        return $this->hasMany(Review::class);
+    }
+
     public function lessons() {
         return $this->hasManyThrough(Lesson::class, Chapter::class);
+    }
+
+    public function wishList()
+    {
+        return $this->belongsToMany(User::class, 'wishlists', 'course_id', 'user_id');
+    }
+
+    public function courseEnrolled()
+    {
+        return $this->belongsToMany(User::class, 'course_enrolleds', 'course_id', 'user_id');
     }
 
     // Tính tổng số chương của khóa học
@@ -52,10 +67,25 @@ class Course extends Model
         return $this->lessons()->count();
     }
 
+    // Tính tổng số học sinh
+    public function getTotalStudentAttribute()
+    {
+        return $this->courseEnrolled()->count();
+    }
+
     // Tính tổng thời gian của khóa học
     public function getDurationAttribute() {
         return $this->lessons()->with('video')->get()->sum(function($lesson) {
             return $lesson->video ? $lesson->video->duration : 0;
         });
+    }
+
+    // Tính rating khóa học
+    public function getRatingAttribute()
+    {
+        $totalRatings = $this->reviews()->count();
+        $sumRatings = $this->reviews()->sum('rating');
+
+        return $totalRatings > 0 ? round($sumRatings / $totalRatings, 1) : $this->attributes['rating'];
     }
 }
