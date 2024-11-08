@@ -20,7 +20,7 @@ class InfoTeacherCourseResource extends JsonResource
             'teacher' => [
                 'id' => $this->teacher->id ?? null,
                 'fullname' => $this->teacher->user->fullname ?? null,
-                'avatar' => $this->teacher->user->avatar ?? null,
+                'avatar' => $this->teacher->user->avatar ? url('images/users/'.  $this->teacher->user->avatar) : null,
                 'bio' => $this->teacher->bio ?? null,
                 'total_course' => $this->teacher->courses->count() ?? null,
                 'rating' => $this->teacher->rating ?? null,

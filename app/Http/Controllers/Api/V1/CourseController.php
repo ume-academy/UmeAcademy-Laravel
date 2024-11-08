@@ -29,7 +29,7 @@ class CourseController extends Controller
             ]);
 
             $course = $this->courseService->createCourse($data);
-
+            
             return new CourseResource($course);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);

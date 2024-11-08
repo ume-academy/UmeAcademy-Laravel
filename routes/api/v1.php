@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\V1\Auth\VerificationController;
 use App\Http\Controllers\Api\V1\ChapterController;
 use App\Http\Controllers\Api\V1\CourseController;
 use App\Http\Controllers\Api\V1\LessonController;
+use App\Http\Controllers\Api\V1\ReviewController;
 use App\Http\Controllers\Api\V1\TeacherController;
 use App\Http\Controllers\Api\V1\VoucherController;
 
@@ -32,6 +33,7 @@ Route::middleware('jwt.auth')->group(function () {
     Route::get('/course/{id}/content', [CourseController::class, 'getContentCourse'])->withoutMiddleware('jwt.auth');
     Route::get('/course/{id}/overview', [CourseController::class, 'getOverviewCourse'])->withoutMiddleware('jwt.auth');
     Route::get('/course/{id}/teacher-information', [CourseController::class, 'getCourseTeacherInformation'])->withoutMiddleware('jwt.auth');
+    Route::get('/course/{id}/reviews', [ReviewController::class, 'getReviewCourse'])->withoutMiddleware('jwt.auth');
 
     // Teacher
     Route::prefix('/teacher')->group(function () {
