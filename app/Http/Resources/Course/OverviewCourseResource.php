@@ -18,27 +18,27 @@ class OverviewCourseResource extends JsonResource
             'id' => $this->id ?? null,
             'name' => $this->name ?? null,
             'summary' => $this->summary ?? null,
-            'thumbnail' => $this->thumbnail ? url('images/courses/'. $this->thumbnail) : null,
             'description' => $this->description ?? null,
-            'video' => $this->video ? url('videos/courses/'. $this->video) : null,
-            'price' => $this->price ?? null,
-            'duration' => $this->duration ?? null,
-            'total_lesson' => $this->total_lesson ?? null,
-            'total_chapter' => $this->total_chapter ?? null,
-            'rating' => $this->rating ?? null,
-            'status' => $this->status ?? null,
-            'category' => [
-                'id' => $this->category->id ?? null,
-                'name' => $this->category->name ?? null
-            ],
-            'level' => [
-                'id' => $this->level->id ?? null,
-                'name' => $this->level->name ?? null
-            ],
-            'teacher' => [
-                'fullname' => $this->teacher->user->fullname ?? null,
-                'email' => $this->teacher->user->email ?? null
-            ],
+            'course_learning_benefit' => $this->courseBenefits(),
+            'course_requirement' => $this->courseRequirements()
         ];
+    }
+
+    private function courseBenefits() {
+        return $this->courseBenefits->map(function ($benefit) {
+            return [
+                'id' => $benefit->id,
+                'name' => $benefit->name
+            ];
+        })->toArray();
+    }
+
+    private function courseRequirements() {
+        return $this->courseRequirements->map(function ($requirement) {
+            return [
+                'id' => $requirement->id,
+                'name' => $requirement->name
+            ];
+        })->toArray();
     }
 }

@@ -58,7 +58,7 @@ class CourseService
         try {
             $user = JWTAuth::parseToken()->authenticate();
     
-            $course = $this->courseRepo->getInfoById($id);
+            $course = $this->courseRepo->getById($id);
     
             $is_wishlist = $course->wishlist()->where('user_id', $user->id)->exists();
             $is_enrolled = $course->courseEnrolled()->where('user_id', $user->id)->exists();
@@ -69,7 +69,7 @@ class CourseService
             return $course;
     
         } catch (JWTException $e) {
-            $course = $this->courseRepo->getInfoById($id); 
+            $course = $this->courseRepo->getById($id); 
     
             $course['is_wishlist'] = false;
             $course['is_enrolled'] = false;
@@ -79,12 +79,18 @@ class CourseService
     }
 
     public function getStatisticCourse($id) {
-        return $this->courseRepo->getInfoById($id); 
+        return $this->courseRepo->getById($id); 
     }
 
     public function getContentCourse($id) {
-        return $this->courseRepo->getInfoById($id); 
+        return $this->courseRepo->getById($id); 
     }
+
+    public function getOverviewCourse($id) {
+        return $this->courseRepo->getById($id); 
+    }
+
+
 
     // Xử lý ảnh thumbnail
     private function handleThumbnail($file)

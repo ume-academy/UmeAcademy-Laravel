@@ -22,7 +22,7 @@ class CourseRepository implements CourseRepositoryInterface
     }
 
     // Chỉ tìm được khóa học đã xuất bản
-    public function getInfoById(int $id) {
+    public function getById(int $id) {
         return Course::where('status', 2)->findOrFail($id);
     }
 }

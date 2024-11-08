@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Course\StoreCourseRequest;
 use App\Http\Resources\Course\ContentCourseResource;
+use App\Http\Resources\Course\CourseResource;
 use App\Http\Resources\Course\OverviewCourseResource;
 use App\Http\Resources\Course\StatisticCourseResource;
 use App\Services\CourseService;
@@ -28,7 +29,7 @@ class CourseController extends Controller
 
             $course = $this->courseService->createCourse($data);
 
-            return new OverviewCourseResource($course);
+            return new CourseResource($course);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
@@ -40,7 +41,7 @@ class CourseController extends Controller
 
             $courses = $this->courseService->getCoursesOfTeacher($perPage);
 
-            return OverviewCourseResource::collection($courses);
+            return CourseResource::collection($courses);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
@@ -50,7 +51,7 @@ class CourseController extends Controller
         try {
             $course = $this->courseService->getInfoCourse($id);
             
-            return (new OverviewCourseResource($course))->additional([
+            return (new CourseResource($course))->additional([
                 'is_wishlist' => $course->is_wishlist,
                 'is_enrolled' => $course->is_enrolled
             ]);
@@ -74,6 +75,16 @@ class CourseController extends Controller
             $course = $this->courseService->getContentCourse($id);
             
             return new ContentCourseResource($course);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function getOverviewCourse($id) {
+        try {
+            $course = $this->courseService->getOverviewCourse($id);
+            
+            return new OverviewCourseResource($course);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
