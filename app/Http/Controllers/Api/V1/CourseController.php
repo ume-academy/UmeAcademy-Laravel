@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Course\StoreCourseRequest;
 use App\Http\Resources\Course\ContentCourseResource;
 use App\Http\Resources\Course\CourseResource;
+use App\Http\Resources\Course\InfoTeacherCourseResource;
 use App\Http\Resources\Course\OverviewCourseResource;
 use App\Http\Resources\Course\StatisticCourseResource;
 use App\Services\CourseService;
@@ -85,6 +86,16 @@ class CourseController extends Controller
             $course = $this->courseService->getOverviewCourse($id);
             
             return new OverviewCourseResource($course);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function getCourseTeacherInformation($id) {
+        try {
+            $course = $this->courseService->getOverviewCourse($id);
+            
+            return new InfoTeacherCourseResource($course);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
