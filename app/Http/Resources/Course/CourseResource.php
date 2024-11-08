@@ -25,6 +25,8 @@ class CourseResource extends JsonResource
             'duration' => $this->duration ?? null,
             'total_lesson' => $this->total_lesson ?? null,
             'total_chapter' => $this->total_chapter ?? null,
+            'total_student' => $this->total_student ?? 0,
+            'total_review' => $this->reviews->count() ?? null,
             'rating' => $this->rating ?? null,
             'status' => $this->status ?? null,
             'category' => [
@@ -38,8 +40,12 @@ class CourseResource extends JsonResource
             'teacher' => [
                 'id' => $this->teacher->id ?? null,
                 'fullname' => $this->teacher->user->fullname ?? null,
-                'avatar' => $this->teacher->user->avatar ?? null
+                'avatar' => $this->teacher->user->avatar ? url('images/users/'. $this->teacher->user->avatar) : null
             ],
+            'badges' => [
+                'badge' => $this->badge ?? null,
+                'category' => $this->category->name ?? null 
+            ]
         ];
     }
 }

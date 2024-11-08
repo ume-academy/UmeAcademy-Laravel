@@ -90,8 +90,6 @@ class CourseService
         return $this->courseRepo->getById($id); 
     }
 
-
-
     // Xử lý ảnh thumbnail
     private function handleThumbnail($file)
     {

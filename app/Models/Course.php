@@ -94,6 +94,6 @@ class Course extends Model
         $totalRatings = $this->reviews()->count();
         $sumRatings = $this->reviews()->sum('rating');
 
-        return $totalRatings > 0 ? round($sumRatings / $totalRatings, 1) : $this->attributes['rating'];
+        return $totalRatings > 0 ? round($sumRatings / $totalRatings, 1) : 5;
     }
 }

@@ -12,11 +12,13 @@ use Illuminate\Support\ServiceProvider;
 use App\Repositories\RefreshTokenRepository;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Repositories\Interfaces\RefreshTokenRepositoryInterface;
+use App\Repositories\Interfaces\ReviewRepositoryInterface;
 use App\Repositories\Interfaces\TeacherRepositoryInterface;
 use App\Repositories\Interfaces\TeacherWalletRepositoryInterface;
 use App\Repositories\Interfaces\VideoRepositoryInterface;
 use App\Repositories\Interfaces\VoucherRepositoryInterface;
 use App\Repositories\LessonRepository;
+use App\Repositories\ReviewRepository;
 use App\Repositories\TeacherRepository;
 use App\Repositories\TeacherWalletRepository;
 use App\Repositories\VideoRepository;
@@ -38,6 +40,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(LessonRepositoryInterface::class, LessonRepository::class);
         $this->app->bind(VideoRepositoryInterface::class, VideoRepository::class);
         $this->app->bind(VoucherRepositoryInterface::class, VoucherRepository::class);
+        $this->app->bind(ReviewRepositoryInterface::class, ReviewRepository::class);
     }
 
     /**
