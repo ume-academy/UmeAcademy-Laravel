@@ -30,6 +30,7 @@ Route::middleware('jwt.auth')->group(function () {
     Route::get('/course/{id}/information', [CourseController::class, 'getInfoCourse'])->withoutMiddleware('jwt.auth');
     Route::get('/course/{id}/statistic', [CourseController::class, 'getStatisticCourse'])->withoutMiddleware('jwt.auth');
     Route::get('/course/{id}/content', [CourseController::class, 'getContentCourse'])->withoutMiddleware('jwt.auth');
+    Route::get('/course/{id}/overview', [CourseController::class, 'getOverviewCourse'])->withoutMiddleware('jwt.auth');
 
     // Teacher
     Route::prefix('/teacher')->group(function () {

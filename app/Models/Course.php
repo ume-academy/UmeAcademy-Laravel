@@ -39,6 +39,14 @@ class Course extends Model
         return $this->hasMany(Chapter::class);
     }
 
+    public function courseRequirements() {
+        return $this->hasMany(CourseRequirement::class);
+    }
+
+    public function courseBenefits() {
+        return $this->hasMany(CourseLearningBenefit::class);
+    }
+
     public function reviews() {
         return $this->hasMany(Review::class);
     }
