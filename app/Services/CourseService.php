@@ -60,8 +60,8 @@ class CourseService
     
             $course = $this->courseRepo->getById($id);
     
-            $is_wishlist = $course->wishlist()->where('user_id', $user->id)->exists();
-            $is_enrolled = $course->courseEnrolled()->where('user_id', $user->id)->exists();
+            $is_wishlist = $course->checkWishlist($user->id);
+            $is_enrolled = $course->checkEnrolled($user->id);
             
             $course['is_wishlist'] = $is_wishlist;
             $course['is_enrolled'] = $is_enrolled;
@@ -89,6 +89,32 @@ class CourseService
     public function getOverviewCourse($id) {
         return $this->courseRepo->getById($id); 
     }
+
+    public function getPurchasedCourseContent($id) {
+        $user = JWTAuth::parseToken()->authenticate();
+    
+        $course = $this->courseRepo->getById($id);
+
+        if($course->checkEnrolled($user->id)) {
+            // danh sách các bài học đã hoàn thành
+            $completedLessons = $this->courseRepo->completedLessons($course->id, $user->id);
+            
+            $course['completed_lesson'] = $completedLessons->count();
+
+            $course['completed_lesson_in_chapter'] = $course->chapters->map(function ($chapter) use ($user) {
+                // Lấy số bài học đã hoàn thành trong chapter này
+                $completedInChapter = $chapter->completedLessonsCount($user->id);
+    
+                return $completedInChapter;
+            });
+            
+            return $course;
+        } else {
+            throw new \Exception('Bạn chưa mua khóa học'); 
+        }
+    }
+
+
 
     // Xử lý ảnh thumbnail
     private function handleThumbnail($file)

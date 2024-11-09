@@ -39,14 +39,6 @@ class Course extends Model
         return $this->hasMany(Chapter::class);
     }
 
-    public function courseRequirements() {
-        return $this->hasMany(CourseRequirement::class);
-    }
-
-    public function courseBenefits() {
-        return $this->hasMany(CourseLearningBenefit::class);
-    }
-
     public function reviews() {
         return $this->hasMany(Review::class);
     }
@@ -95,5 +87,17 @@ class Course extends Model
         $sumRatings = $this->reviews()->sum('rating');
 
         return $totalRatings > 0 ? round($sumRatings / $totalRatings, 1) : 5;
+    }
+
+    // Phương thức kiểm tra nếu người dùng đã yêu thích khóa học
+    public function checkWishlist($userId)
+    {
+        return $this->wishlist()->where('user_id', $userId)->exists();
+    }
+
+    // Phương thức kiểm tra nếu người dùng đã đăng ký khóa học
+    public function checkEnrolled($userId)
+    {
+        return $this->courseEnrolled()->where('user_id', $userId)->exists();
     }
 }

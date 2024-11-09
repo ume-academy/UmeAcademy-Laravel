@@ -35,6 +35,13 @@ Route::middleware('jwt.auth')->group(function () {
     Route::get('/course/{id}/teacher-information', [CourseController::class, 'getCourseTeacherInformation'])->withoutMiddleware('jwt.auth');
     Route::get('/course/{id}/reviews', [ReviewController::class, 'getReviewCourse'])->withoutMiddleware('jwt.auth');
 
+    // Learning
+    Route::prefix('/learning')->group(function () {
+        Route::get('/course/{id}/content', [CourseController::class, 'getPurchasedCourseContent']);
+
+        Route::post('/course/{id}/chapter/{chapterId}/lesson/{lessonId}/complete', [LessonController::class, 'markLessonCompleted']);
+    });
+
     // Teacher
     Route::prefix('/teacher')->group(function () {
         Route::get('/courses', [CourseController::class, 'getCoursesOfTeacher']);
