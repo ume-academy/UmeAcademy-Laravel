@@ -19,26 +19,8 @@ class OverviewCourseResource extends JsonResource
             'name' => $this->name ?? null,
             'summary' => $this->summary ?? null,
             'description' => $this->description ?? null,
-            'course_learning_benefit' => $this->courseBenefits(),
-            'course_requirement' => $this->courseRequirements()
+            'course_learning_benefit' => $this->course_learning_benefit,
+            'course_requirement' => $this->course_requirement
         ];
-    }
-
-    private function courseBenefits() {
-        return $this->courseBenefits->map(function ($benefit) {
-            return [
-                'id' => $benefit->id,
-                'name' => $benefit->name
-            ];
-        })->toArray();
-    }
-
-    private function courseRequirements() {
-        return $this->courseRequirements->map(function ($requirement) {
-            return [
-                'id' => $requirement->id,
-                'name' => $requirement->name
-            ];
-        })->toArray();
     }
 }

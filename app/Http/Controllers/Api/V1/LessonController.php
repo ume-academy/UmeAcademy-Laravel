@@ -49,4 +49,19 @@ class LessonController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function markLessonCompleted($id, $chapterId, $lessonId) {
+        try {
+            $data = [
+                'course_id' => $id,
+                'chapter_id' => $chapterId,
+                'lesson_id' => $lessonId,
+            ];
+            $this->lessonService->markLessonCompleted($data);
+
+            return response()->json(['success' => 'Đã hoàn thành bài học']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }

@@ -19,4 +19,11 @@ class Chapter extends Model
     public function lessons() {
         return $this->hasMany(Lesson::class);
     }
+
+    public function completedLessonsCount(int $userId): int
+    {
+        return $this->lessons()->whereHas('lessonCompleted', function ($query) use ($userId) {
+            $query->where('user_id', $userId);
+        })->count();
+    }
 }

@@ -8,4 +8,5 @@ interface CourseRepositoryInterface
     public function create(array $data);
     public function find(int $id);
     public function getById(int $id);
+    public function completedLessons(int $courseId, int $userId);
 }
