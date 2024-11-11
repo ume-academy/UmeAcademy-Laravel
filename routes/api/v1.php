@@ -4,12 +4,14 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\Auth\LoginController;
 use App\Http\Controllers\Api\V1\Auth\RegistrationController;
 use App\Http\Controllers\Api\V1\Auth\VerificationController;
+use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\ChapterController;
 use App\Http\Controllers\Api\V1\CourseController;
 use App\Http\Controllers\Api\V1\LessonController;
 use App\Http\Controllers\Api\V1\ReviewController;
 use App\Http\Controllers\Api\V1\TeacherController;
 use App\Http\Controllers\Api\V1\VoucherController;
+use App\Models\Category;
 
 Route::prefix('/auth')
 ->middleware(['api', 'jwt.auth'])
@@ -57,3 +59,5 @@ Route::middleware('jwt.auth')->group(function () {
         Route::get('/course/{id}/vouchers', [VoucherController::class, 'getAllVoucher']);
     });
 });
+// Category
+ Route::get('/categories', [CategoryController::class, 'getAllCategories']);
