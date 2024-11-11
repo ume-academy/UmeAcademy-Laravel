@@ -14,7 +14,7 @@ class CategoryController extends Controller
         try {
             $perPage = $req->input('per_page', 10);
             $categories = $this->categoryService->getAllCategories($perPage);
-            return new  CategoryResource($categories);
+            return CategoryResource::collection($categories);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }

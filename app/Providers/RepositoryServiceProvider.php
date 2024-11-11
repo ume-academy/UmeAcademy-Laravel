@@ -43,7 +43,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(VideoRepositoryInterface::class, VideoRepository::class);
         $this->app->bind(VoucherRepositoryInterface::class, VoucherRepository::class);
         $this->app->bind(ReviewRepositoryInterface::class, ReviewRepository::class);
-        $this->app->bind(CategoryRepository::class, CategoryRepositoryInterface::class);
+        $this->app->bind(CategoryRepositoryInterface::class, CategoryRepository::class);
     }
 
     /**
