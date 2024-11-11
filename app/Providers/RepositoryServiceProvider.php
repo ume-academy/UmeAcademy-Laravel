@@ -6,7 +6,6 @@ use App\Repositories\CategoryRepository;
 use App\Repositories\ChapterRepository;
 use App\Repositories\CourseRepository;
 use App\Repositories\Interfaces\CategoryRepositoryInterface;
-use App\Repositories\Interfaces\CategoryRepositoryInterface;
 use App\Repositories\Interfaces\ChapterRepositoryInterface;
 use App\Repositories\Interfaces\CourseRepositoryInterface;
 use App\Repositories\Interfaces\LessonRepositoryInterface;
