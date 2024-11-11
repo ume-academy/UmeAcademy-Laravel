@@ -25,4 +25,14 @@ class CourseRepository implements CourseRepositoryInterface
     public function getById(int $id) {
         return Course::where('status', 2)->findOrFail($id);
     }
+
+    // Lấy danh sách bài học đã hoàn thành của user trong một khóa học
+    public function completedLessons(int $courseId, int $userId)
+    {
+        $course = $this->getById($courseId);
+        return $course->lessons()
+            ->whereHas('lessonCompleted', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })->get();
+    }
 }

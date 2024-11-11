@@ -6,6 +6,7 @@ use App\Repositories\Interfaces\ChapterRepositoryInterface;
 use App\Repositories\Interfaces\CourseRepositoryInterface;
 use App\Repositories\Interfaces\LessonRepositoryInterface;
 use App\Traits\ValidationTrait;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class LessonService
 {
@@ -26,5 +27,21 @@ class LessonService
         $this->validateChapter($course, $data['chapter_id']);
 
         return $this->lessonRepo->create($data);
+    }
+
+    public function markLessonCompleted(array $data) {
+        $user = JWTAuth::parseToken()->authenticate();
+
+        $course = $this->courseRepo->getById($data['course_id']);
+        $chapter = $this->validateChapter($course, $data['chapter_id']);
+        $lesson = $this->validateLesson($chapter, $data['lesson_id']);
+
+        // Kiểm tra xem người dùng đã đk khóa học chưa
+        if($course->checkEnrolled($user->id)) {
+            return $this->lessonRepo->syncLessonCompleted($lesson, [$user->id]);
+        } else {
+            throw new \Exception('Bạn chưa mua khóa học'); 
+        }
+        
     }
 }
