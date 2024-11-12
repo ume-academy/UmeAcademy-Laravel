@@ -6,4 +6,5 @@ interface CategoryRepositoryInterface
 {
     // 
     public function all($perPage);
+    public function create($data);
 }

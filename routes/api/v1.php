@@ -58,6 +58,9 @@ Route::middleware('jwt.auth')->group(function () {
         Route::post('/course/{id}/vouchers', [VoucherController::class, 'createVoucher']);
         Route::get('/course/{id}/vouchers', [VoucherController::class, 'getAllVoucher']);
     });
+
+    // Category
+ Route::get('/categories', [CategoryController::class, 'getAllCategories'])->withoutMiddleware('jwt.auth');
+ Route::post('/categories', [CategoryController::class, 'storeCategories']);
 });
-// Category
- Route::get('/categories', [CategoryController::class, 'getAllCategories']);
+
