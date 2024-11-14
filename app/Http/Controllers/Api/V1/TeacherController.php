@@ -20,4 +20,14 @@ class TeacherController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function checkTeacher() {
+        try {
+            $isTeacher = $this->teacherService->checkTeacher();
+            return response()->json(['is_teacher' => $isTeacher], 200);
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }

@@ -6,12 +6,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Category extends Model
+class VoucherUsage extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'name',
-        'parent_id',
+        'user_id',
+        'transaction_id',
+        'system_voucher_id',
+        'teacher_voucher_id',
+        'status',
+        'used_at'
     ];
+
 }

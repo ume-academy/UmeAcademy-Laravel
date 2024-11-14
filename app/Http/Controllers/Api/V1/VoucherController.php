@@ -3,17 +3,18 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Voucher\StoreVoucherRequest;
-use App\Http\Resources\Voucher\VoucherResource;
-use App\Services\VoucherService;
+use App\Http\Requests\Voucher\StoreTeacherVoucherRequest;
+use App\Http\Resources\Voucher\TeacherVoucherResource;
+use App\Services\TeacherVoucherService;
+use Illuminate\Database\QueryException;
 
 class VoucherController extends Controller
 {
     public function __construct(
-        private VoucherService $voucherService,
+        private TeacherVoucherService $teacherVoucherService,
     ){}
 
-    public function createVoucher(StoreVoucherRequest $req, $id) {
+    public function createVoucher(StoreTeacherVoucherRequest $req, $id) {
         try {
             $data = $req->only([
                 'code',
@@ -24,9 +25,13 @@ class VoucherController extends Controller
             ]);
             $data['course_id'] = $id;
 
-            $voucher = $this->voucherService->createVoucher($data);
+            $voucher = $this->teacherVoucherService->createVoucher($data);
 
-            return new VoucherResource($voucher);
+            return new TeacherVoucherResource($voucher);
+        } catch (QueryException $e) {
+            if ($e->errorInfo[1] == 1062) { 
+                return response()->json(['error' => "Code đã tồn tại"], 500);
+            }
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
@@ -34,9 +39,9 @@ class VoucherController extends Controller
 
     public function getAllVoucher($id) {
         try {
-            $vouchers = $this->voucherService->getAllVoucher($id);
+            $vouchers = $this->teacherVoucherService->getAllVoucher($id);
 
-            return VoucherResource::collection($vouchers);
+            return TeacherVoucherResource::collection($vouchers);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
