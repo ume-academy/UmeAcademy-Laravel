@@ -5,7 +5,7 @@ namespace App\Http\Resources\Voucher;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class VoucherResource extends JsonResource
+class TeacherVoucherResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -19,6 +19,7 @@ class VoucherResource extends JsonResource
             'code' => $this->code ?? null,
             'quantity' => $this->quantity ?? null,
             'discount' => $this->discount ?? null,
+            'used_count' => $this->used_count ?? null,
             'start_date' => $this->start_date ?? null,
             'end_date' => $this->end_date ?? null,
             'course' => [

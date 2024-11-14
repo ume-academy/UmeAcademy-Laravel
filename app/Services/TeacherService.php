@@ -41,4 +41,14 @@ class TeacherService
             throw $e;
         }
     }
+
+    public function checkTeacher() {
+        $user = JWTAuth::parseToken()->authenticate();
+    
+        if ($user->teacher()->exists()) {
+            return true;
+        }
+
+        return false;
+    }
 }

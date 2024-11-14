@@ -11,7 +11,6 @@ use App\Http\Controllers\Api\V1\LessonController;
 use App\Http\Controllers\Api\V1\ReviewController;
 use App\Http\Controllers\Api\V1\TeacherController;
 use App\Http\Controllers\Api\V1\VoucherController;
-use App\Models\Category;
 
 Route::prefix('/auth')
 ->middleware(['api', 'jwt.auth'])
@@ -29,7 +28,9 @@ Route::prefix('/auth')
 
 Route::middleware('jwt.auth')->group(function () {
     // Student
-    Route::post('/register/teacher', [TeacherController::class, 'registerTeacher']);
+    Route::post('/teachers/register', [TeacherController::class, 'registerTeacher']);
+    Route::post('/teachers/check', [TeacherController::class, 'checkTeacher']);
+    
     Route::get('/course/{id}/information', [CourseController::class, 'getInfoCourse'])->withoutMiddleware('jwt.auth');
     Route::get('/course/{id}/statistic', [CourseController::class, 'getStatisticCourse'])->withoutMiddleware('jwt.auth');
     Route::get('/course/{id}/content', [CourseController::class, 'getContentCourse'])->withoutMiddleware('jwt.auth');
@@ -60,7 +61,7 @@ Route::middleware('jwt.auth')->group(function () {
     });
 
     // Category
- Route::get('/categories', [CategoryController::class, 'getAllCategories'])->withoutMiddleware('jwt.auth');
- Route::post('/categories', [CategoryController::class, 'storeCategories']);
+    Route::get('/categories', [CategoryController::class, 'getAllCategories'])->withoutMiddleware('jwt.auth');
+    Route::post('/categories', [CategoryController::class, 'storeCategories']);
 });
 
