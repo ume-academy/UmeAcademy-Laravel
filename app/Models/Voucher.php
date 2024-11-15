@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class TeacherVoucher extends Model
+class Voucher extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -17,7 +17,9 @@ class TeacherVoucher extends Model
         'used_count',
         'start_date',
         'end_date',
-        'course_id'
+        'creator_type',
+        'course_id',
+        'teacher_id'
     ];
 
     public function course() {

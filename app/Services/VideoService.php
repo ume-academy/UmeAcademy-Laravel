@@ -28,9 +28,9 @@ class VideoService
         DB::beginTransaction();
 
         try {
-            $user = $this->validateTeacher();
+            $teacher = $this->validateTeacher();
 
-            $course = $this->validateCourse($user, $data['course_id']);
+            $course = $this->validateCourse($teacher, $data['course_id']);
             $chapter = $this->validateChapter($course, $data['chapter_id']);
             $lesson = $this->validateLesson($chapter, $data['lesson_id']);
 

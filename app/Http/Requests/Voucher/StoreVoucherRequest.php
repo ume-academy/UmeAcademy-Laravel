@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class StoreTeacherVoucherRequest extends FormRequest
+class StoreVoucherRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,7 @@ class StoreTeacherVoucherRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'code' => 'required|max:10', 
+            'code' => 'required|max:10|unique:vouchers,code', 
             'quantity' => 'required|integer|min:1',  
             'discount' => 'required|numeric|between:0,100',   
             'start_date' => 'required|date|before:end_date',
@@ -37,6 +37,7 @@ class StoreTeacherVoucherRequest extends FormRequest
         return [
             'code.required' => 'Mã giảm giá là bắt buộc.',
             'code.max' => 'Mã giảm giá không được vượt quá 10 ký tự.',
+            'code.unique' => 'Mã giảm giá đã tồn tại.',
 
             'quantity.required' => 'Số lượng là bắt buộc.',
             'quantity.integer' => 'Số lượng phải là một số nguyên.',

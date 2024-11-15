@@ -13,8 +13,7 @@ class VoucherUsage extends Model
     protected $fillable = [
         'user_id',
         'transaction_id',
-        'system_voucher_id',
-        'teacher_voucher_id',
+        'voucher_id',
         'status',
         'used_at'
     ];

@@ -24,11 +24,11 @@ class CourseService
         DB::beginTransaction();  
 
         try {
-            $user = $this->validateTeacher();
+            $teacher = $this->validateTeacher();
 
             // Xử lý ảnh thumbnail
             $data['thumbnail'] = $this->handleThumbnail($data['thumbnail']);
-            $data['teacher_id'] = $user->teacher->id;
+            $data['teacher_id'] = $teacher->id;
 
             // Tạo khóa học
             $course = $this->courseRepo->create($data);
@@ -49,9 +49,9 @@ class CourseService
 
     public function getCoursesOfTeacher($perPage)
     {
-        $user = $this->validateTeacher();
+        $teacher = $this->validateTeacher();
 
-        return $this->courseRepo->getByTeacher($user->teacher->id, $perPage);
+        return $this->courseRepo->getByTeacher($teacher->id, $perPage);
     }
 
     public function getInfoCourse($id) {

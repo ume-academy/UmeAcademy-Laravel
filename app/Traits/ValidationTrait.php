@@ -15,13 +15,13 @@ trait ValidationTrait
             throw new NotTeacherException();
         }
 
-        return $user;
+        return $user->teacher;
     }
 
-    public function validateCourse($user, $courseId)
+    public function validateCourse($teacher, $courseId)
     {
         $course = $this->courseRepo->find($courseId);
-        if (!$course || $course->teacher_id !== $user->teacher->id) {
+        if (!$course || $course->teacher_id !== $teacher->id) {
             throw new \Exception("Bạn không có quyền cho khóa học này.");
         }
 
