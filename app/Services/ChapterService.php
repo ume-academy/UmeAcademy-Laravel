@@ -17,10 +17,10 @@ class ChapterService
 
     public function createChapter(array $data)
     {
-        $user = $this->validateTeacher();
+        $teacher = $this->validateTeacher();
 
         // Kiểm tra quyền sở hữu của khóa học
-        $this->validateCourse($user, $data['course_id']);
+        $this->validateCourse($teacher, $data['course_id']);
 
         return $this->chapterRepo->create($data);
     }

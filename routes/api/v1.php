@@ -38,6 +38,8 @@ Route::middleware('jwt.auth')->group(function () {
     Route::get('/course/{id}/teacher-information', [CourseController::class, 'getCourseTeacherInformation'])->withoutMiddleware('jwt.auth');
     Route::get('/course/{id}/reviews', [ReviewController::class, 'getReviewCourse'])->withoutMiddleware('jwt.auth');
 
+    Route::post('/vouchers/check', [VoucherController::class, 'checkVoucher'])->withoutMiddleware('jwt.auth');
+
     // Learning
     Route::prefix('/learning')->group(function () {
         Route::get('/course/{id}/content', [CourseController::class, 'getPurchasedCourseContent']);
@@ -57,7 +59,7 @@ Route::middleware('jwt.auth')->group(function () {
         Route::post('/course/{id}/chapter/{chapterId}/lesson/{lessonId}/videos', [LessonController::class, 'createVideo']);
 
         Route::post('/course/{id}/vouchers', [VoucherController::class, 'createVoucher']);
-        Route::get('/course/{id}/vouchers', [VoucherController::class, 'getAllVoucher']);
+        Route::get('/course/{id}/vouchers', [VoucherController::class, 'getVouchersOfCourse']);
     });
 
     // Category

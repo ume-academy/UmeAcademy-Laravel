@@ -20,10 +20,10 @@ class LessonService
 
     public function createLesson(array $data)
     {
-        $user = $this->validateTeacher();
+        $teacher = $this->validateTeacher();
 
         // Kiểm tra khóa học và chapter
-        $course = $this->validateCourse($user, $data['course_id']);
+        $course = $this->validateCourse($teacher, $data['course_id']);
         $this->validateChapter($course, $data['chapter_id']);
 
         return $this->lessonRepo->create($data);

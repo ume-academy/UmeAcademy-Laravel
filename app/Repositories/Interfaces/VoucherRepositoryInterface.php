@@ -2,8 +2,9 @@
 
 namespace App\Repositories\Interfaces;
 
-interface TeacherVoucherRepositoryInterface
+interface VoucherRepositoryInterface
 {
     public function create(array $data);
     public function getAllByCourse(int $id);
+    public function getByCode($code);
 }

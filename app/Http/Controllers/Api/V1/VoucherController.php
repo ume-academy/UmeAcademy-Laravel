@@ -3,18 +3,19 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Voucher\StoreTeacherVoucherRequest;
-use App\Http\Resources\Voucher\TeacherVoucherResource;
-use App\Services\TeacherVoucherService;
+use App\Http\Requests\Voucher\CheckVoucherRequest;
+use App\Http\Requests\Voucher\StoreVoucherRequest;
+use App\Http\Resources\Voucher\VoucherResource;
+use App\Services\VoucherService;
 use Illuminate\Database\QueryException;
 
 class VoucherController extends Controller
 {
     public function __construct(
-        private TeacherVoucherService $teacherVoucherService,
+        private VoucherService $voucherService,
     ){}
 
-    public function createVoucher(StoreTeacherVoucherRequest $req, $id) {
+    public function createVoucher(StoreVoucherRequest $req, $id) {
         try {
             $data = $req->only([
                 'code',
@@ -25,9 +26,9 @@ class VoucherController extends Controller
             ]);
             $data['course_id'] = $id;
 
-            $voucher = $this->teacherVoucherService->createVoucher($data);
+            $voucher = $this->voucherService->createVoucher($data);
 
-            return new TeacherVoucherResource($voucher);
+            return new VoucherResource($voucher);
         } catch (QueryException $e) {
             if ($e->errorInfo[1] == 1062) { 
                 return response()->json(['error' => "Code đã tồn tại"], 500);
@@ -37,11 +38,23 @@ class VoucherController extends Controller
         }
     }
 
-    public function getAllVoucher($id) {
+    public function getVouchersOfCourse($id) {
         try {
-            $vouchers = $this->teacherVoucherService->getAllVoucher($id);
+            $vouchers = $this->voucherService->getVouchersOfCourse($id);
 
-            return TeacherVoucherResource::collection($vouchers);
+            return VoucherResource::collection($vouchers);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function checkVoucher(CheckVoucherRequest $req) {
+        try {
+            $data = $req->only(['code', 'course_id']);
+
+            $voucher = $this->voucherService->checkVoucher($data);
+
+            return new VoucherResource($voucher);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }

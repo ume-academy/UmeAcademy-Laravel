@@ -5,7 +5,7 @@ namespace App\Http\Resources\Voucher;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TeacherVoucherResource extends JsonResource
+class VoucherResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
