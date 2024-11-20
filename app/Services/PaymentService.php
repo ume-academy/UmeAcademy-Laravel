@@ -17,6 +17,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class PaymentService
 {
     use VoucherTrait;
+    private const PAYMENT_METHOD_BANKING = 2;
 
     public function __construct(
         private PayOSService $payOSService,
@@ -32,7 +33,7 @@ class PaymentService
     public function checkout($data) {
         $data = $this->formatCheckoutData($data);
 
-        if($data['payment_method_id'] == 2) {
+        if($data['payment_method_id'] == self::PAYMENT_METHOD_BANKING) {
             $response = $this->payOSService->checkout($data);
 
             if($response) {
@@ -111,7 +112,7 @@ class PaymentService
         if ($course->checkEnrolled($user->id)) {
             throw new \Exception('Bạn đã mua khóa học này rồi!');
         }
-    
+
         if (isset($data['voucher_id'])) {
             $voucher = $this->voucherRepo->find($data['voucher_id']);
             $voucher = $this->check($voucher, $course);
@@ -143,14 +144,16 @@ class PaymentService
         
         $transaction = $this->transactionRepo->create($transactionData);
 
-        $voucherUsageData = [
-            'user_id' => $data['user_id'],
-            'transaction_id' => $transaction->id,
-            'voucher_id' => $data['voucher_id'],
-            'used_at' => now()->toDateTimeString()
-        ];
-
-        $voucherUsage = $this->voucherUsageRepo->create($voucherUsageData);
+        if(isset($data['voucher_id'])) {
+            $voucherUsageData = [
+                'user_id' => $data['user_id'],
+                'transaction_id' => $transaction->id,
+                'voucher_id' => $data['voucher_id'] ?? null,
+                'used_at' => now()->toDateTimeString()
+            ];
+    
+            $voucherUsage = $this->voucherUsageRepo->create($voucherUsageData);
+        }
     }
 
     private function generateTransactionCode()
