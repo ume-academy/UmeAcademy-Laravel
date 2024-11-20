@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Services\AuthService;
+use App\Services\UserService;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
@@ -16,6 +17,7 @@ class AuthController extends Controller
 {
     public function __construct(
         private AuthService $authService, 
+        private UserService $userService,
     )
     {}
 
@@ -72,5 +74,21 @@ class AuthController extends Controller
         return $token;
     }
 
-    // Other auth-related actions (login, logout, forgotPassword) omitted for brevity
+    public function me()
+    {
+        try {
+            // Lấy thông tin user từ JWT token
+            $user = JWTAuth::parseToken()->authenticate();
+
+            $userData = $this->userService->me($user->id);
+
+            return response()->json([
+                'data' => $userData,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 400);
+        }
+    }
+
+    // forgotPassword
 }

@@ -30,6 +30,7 @@ Route::prefix('/auth')
             ->group(function () {
                 Route::post('/logout', [AuthController::class, 'logout']);
                 Route::post('/refreshToken', [AuthController::class, 'refreshTokens']);
+                Route::post('/me', [AuthController::class, 'me']);
             }
         );
     }
