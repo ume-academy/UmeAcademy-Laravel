@@ -55,6 +55,7 @@ Route::prefix('admin')
 
         // Fee
         Route::put('/fee/{id}', [FeeController::class, 'update']);
+        Route::get('/fee/{id}', [FeeController::class, 'get']);
     }
 );
 

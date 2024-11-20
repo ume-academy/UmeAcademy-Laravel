@@ -21,4 +21,14 @@ class FeeService
         
         return $this->feePlatformRepo->updateFee($id, $data);
     }
+
+    public function get($id) {
+        $user = JWTAuth::parseToken()->authenticate();
+
+        if(!$user || !$user->hasRole('admin')) {
+            throw new AuthorizationException('Unauthorized');
+        }
+        
+        return $this->feePlatformRepo->getById($id);
+    }
 }

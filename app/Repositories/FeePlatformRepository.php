@@ -22,4 +22,8 @@ class FeePlatformRepository implements FeePlatformRepositoryInterface
         $fee = FeePlatform::findOrFail($id);
         return $fee->update($data);
     }
+
+    public function getById(int $id) {
+        return FeePlatform::findOrFail($id);
+    }
 }
