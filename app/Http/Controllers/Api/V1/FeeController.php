@@ -25,4 +25,16 @@ class FeeController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function get($id) {
+        try {
+            $fee = $this->feeService->get($id);
+            return response()->json([
+                'fee' => $fee->fee
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }
