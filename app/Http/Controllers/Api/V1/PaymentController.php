@@ -21,7 +21,6 @@ class PaymentController extends Controller
                 'payment_method_id',
                 'voucher_id'
             ]);
-
             return $this->paymentService->checkout($data);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);

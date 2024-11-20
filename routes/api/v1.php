@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\V1\TeacherController;
 use App\Http\Controllers\Api\V1\VoucherController;
 use App\Http\Controllers\Api\V1\EmailVerificationController;
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\FeeController;
 use App\Http\Controllers\Api\V1\Teacher\TeacherRegistrationController;
 
 Route::prefix('/auth')
@@ -37,33 +38,32 @@ Route::prefix('/auth')
     }
 );
 
-Route::middleware('jwt.auth')->group(function () {
-    // Student
-    Route::post('/teachers/register', [TeacherController::class, 'registerTeacher']);
-    Route::post('/teachers/check', [TeacherController::class, 'checkTeacher']);
-    
-    Route::get('/course/{id}/information', [CourseController::class, 'getInfoCourse'])->withoutMiddleware('jwt.auth');
-    Route::get('/course/{id}/statistic', [CourseController::class, 'getStatisticCourse'])->withoutMiddleware('jwt.auth');
-    Route::get('/course/{id}/content', [CourseController::class, 'getContentCourse'])->withoutMiddleware('jwt.auth');
-    Route::get('/course/{id}/overview', [CourseController::class, 'getOverviewCourse'])->withoutMiddleware('jwt.auth');
-    Route::get('/course/{id}/teacher-information', [CourseController::class, 'getCourseTeacherInformation'])->withoutMiddleware('jwt.auth');
-    Route::get('/course/{id}/reviews', [ReviewController::class, 'getReviewCourse'])->withoutMiddleware('jwt.auth');
+// Student 
+Route::prefix('teachers')
+    ->middleware('verify.jwt.token')
+    ->group(function () {
+        Route::post('/register', [TeacherController::class, 'registerTeacher']);
+        Route::post('/check', [TeacherController::class, 'checkTeacher']);
+    }
+);
 
-    Route::post('/vouchers/check', [VoucherController::class, 'checkVoucher'])->withoutMiddleware('jwt.auth');
-    Route::post('/checkout', [PaymentController::class, 'checkout']);
-    Route::post('/confirm-webhook', [PaymentController::class, 'confirmWebhook'])->withoutMiddleware('jwt.auth');
-    Route::get('/cancel', [PaymentController::class, 'cancel'])->withoutMiddleware('jwt.auth');
+Route::prefix('admin')
+    ->middleware('verify.jwt.token')
+    ->group(function () {
+        // Category
+        Route::post('/categories', [CategoryController::class, 'storeCategories']);
 
-    // Learning
-    Route::prefix('/learning')->group(function () {
-        Route::get('/course/{id}/content', [CourseController::class, 'getPurchasedCourseContent']);
+        // Fee
+        Route::put('/fee/{id}', [FeeController::class, 'update']);
+    }
+);
 
-        Route::post('/course/{id}/chapter/{chapterId}/lesson/{lessonId}/complete', [LessonController::class, 'markLessonCompleted']);
-    });
-
-    // Teacher
-    Route::prefix('/teacher')->group(function () {
+// Teacher
+Route::prefix('/teacher')
+    ->middleware('verify.jwt.token')
+    ->group(function () {
         Route::get('/courses', [CourseController::class, 'getCoursesOfTeacher']);
+
         Route::post('/courses', [CourseController::class, 'createCourse']);
 
         Route::post('/course/{id}/chapters', [ChapterController::class, 'createChapter']);
@@ -73,11 +73,34 @@ Route::middleware('jwt.auth')->group(function () {
         Route::post('/course/{id}/chapter/{chapterId}/lesson/{lessonId}/videos', [LessonController::class, 'createVideo']);
 
         Route::post('/course/{id}/vouchers', [VoucherController::class, 'createVoucher']);
+
         Route::get('/course/{id}/vouchers', [VoucherController::class, 'getVouchersOfCourse']);
-    });
+    }
+);
 
-    // Category
-    Route::get('/categories', [CategoryController::class, 'getAllCategories'])->withoutMiddleware('jwt.auth');
-    Route::post('/categories', [CategoryController::class, 'storeCategories']);
-});
+// Learning
+Route::prefix('/learning')
+    ->middleware('verify.jwt.token')
+    ->group(function () {
+        Route::get('/course/{id}/content', [CourseController::class, 'getPurchasedCourseContent']);
 
+        Route::post('/course/{id}/chapter/{chapterId}/lesson/{lessonId}/complete', [LessonController::class, 'markLessonCompleted']);
+    }
+);
+
+// Category
+Route::get('/categories', [CategoryController::class, 'getAllCategories']);
+
+// Course
+Route::get('/course/{id}/information', [CourseController::class, 'getInfoCourse']);
+Route::get('/course/{id}/statistic', [CourseController::class, 'getStatisticCourse']);
+Route::get('/course/{id}/content', [CourseController::class, 'getContentCourse']);
+Route::get('/course/{id}/overview', [CourseController::class, 'getOverviewCourse']);
+Route::get('/course/{id}/teacher-information', [CourseController::class, 'getCourseTeacherInformation']);
+Route::get('/course/{id}/reviews', [ReviewController::class, 'getReviewCourse']);
+
+// Payment
+Route::post('/checkout', [PaymentController::class, 'checkout']);
+Route::post('/vouchers/check', [VoucherController::class, 'checkVoucher']);
+Route::post('/confirm-webhook', [PaymentController::class, 'confirmWebhook']);
+Route::get('/cancel', [PaymentController::class, 'cancel']);

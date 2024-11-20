@@ -16,4 +16,10 @@ class FeePlatformRepository implements FeePlatformRepositoryInterface
     {
         return TeacherFee::where('teacher_id', $id)->first()->fee ?? $this->getFee();
     }
+
+    public function updateFee(int $id, array $data)
+    {
+        $fee = FeePlatform::findOrFail($id);
+        return $fee->update($data);
+    }
 }
