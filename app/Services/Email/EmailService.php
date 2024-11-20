@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Mail;
+namespace App\Services\Email;
 
 use App\Contracts\EmailSenderInterface;
 use App\Notifications\Auth\VerificationEmailNotification;
@@ -23,4 +23,6 @@ class EmailService implements EmailSenderInterface
     // public function sendPaymentSuccessEmail($user, $order){
 
     // };
+    // sendWithdrawalSuccessfulEmail
+    // sendDepositlSuccessfulEmail
 }

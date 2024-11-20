@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+
 use App\Repositories\CategoryRepository;
 use App\Repositories\ChapterRepository;
 use App\Repositories\CourseRepository;
@@ -10,6 +11,8 @@ use App\Repositories\Interfaces\ChapterRepositoryInterface;
 use App\Repositories\Interfaces\CourseRepositoryInterface;
 use App\Repositories\Interfaces\LessonRepositoryInterface;
 use App\Repositories\UserRepository;
+use App\Repositories\TokenRepository;
+use App\Repositories\TeacherRepository;
 use Illuminate\Support\ServiceProvider;
 use App\Repositories\RefreshTokenRepository;
 use App\Repositories\Interfaces\UserRepositoryInterface;
@@ -21,10 +24,10 @@ use App\Repositories\Interfaces\TeacherWalletRepositoryInterface;
 use App\Repositories\Interfaces\VideoRepositoryInterface;
 use App\Repositories\LessonRepository;
 use App\Repositories\ReviewRepository;
-use App\Repositories\TeacherRepository;
 use App\Repositories\VoucherRepository;
 use App\Repositories\TeacherWalletRepository;
 use App\Repositories\VideoRepository;
+use App\Repositories\Interfaces\TokenRepositoryInterface;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -34,7 +37,6 @@ class RepositoryServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
-        $this->app->bind(RefreshTokenRepositoryInterface::class, RefreshTokenRepository::class);
         $this->app->bind(TeacherRepositoryInterface::class, TeacherRepository::class);
         $this->app->bind(TeacherWalletRepositoryInterface::class, TeacherWalletRepository::class);
         $this->app->bind(CourseRepositoryInterface::class, CourseRepository::class);
@@ -44,6 +46,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(VoucherRepositoryInterface::class, VoucherRepository::class);
         $this->app->bind(ReviewRepositoryInterface::class, ReviewRepository::class);
         $this->app->bind(CategoryRepositoryInterface::class, CategoryRepository::class);
+        $this->app->bind(TokenRepositoryInterface::class, TokenRepository::class);
     }
 
     /**

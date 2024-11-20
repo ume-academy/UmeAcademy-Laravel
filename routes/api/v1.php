@@ -1,9 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\V1\Auth\LoginController;
-use App\Http\Controllers\Api\V1\Auth\RegistrationController;
-use App\Http\Controllers\Api\V1\Auth\VerificationController;
 use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\ChapterController;
 use App\Http\Controllers\Api\V1\CourseController;
@@ -11,20 +8,32 @@ use App\Http\Controllers\Api\V1\LessonController;
 use App\Http\Controllers\Api\V1\ReviewController;
 use App\Http\Controllers\Api\V1\TeacherController;
 use App\Http\Controllers\Api\V1\VoucherController;
+use App\Http\Controllers\Api\V1\EmailVerificationController;
+use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\Teacher\TeacherRegistrationController;
 
 Route::prefix('/auth')
-->middleware(['api', 'jwt.auth'])
-->group(function () {
-    Route::post('/register', [RegistrationController::class, 'registerWithEmail'])->withoutMiddleware('jwt.auth');
-    Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
-    ->name('verification.verify')->withoutMiddleware('jwt.auth');
+    ->group(function () {
 
-    Route::post('/email/resend', [VerificationController::class, 'resend'])
-    ->name('verification.resend')->withoutMiddleware('jwt.auth');
+        Route::post('/register/{type}', [AuthController::class, 'register']);
 
-    Route::post('/login', [LoginController::class, 'loginWithEmail'])->withoutMiddleware('jwt.auth');
-    // Route::post('/logout', [AuthController::class, 'logout']);
-});
+        Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])
+            ->name('verification.verify');
+
+        Route::post('/email/resendVerificationEmail', [EmailVerificationController::class, 'resendVerificationEmail'])
+            ->name('verification.resend');
+
+        Route::post('/login/{type}', [AuthController::class, 'login']);
+
+        // Các route cần xác thực JWT
+        Route::middleware('verify.jwt.token')
+            ->group(function () {
+                Route::post('/logout', [AuthController::class, 'logout']);
+                Route::post('/refreshToken', [AuthController::class, 'refreshTokens']);
+            }
+        );
+    }
+);
 
 Route::middleware('jwt.auth')->group(function () {
     // Student
