@@ -35,4 +35,10 @@ class CourseRepository implements CourseRepositoryInterface
                 $query->where('user_id', $userId);
             })->get();
     }
+
+    // Đồng bộ dữ liệu vào bảng course_enrolled
+    public function syncCourseEnrolled(Course $course, array $userIds)
+    {
+        return $course->courseEnrolled()->attach($userIds);
+    }
 }

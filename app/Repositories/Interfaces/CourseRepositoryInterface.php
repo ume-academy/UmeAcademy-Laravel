@@ -2,6 +2,8 @@
 
 namespace App\Repositories\Interfaces;
 
+use App\Models\Course;
+
 interface CourseRepositoryInterface
 {
     public function getByTeacher(int $id, int $perPage);
@@ -9,4 +11,5 @@ interface CourseRepositoryInterface
     public function find(int $id);
     public function getById(int $id);
     public function completedLessons(int $courseId, int $userId);
+    public function syncCourseEnrolled(Course $course, array $userIds);
 }
