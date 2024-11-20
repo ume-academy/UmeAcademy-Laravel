@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+
 use App\Repositories\CategoryRepository;
 use App\Repositories\ChapterRepository;
 use App\Repositories\CourseRepository;
@@ -12,6 +13,8 @@ use App\Repositories\Interfaces\CourseRepositoryInterface;
 use App\Repositories\Interfaces\FeePlatformRepositoryInterface;
 use App\Repositories\Interfaces\LessonRepositoryInterface;
 use App\Repositories\UserRepository;
+use App\Repositories\TokenRepository;
+use App\Repositories\TeacherRepository;
 use Illuminate\Support\ServiceProvider;
 use App\Repositories\RefreshTokenRepository;
 use App\Repositories\Interfaces\UserRepositoryInterface;
@@ -26,13 +29,13 @@ use App\Repositories\Interfaces\VideoRepositoryInterface;
 use App\Repositories\Interfaces\VoucherUsageRepositoryInterface;
 use App\Repositories\LessonRepository;
 use App\Repositories\ReviewRepository;
-use App\Repositories\TeacherRepository;
 use App\Repositories\VoucherRepository;
 use App\Repositories\TeacherWalletRepository;
 use App\Repositories\TeacherWalletTransactionRepository;
 use App\Repositories\TransactionRepository;
 use App\Repositories\VideoRepository;
 use App\Repositories\VoucherUsageRepository;
+use App\Repositories\Interfaces\TokenRepositoryInterface;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -42,7 +45,6 @@ class RepositoryServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
-        $this->app->bind(RefreshTokenRepositoryInterface::class, RefreshTokenRepository::class);
         $this->app->bind(TeacherRepositoryInterface::class, TeacherRepository::class);
         $this->app->bind(TeacherWalletRepositoryInterface::class, TeacherWalletRepository::class);
         $this->app->bind(CourseRepositoryInterface::class, CourseRepository::class);
@@ -56,6 +58,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(TransactionRepositoryInterface::class, TransactionRepository::class);
         $this->app->bind(VoucherUsageRepositoryInterface::class, VoucherUsageRepository::class);
         $this->app->bind(TeacherWalletTransactionRepositoryInterface::class, TeacherWalletTransactionRepository::class);
+        $this->app->bind(TokenRepositoryInterface::class, TokenRepository::class);
     }
 
     /**

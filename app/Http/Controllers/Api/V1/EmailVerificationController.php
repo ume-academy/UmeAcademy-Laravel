@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1\Auth;
+namespace App\Http\Controllers\Api\V1;
 
 use App\Models\User;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\VerificationRequest;
+use App\Http\Requests\Auth\ResendEmailRequest;
 use Illuminate\Support\Facades\Cache;
 
-class VerificationController extends Controller
+class EmailVerificationController extends Controller
 {
     public function verify($id, $hash)
     {
@@ -28,7 +28,7 @@ class VerificationController extends Controller
         return response()->json(['message' => 'Email đã được xác minh thành công.'], 200);
     }
 
-    public function resend(VerificationRequest $request)
+    public function resend(ResendEmailRequest $request)
     {
         $user = User::where('email', $request->email)->first();
 

@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class VerificationRequest extends FormRequest
+class ResendEmailRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
