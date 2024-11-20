@@ -18,4 +18,8 @@ class VoucherRepository implements VoucherRepositoryInterface
     public function getByCode($code) {
         return Voucher::where('code', $code)->first();
     }
+
+    public function find(int $id) {
+        return Voucher::findOrFail($id);
+    }
 }

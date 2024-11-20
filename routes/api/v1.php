@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\ChapterController;
 use App\Http\Controllers\Api\V1\CourseController;
 use App\Http\Controllers\Api\V1\LessonController;
+use App\Http\Controllers\Api\V1\PaymentController;
 use App\Http\Controllers\Api\V1\ReviewController;
 use App\Http\Controllers\Api\V1\TeacherController;
 use App\Http\Controllers\Api\V1\VoucherController;
@@ -49,6 +50,9 @@ Route::middleware('jwt.auth')->group(function () {
     Route::get('/course/{id}/reviews', [ReviewController::class, 'getReviewCourse'])->withoutMiddleware('jwt.auth');
 
     Route::post('/vouchers/check', [VoucherController::class, 'checkVoucher'])->withoutMiddleware('jwt.auth');
+    Route::post('/checkout', [PaymentController::class, 'checkout']);
+    Route::post('/confirm-webhook', [PaymentController::class, 'confirmWebhook'])->withoutMiddleware('jwt.auth');
+    Route::get('/cancel', [PaymentController::class, 'cancel'])->withoutMiddleware('jwt.auth');
 
     // Learning
     Route::prefix('/learning')->group(function () {
