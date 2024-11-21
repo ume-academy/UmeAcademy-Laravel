@@ -114,6 +114,11 @@ class CourseService
         }
     }
 
+    public function getPurchasedCourses($perPage) {
+        $user = JWTAuth::parseToken()->authenticate();
+
+        return $this->courseRepo->getCourseOfStudent($user, $perPage);
+    }
 
 
     // Xử lý ảnh thumbnail

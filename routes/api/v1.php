@@ -47,6 +47,12 @@ Route::prefix('teachers')
     }
 );
 
+Route::middleware('verify.jwt.token')->group(function() {
+    Route::get('/purchased-courses', [CourseController::class, 'getPurchasedCourses']);
+});
+
+
+// Admin
 Route::prefix('admin')
     ->middleware('verify.jwt.token')
     ->group(function () {
