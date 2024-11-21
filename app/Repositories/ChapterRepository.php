@@ -15,4 +15,10 @@ class ChapterRepository implements ChapterRepositoryInterface
     public function find(int $id) {
         return Chapter::findOrFail($id);
     }
+
+    public function update(int $id, array $data) {
+        $chapter = $this->find($id);
+
+        return $chapter->update($data);
+    }
 }

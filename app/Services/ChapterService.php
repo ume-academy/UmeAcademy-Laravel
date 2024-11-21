@@ -24,4 +24,16 @@ class ChapterService
 
         return $this->chapterRepo->create($data);
     }
+
+    public function updateChapter($chapterId, $data) {
+        $teacher = $this->validateTeacher();
+        
+        // Kiểm tra quyền sở hữu của khóa học
+        $course = $this->validateCourse($teacher, $data['course_id']);
+        $this->validateChapter($course, $chapterId);
+
+        $data = ['name' => $data['name']];
+        
+        return $this->chapterRepo->update($chapterId, $data);
+    }
 }
