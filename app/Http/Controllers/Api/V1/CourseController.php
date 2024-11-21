@@ -111,4 +111,15 @@ class CourseController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function getPurchasedCourses(Request $req) {
+        try {
+            $perPage = $req->input('per_page', 8);
+
+            $courses = $this->courseService->getPurchasedCourses($perPage);
+            return CourseResource::collection($courses);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }

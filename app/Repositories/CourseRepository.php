@@ -41,4 +41,9 @@ class CourseRepository implements CourseRepositoryInterface
     {
         return $course->courseEnrolled()->attach($userIds);
     }
+
+    // Lấy khóa học đã mua của học sinh
+    public function getCourseOfStudent($user, $perPage) {
+        return $user->enrolledCourses()->paginate($perPage);
+    }
 }
