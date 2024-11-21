@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\V1\VoucherController;
 use App\Http\Controllers\Api\V1\EmailVerificationController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\FeeController;
+use App\Http\Controllers\Api\V1\PaymentMethodController;
 use App\Http\Controllers\Api\V1\Teacher\TeacherRegistrationController;
 use App\Services\EmailVerificationService;
 
@@ -63,6 +64,10 @@ Route::prefix('admin')
         // Fee
         Route::put('/fee/{id}', [FeeController::class, 'update']);
         Route::get('/fee/{id}', [FeeController::class, 'get']);
+
+        Route::post('/payment-methods', [PaymentMethodController::class, 'createPaymentMethod']);
+        Route::put('/payment-methods/{id}', [PaymentMethodController::class, 'updatePaymentMethod']);
+        Route::delete('/payment-methods/{id}', [PaymentMethodController::class, 'deletePaymentMethod']);
     }
 );
 
@@ -123,3 +128,5 @@ Route::post('/confirm-webhook', [PaymentController::class, 'confirmWebhook']);
 Route::get('/cancel', [PaymentController::class, 'cancel']);
 
 Route::get('teacher/{id}', [TeacherController::class, 'getInfoTeacher']);
+
+Route::get('/payment-methods', [PaymentMethodController::class, 'getAllPaymentMethod']);

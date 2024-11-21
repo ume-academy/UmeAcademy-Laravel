@@ -36,8 +36,8 @@ class PayOSService
                     'quantity' => 1
                 ]
             ],
-            "returnUrl" => env('APP_URL') . "/course/$course->id",
-            "cancelUrl" => "http://127.0.0.1:8000/api/v1/cancel"
+            "returnUrl" => "https::/umeacademy.online/course/$course->id",
+            "cancelUrl" => env('APP_URL') . "/api/v1/cancel"
         ];
 
         $response = $payOS->createPaymentLink($data);
