@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Course\StoreCourseRequest;
+use App\Http\Requests\Course\UpdateCourseRequest;
 use App\Http\Resources\Course\ContentCoursePurchasedResource;
 use App\Http\Resources\Course\ContentCourseResource;
 use App\Http\Resources\Course\CourseResource;
@@ -118,6 +119,26 @@ class CourseController extends Controller
 
             $courses = $this->courseService->getPurchasedCourses($perPage);
             return CourseResource::collection($courses);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function getCourse($id) {
+        try {
+            $course = $this->courseService->getCourse($id);
+            return new CourseResource($course);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function updateCourse(UpdateCourseRequest $req, $id) {
+        try {
+            $data = $req->all();
+            
+            $course = $this->courseService->updateCourse($id, $data);
+            return new CourseResource($course);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }

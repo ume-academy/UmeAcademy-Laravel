@@ -120,6 +120,40 @@ class CourseService
         return $this->courseRepo->getCourseOfStudent($user, $perPage);
     }
 
+    public function getCourse($id) {
+        $teacher = $this->validateTeacher();
+
+        // Kiểm tra quyền sở hữu của khóa học
+        $this->validateCourse($teacher, $id);
+
+        return $this->courseRepo->find($id);
+    }
+    
+    public function updateCourse($id, $data) {
+        $teacher = $this->validateTeacher();
+
+        // Kiểm tra quyền sở hữu của khóa học
+        $this->validateCourse($teacher, $id);
+
+        $course = $this->courseRepo->find($id);      
+
+        // Kiểm tra nếu không up ảnh mới thì sẽ dùng lại ảnh cũ 
+        if (isset($data['thumbnail'])) {
+            $data['thumbnail'] = $this->handleThumbnail($data['thumbnail']);
+        } else {
+            $data['thumbnail'] = $course->thumbnail;
+        }
+
+        if(isset($data['video'])) {
+            $data['video'] = $this->handleVideo($data['video']);
+        }
+
+        // Cập nhật vào db
+        $this->courseRepo->update($id, $data);
+
+        $updatedCourse = $this->courseRepo->find($id);
+        return $updatedCourse;
+    }
 
     // Xử lý ảnh thumbnail
     private function handleThumbnail($file)
@@ -139,5 +173,14 @@ class CourseService
         ];
 
         return $this->chapterRepo->create($dataChapter);
+    }
+
+    // Xử lý ảnh video
+    private function handleVideo($file)
+    {
+        $fileName = HandleFileTrait::generateName($file);
+        HandleFileTrait::uploadFile($file, $fileName, 'courses', true);
+        
+        return $fileName;
     }
 }
