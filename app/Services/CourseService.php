@@ -195,6 +195,21 @@ class CourseService
         return $this->courseApprovalRepo->create($data);
     }
 
+    public function updateTargetCourse($id, $data) {
+        $teacher = $this->validateTeacher();
+
+        // Kiểm tra quyền sở hữu của khóa học
+        $this->validateCourse($teacher, $id);
+
+        $data['course_requirement'] = $data['data']['course_requirement'];
+        $data['course_learning_benefit'] = $data['data']['course_learning_benefit'];
+
+        // Cập nhật vào db
+        $this->courseRepo->update($id, $data);
+
+        $updatedCourse = $this->courseRepo->find($id);
+        return $updatedCourse;
+    }
 
 
     // Xử lý ảnh thumbnail

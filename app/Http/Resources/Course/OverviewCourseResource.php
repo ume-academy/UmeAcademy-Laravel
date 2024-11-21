@@ -19,8 +19,8 @@ class OverviewCourseResource extends JsonResource
             'name' => $this->name ?? null,
             'summary' => $this->summary ?? null,
             'description' => $this->description ?? null,
+            'course_requirement' => $this->course_requirement,
             'course_learning_benefit' => $this->course_learning_benefit,
-            'course_requirement' => $this->course_requirement
         ];
     }
 }
