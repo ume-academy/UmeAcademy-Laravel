@@ -13,16 +13,17 @@ use App\Http\Controllers\Api\V1\EmailVerificationController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\FeeController;
 use App\Http\Controllers\Api\V1\Teacher\TeacherRegistrationController;
+use App\Services\EmailVerificationService;
 
 Route::prefix('/auth')
     ->group(function () {
 
         Route::post('/register/{type}', [AuthController::class, 'register']);
 
-        Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])
+        Route::get('/email/verify/{id}/{hash}', [EmailVerificationService::class, 'verifyEmail'])
             ->name('verification.verify');
 
-        Route::post('/email/resendVerificationEmail', [EmailVerificationController::class, 'resendVerificationEmail'])
+        Route::post('/email/resendVerificationEmail', [EmailVerificationService::class, 'resendVerificationEmail'])
             ->name('verification.resend');
 
         Route::post('/login/{type}', [AuthController::class, 'login']);

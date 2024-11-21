@@ -25,7 +25,13 @@ class LoginRequest extends FormRequest
     {
         return [
             'email' => 'required|email',
-            'password' => 'required',
+            'password' => [
+                'required',
+                'min:8',
+                'max:32',
+                'regex:/[A-Za-z0-9]/', 
+                'regex:/[!@#$%^&*]/', 
+            ],
         ];
     }
 
@@ -35,6 +41,9 @@ class LoginRequest extends FormRequest
             'email.required' => 'Trường email là bắt buộc',
             'email.email' => 'Email không đúng định dạng',
             'password.required' => 'Mật khẩu là bắt buộc.',
+            'password.min' => 'Mật khẩu phải có ít nhất :min ký tự.',
+            'password.max' => 'Mật khẩu không được vượt quá :max ký tự.',
+            'password.regex' => 'Mật khẩu bao gồm a-z, A-Z, 0-9 và phải chứa ít nhất một ký tự đặc biệt.',
         ];
     }
 

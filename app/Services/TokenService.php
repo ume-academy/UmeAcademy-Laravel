@@ -14,8 +14,8 @@ class TokenService implements TokenServiceInterface
     public function __construct(
         protected TokenRepositoryInterface $tokenRepository, 
         protected UserRepositoryInterface $userRepository, 
-        ) 
-        {}
+    ) 
+    {}
         
     public function generateTokens(object $user) 
     {
@@ -53,10 +53,6 @@ class TokenService implements TokenServiceInterface
 
     public function refreshTokens(string $refreshToken) 
     {
-//         $cacheFiles = File::files(storage_path('framework/cache/data'));
-//         $keys = Cache::store('file')->keys('*');
-// return($keys);
-// return $this->isRefreshTokenBlacklisted("00121");
         // Kiểm tra xem refresh_token có trong blacklist không
         if ($this->isRefreshTokenBlacklisted($refreshToken)) {
             /* 
@@ -76,7 +72,8 @@ class TokenService implements TokenServiceInterface
         
         // Kiểm tra refresh token có hợp lệ không
         $storedToken = $this->tokenRepository->getRefreshToken($userId);
-        if ($storedToken !== $refreshToken) {
+        // return $storedToken;
+        if ($storedToken->refresh_token !== $refreshToken) {
             return ['error' => 'Refresh token không hợp lệ.'];
             // tra ve Exception
         }

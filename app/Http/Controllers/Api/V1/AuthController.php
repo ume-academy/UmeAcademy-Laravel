@@ -11,6 +11,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Exceptions\Auth\EmailNotVerifiedException;
+use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use App\Exceptions\Auth\InvalidCredentialsException;
 
 class AuthController extends Controller
@@ -61,7 +62,11 @@ class AuthController extends Controller
             
             $data = $this->authService->logout($acccessToken, $refreshToken);
             return $data;
+        } catch (TokenInvalidException $e) {
+            return response()->json(['error' => $e->getMessage()], 401);
         } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        } catch (JWTException $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         } 
     }
@@ -82,9 +87,7 @@ class AuthController extends Controller
 
             $userData = $this->userService->me($user->id);
 
-            return response()->json([
-                'data' => $userData,
-            ], 200);
+            return new UserResource($userData);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }

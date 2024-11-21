@@ -18,7 +18,7 @@ class TokenRepository implements TokenRepositoryInterface
 
     public function getRefreshToken(int $userId) 
     {
-        return RefreshToken::where('user_id', $userId)->get('refresh_token');
+        return RefreshToken::where('user_id', $userId)->first('refresh_token');
     }
 
     public function deleteRefreshToken(string $refreshToken) 

@@ -8,6 +8,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Factories\RegistrationFactory;
 use Illuminate\Support\Facades\Cookie;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 
 class AuthService
 {
@@ -38,11 +39,16 @@ class AuthService
         return $this->tokenService->generateTokens($user);
     }
 
-    public function logout(string $accessToken, string $refreshToken)
+    public function logout($accessToken, $refreshToken)
     {
         if (empty($refreshToken)) {
-            return ['error' => 'Refresh token không được cung cấp.'];
+            throw new TokenInvalidException('Refresh token không được cung cấp.');
         }
+
+        if (empty($accessToken)) {
+            throw new TokenInvalidException('Access token không được cung cấp.');
+        }
+
         try {
 
             // Giải mã refresh token để lấy user_id và device_id
@@ -60,12 +66,12 @@ class AuthService
             JWTAuth::invalidate($accessToken);
             return ['message' => 'Đã đăng xuất thành công.'];
         } catch (JWTException $e) {
-            return ['error' => 'Đăng xuất thất bại'];
+            return ['error' => 'Đăng xuất thất bại.'];
         }
 
     }
 
-    public function refreshTokens(string $refreshToken)
+    public function refreshTokens($refreshToken)
     {
         if (!$refreshToken) {
             return ['error' => 'Refresh token không được cung cấp. Vui lòng đăng nhập lại.'];
@@ -74,5 +80,5 @@ class AuthService
         return $this->tokenService->refreshTokens($refreshToken);
     }
 
-    // Other auth-related methods (login, logout, forgotPassword) omitted for brevity
+    // forgotPassword
 }
