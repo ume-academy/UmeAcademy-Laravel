@@ -85,6 +85,8 @@ Route::prefix('/teacher')
 
         Route::get('/course/{id}', [CourseController::class, 'getCourse']);
         Route::put('/course/{id}', [CourseController::class, 'updateCourse']);
+
+        Route::post('/course/{id}/course-approval-request', [CourseController::class, 'requestApprovalCourse']);
     }
 );
 

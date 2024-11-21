@@ -3,10 +3,13 @@
 namespace App\Services;
 
 use App\Repositories\Interfaces\ChapterRepositoryInterface;
+use App\Repositories\Interfaces\CourseApprovalRepositoryInterface;
 use App\Repositories\Interfaces\CourseRepositoryInterface;
 use App\Traits\HandleFileTrait;
 use App\Traits\ValidationTrait;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -17,6 +20,7 @@ class CourseService
     public function __construct(
         private CourseRepositoryInterface $courseRepo,
         private ChapterRepositoryInterface $chapterRepo,
+        private CourseApprovalRepositoryInterface $courseApprovalRepo,
     ){}
 
     public function createCourse(array $data)
@@ -154,6 +158,44 @@ class CourseService
         $updatedCourse = $this->courseRepo->find($id);
         return $updatedCourse;
     }
+
+    public function requestApprovalCourse($id) {
+        $teacher = $this->validateTeacher();
+
+        // Kiểm tra quyền sở hữu của khóa học
+        $this->validateCourse($teacher, $id);
+
+        $course = $this->courseRepo->find($id);
+        $courseValidator = Validator::make($course->toArray(), [
+            'name' => 'required',
+            'summary' => 'required',
+            'price' => 'required|numeric|gt:0',
+            'thumbnail' => 'required'
+        ], [
+            'name.required' => 'name không được bỏ trống.',
+
+            'summary.required' => 'summary không được bỏ trống.',
+
+            'price.required' => 'price không được bỏ trống.',
+            'price.numeric' => 'price phải là số.',
+            'price.gt' => 'price phải > 0.',
+
+            'thumbnail.required' => 'thumbnail không được bỏ trống.'
+        ]);
+
+        if ($courseValidator->fails()) {
+            throw new ValidationException($courseValidator);
+        }
+
+        $data = [
+            'teacher_id' => $teacher->id,
+            'course_id' => $course->id,
+        ];
+
+        return $this->courseApprovalRepo->create($data);
+    }
+
+
 
     // Xử lý ảnh thumbnail
     private function handleThumbnail($file)
