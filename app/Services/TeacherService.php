@@ -51,4 +51,8 @@ class TeacherService
 
         return false;
     }
+
+    public function getInfoTeacher($id) {
+        return $this->teacherRepo->getById($id);
+    }
 }

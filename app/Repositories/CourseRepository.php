@@ -46,4 +46,10 @@ class CourseRepository implements CourseRepositoryInterface
     public function getCourseOfStudent($user, $perPage) {
         return $user->enrolledCourses()->paginate($perPage);
     }
+
+    public function update(int $id, array $data) {
+        $course = $this->find($id);
+
+        return $course->update($data);
+    }
 }

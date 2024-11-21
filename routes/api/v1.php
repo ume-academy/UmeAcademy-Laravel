@@ -82,6 +82,9 @@ Route::prefix('/teacher')
         Route::post('/course/{id}/vouchers', [VoucherController::class, 'createVoucher']);
 
         Route::get('/course/{id}/vouchers', [VoucherController::class, 'getVouchersOfCourse']);
+
+        Route::get('/course/{id}', [CourseController::class, 'getCourse']);
+        Route::put('/course/{id}', [CourseController::class, 'updateCourse']);
     }
 );
 
@@ -111,3 +114,5 @@ Route::post('/checkout', [PaymentController::class, 'checkout']);
 Route::post('/vouchers/check', [VoucherController::class, 'checkVoucher']);
 Route::post('/confirm-webhook', [PaymentController::class, 'confirmWebhook']);
 Route::get('/cancel', [PaymentController::class, 'cancel']);
+
+Route::get('teacher/{id}', [TeacherController::class, 'getInfoTeacher']);
