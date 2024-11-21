@@ -20,4 +20,10 @@ class LessonRepository implements LessonRepositoryInterface
     {
         return $lesson->lessonCompleted()->attach($userIds);
     }
+
+    public function update(int $id, array $data) {
+        $lesson = $this->find($id);
+
+        return $lesson->update($data);
+    }
 }

@@ -54,10 +54,17 @@ class CourseController extends Controller
         try {
             $course = $this->courseService->getInfoCourse($id);
             
-            return (new CourseResource($course))->additional([
-                'is_wishlist' => $course->is_wishlist,
-                'is_enrolled' => $course->is_enrolled
-            ]);
+            $courseData = (new CourseResource($course))->resolve();
+
+            // merge vào data
+            $response = [
+                'data' => array_merge($courseData, [
+                    'is_wishlist' => $course->is_wishlist,
+                    'is_enrolled' => $course->is_enrolled,
+                ]),
+            ];
+
+            return response()->json($response, 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }

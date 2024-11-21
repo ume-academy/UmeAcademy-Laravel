@@ -75,8 +75,10 @@ Route::prefix('/teacher')
         Route::post('/courses', [CourseController::class, 'createCourse']);
 
         Route::post('/course/{id}/chapters', [ChapterController::class, 'createChapter']);
+        Route::put('/course/{id}/chapter/{chapterId}', [ChapterController::class, 'updateChapter']);
 
         Route::post('/course/{id}/chapter/{chapterId}/lessons', [LessonController::class, 'createLesson']);
+        Route::put('/course/{id}/chapter/{chapterId}/lesson/{lessonId}', [LessonController::class, 'updateLesson']);
         
         Route::post('/course/{id}/chapter/{chapterId}/lesson/{lessonId}/videos', [LessonController::class, 'createVideo']);
 

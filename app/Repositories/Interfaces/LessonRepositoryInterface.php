@@ -9,4 +9,5 @@ interface LessonRepositoryInterface
     public function create(array $data);
     public function find(int $id);
     public function syncLessonCompleted(Lesson $lesson, array $userIds);
+    public function update(int $id, array $data);
 }
