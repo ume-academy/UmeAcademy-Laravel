@@ -153,4 +153,15 @@ class CourseController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function updateTargetCourse(Request $req, $id) {
+        try {
+            $data = $req->only('data');
+
+            $course = $this->courseService->updateTargetCourse($id, $data);
+            return new OverviewCourseResource($course);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }
