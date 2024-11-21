@@ -13,10 +13,12 @@ use App\Services\Auth\LoginViaEmailService;
 use App\Contracts\EmailVerificationInterface;
 use App\Contracts\RefreshTokenInterface;
 use App\Repositories\Interfaces\CategoryRepositoryInterface;
+use App\Repositories\Interfaces\WithdrawMethodRepositoryInterface;
 use App\Services\Auth\EmailVerificationService;
 use App\Services\Auth\RefreshTokenService;
 use App\Services\Auth\RegistrationViaEmailService;
 use App\Services\CategoryService;
+use App\Services\WithdrawMethodService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -32,6 +34,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(TokenInterface::class, TokenService::class);
         $this->app->bind(RefreshTokenInterface::class, RefreshTokenService::class);
         $this->app->bind(CategoryRepositoryInterface::class, CategoryService::class);
+        $this->app->bind( WithdrawMethodRepositoryInterface::class, WithdrawMethodService::class);
     }
 
     /**
