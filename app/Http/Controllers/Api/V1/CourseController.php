@@ -143,4 +143,14 @@ class CourseController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function requestApprovalCourse($id) {
+        try {
+            $this->courseService->requestApprovalCourse($id);
+            return response()->json(['message' => 'Gửi yêu cầu phê duyệt khóa học thành công']);
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }

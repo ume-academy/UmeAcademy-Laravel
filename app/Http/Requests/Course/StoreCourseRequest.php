@@ -56,7 +56,6 @@ class StoreCourseRequest extends FormRequest
 
     protected function failedValidation(Validator $validator) {
         throw new HttpResponseException(response()->json([
-            'message' => 'Thêm mới khóa học không thành công',
             'errors' => $validator->errors()
         ], 500));
     } 

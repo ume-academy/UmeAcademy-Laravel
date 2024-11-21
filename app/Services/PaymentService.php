@@ -98,7 +98,9 @@ class PaymentService
 
         // Voucher usage 
         $voucherUsage = $this->voucherUsageRepo->getByTransaction($transaction->id);
-        $this->voucherUsageRepo->delete($voucherUsage->id);
+        if($voucherUsage) {
+            $this->voucherUsageRepo->delete($voucherUsage->id);
+        }
     }
 
 

@@ -5,10 +5,12 @@ namespace App\Providers;
 
 use App\Repositories\CategoryRepository;
 use App\Repositories\ChapterRepository;
+use App\Repositories\CourseApprovalRepository;
 use App\Repositories\CourseRepository;
 use App\Repositories\FeePlatformRepository;
 use App\Repositories\Interfaces\CategoryRepositoryInterface;
 use App\Repositories\Interfaces\ChapterRepositoryInterface;
+use App\Repositories\Interfaces\CourseApprovalRepositoryInterface;
 use App\Repositories\Interfaces\CourseRepositoryInterface;
 use App\Repositories\Interfaces\FeePlatformRepositoryInterface;
 use App\Repositories\Interfaces\LessonRepositoryInterface;
@@ -59,6 +61,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(VoucherUsageRepositoryInterface::class, VoucherUsageRepository::class);
         $this->app->bind(TeacherWalletTransactionRepositoryInterface::class, TeacherWalletTransactionRepository::class);
         $this->app->bind(TokenRepositoryInterface::class, TokenRepository::class);
+        $this->app->bind(CourseApprovalRepositoryInterface::class, CourseApprovalRepository::class);
     }
 
     /**
