@@ -52,4 +52,8 @@ class CourseRepository implements CourseRepositoryInterface
 
         return $course->update($data);
     }
+    
+    public function getByIds(array $ids) {
+        return Course::whereIn('id', $ids)->get();
+    }
 }

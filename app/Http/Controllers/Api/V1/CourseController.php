@@ -171,4 +171,15 @@ class CourseController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function getCourseByIds(Request $req) {
+        try {
+            $ids = $req->input('ids');
+
+            $courses = $this->courseService->getCourseByIds($ids);
+            return CourseResource::collection($courses);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }

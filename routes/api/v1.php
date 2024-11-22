@@ -124,6 +124,7 @@ Route::get('/course/{id}/content', [CourseController::class, 'getContentCourse']
 Route::get('/course/{id}/overview', [CourseController::class, 'getOverviewCourse']);
 Route::get('/course/{id}/teacher-information', [CourseController::class, 'getCourseTeacherInformation']);
 Route::get('/course/{id}/reviews', [ReviewController::class, 'getReviewCourse']);
+Route::get('/courses', [CourseController::class, 'getCourseByIds']);
 
 // Payment
 Route::post('/checkout', [PaymentController::class, 'checkout']);
