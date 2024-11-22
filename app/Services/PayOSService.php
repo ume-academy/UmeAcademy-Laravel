@@ -36,7 +36,7 @@ class PayOSService
                     'quantity' => 1
                 ]
             ],
-            "returnUrl" => "https::/umeacademy.online/course/$course->id",
+            "returnUrl" => "https://umeacademy.online/course/$course->id",
             "cancelUrl" => env('APP_URL') . "/api/v1/cancel"
         ];
 

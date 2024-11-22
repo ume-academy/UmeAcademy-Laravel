@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\FeeController;
 use App\Http\Controllers\Api\V1\PaymentMethodController;
 use App\Http\Controllers\Api\V1\Teacher\TeacherRegistrationController;
+use App\Http\Controllers\Api\V1\UserController;
 use App\Services\EmailVerificationService;
 
 Route::prefix('/auth')
@@ -65,9 +66,12 @@ Route::prefix('admin')
         Route::put('/fee/{id}', [FeeController::class, 'update']);
         Route::get('/fee/{id}', [FeeController::class, 'get']);
 
+        // Payment method
         Route::post('/payment-methods', [PaymentMethodController::class, 'createPaymentMethod']);
         Route::put('/payment-methods/{id}', [PaymentMethodController::class, 'updatePaymentMethod']);
         Route::delete('/payment-methods/{id}', [PaymentMethodController::class, 'deletePaymentMethod']);
+
+        Route::get('/users', [UserController::class, 'getListUser']);
     }
 );
 
