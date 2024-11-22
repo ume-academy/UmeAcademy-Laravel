@@ -211,6 +211,11 @@ class CourseService
         return $updatedCourse;
     }
 
+    public function getCourseByIds($ids) {
+        $data = explode(',', $ids);
+        return $this->courseRepo->getByIds($data);
+    }
+
 
     // Xử lý ảnh thumbnail
     private function handleThumbnail($file)
