@@ -48,4 +48,8 @@ class UserRepository implements UserRepositoryInterface
         $user->refresh_token = $refreshToken;
         $user->save();
     }
+
+    public function getAllUser($perPage) {
+        return User::paginate($perPage);
+    }
 }
