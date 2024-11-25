@@ -5,11 +5,14 @@ namespace App\Services;
 use App\Exceptions\Teacher\AlreadyTeacherException;
 use App\Repositories\Interfaces\TeacherRepositoryInterface;
 use App\Repositories\Interfaces\TeacherWalletRepositoryInterface;
+use App\Traits\ValidationTrait;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class TeacherService
 {
+    use ValidationTrait;
+
     public function __construct(
         private TeacherRepositoryInterface $teacherRepo,
         private TeacherWalletRepositoryInterface $teacherWalletRepo
@@ -54,5 +57,10 @@ class TeacherService
 
     public function getInfoTeacher($id) {
         return $this->teacherRepo->getById($id);
+    }
+
+    public function getWalletBalance() {
+        $teacher = $this->validateTeacher();
+        return $this->teacherWalletRepo->getByTeacherId($teacher->id);
     }
 }

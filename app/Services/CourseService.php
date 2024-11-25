@@ -192,7 +192,12 @@ class CourseService
             'course_id' => $course->id,
         ];
 
-        return $this->courseApprovalRepo->create($data);
+        $courseApproval = $this->courseApprovalRepo->create($data);
+        if($courseApproval) {
+            $this->courseRepo->updateStatus($course->id, 1);
+        }
+
+        return $courseApproval;
     }
 
     public function updateTargetCourse($id, $data) {

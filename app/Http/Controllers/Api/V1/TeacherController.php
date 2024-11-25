@@ -41,4 +41,13 @@ class TeacherController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function getWalletBalance() {
+        try {
+            $wallet = $this->teacherService->getWalletBalance();
+            return response()->json(['data' => $wallet->available_balance]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }
