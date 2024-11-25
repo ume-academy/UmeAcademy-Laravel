@@ -224,16 +224,23 @@ class CourseService
     }
 
     public function getStudentsOfCourse($id, $perPage) {
+        $teacher = $this->validateTeacher();
+
         $course = $this->courseRepo->getById($id);
 
-        $users = $course->courseEnrolled()->paginate($perPage);
+        // Kiểm tra quyền sở hữu của khóa học
+        $this->validateCourse($teacher, $id);
+
+        $students = $course->courseEnrolled()->paginate($perPage);
 
         // Duyệt qua từng học viên và thêm thông tin về tiến độ
-        return $users->getCollection()->transform(function ($user) use ($course) {
+        $students->getCollection()->transform(function ($user) use ($course) {
             $user->progress = $this->courseRepo->completedLessons($course->id, $user->pivot->user_id)->count() / $course->total_lesson * 100;
             
             return $user;
         });
+
+        return $students;
     }
 
     // Xử lý ảnh thumbnail
