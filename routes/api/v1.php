@@ -106,6 +106,8 @@ Route::prefix('/teacher')
         Route::get('/wallet-balance', [TeacherController::class, 'getWalletBalance']);
 
         Route::get('/course/{id}/students', [CourseController::class, 'getStudentsOfCourse']);
+
+        Route::get('/wallet-transaction', [TeacherController::class, 'getWalletTransaction']);
     }
 );
 
