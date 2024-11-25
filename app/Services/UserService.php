@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Repositories\Interfaces\UserRepositoryInterface;
+use Illuminate\Auth\Access\AuthorizationException;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserService
 {
@@ -24,5 +26,15 @@ class UserService
     public function updateUser ($userId, $data)
     {
         return $this->userRepository->update($userId, $data);
+    }
+
+    public function getListUser($perPage) {
+        $user = JWTAuth::parseToken()->authenticate();
+        
+        if(!$user || !$user->hasRole('admin')) {
+            throw new AuthorizationException('Unauthorized');
+        }
+
+        return $this->userRepository->getAllUser($perPage);
     }
 }

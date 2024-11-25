@@ -192,7 +192,12 @@ class CourseService
             'course_id' => $course->id,
         ];
 
-        return $this->courseApprovalRepo->create($data);
+        $courseApproval = $this->courseApprovalRepo->create($data);
+        if($courseApproval) {
+            $this->courseRepo->updateStatus($course->id, 1);
+        }
+
+        return $courseApproval;
     }
 
     public function updateTargetCourse($id, $data) {
@@ -209,6 +214,11 @@ class CourseService
 
         $updatedCourse = $this->courseRepo->find($id);
         return $updatedCourse;
+    }
+
+    public function getCourseByIds($ids) {
+        $data = explode(',', $ids);
+        return $this->courseRepo->getByIds($data);
     }
 
 

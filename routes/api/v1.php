@@ -66,9 +66,12 @@ Route::prefix('admin')
         Route::put('/fee/{id}', [FeeController::class, 'update']);
         Route::get('/fee/{id}', [FeeController::class, 'get']);
 
+        // Payment method
         Route::post('/payment-methods', [PaymentMethodController::class, 'createPaymentMethod']);
         Route::put('/payment-methods/{id}', [PaymentMethodController::class, 'updatePaymentMethod']);
         Route::delete('/payment-methods/{id}', [PaymentMethodController::class, 'deletePaymentMethod']);
+
+        Route::get('/users', [UserController::class, 'getListUser']);
     }
 );
 
@@ -98,6 +101,9 @@ Route::prefix('/teacher')
         Route::put('/course/{id}/target-course', [CourseController::class, 'updateTargetCourse']);
 
         Route::post('/course/{id}/course-approval-request', [CourseController::class, 'requestApprovalCourse']);
+
+        Route::get('/wallet-balance', [TeacherController::class, 'getWalletBalance']);
+        Route::get('/wallet-transaction', [TeacherController::class, 'getWalletTransaction']);
     }
 );
 
@@ -124,6 +130,7 @@ Route::get('/course/{id}/content', [CourseController::class, 'getContentCourse']
 Route::get('/course/{id}/overview', [CourseController::class, 'getOverviewCourse']);
 Route::get('/course/{id}/teacher-information', [CourseController::class, 'getCourseTeacherInformation']);
 Route::get('/course/{id}/reviews', [ReviewController::class, 'getReviewCourse']);
+Route::get('/courses', [CourseController::class, 'getCourseByIds']);
 
 // Payment
 Route::post('/checkout', [PaymentController::class, 'checkout']);

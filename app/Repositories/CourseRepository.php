@@ -52,4 +52,15 @@ class CourseRepository implements CourseRepositoryInterface
 
         return $course->update($data);
     }
+    
+    public function getByIds(array $ids) {
+        return Course::whereIn('id', $ids)->where('status', 2)->get();
+    }
+    
+    public function updateStatus(int $id, $status) {
+        $course = $this->find($id);
+
+        $course->status = $status;
+        $course->save();
+    }
 }
