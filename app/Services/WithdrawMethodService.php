@@ -14,13 +14,14 @@ class WithdrawMethodService
         private WithdrawMethodRepositoryInterface $withdrawMethodRepository
     ) {
     }
-    public function addPaymentInfomation($data)
+    public function addPaymentInfomation(array $data)
     {
         $teacher = $this->validateTeacher();
         // $user = JWTAuth::parseToken()->authenticate();
         if (!$teacher) {
             throw new \Exception("Teacher validation failed."); // Adjust as needed
         }
+        //Lấy id của teacher đang đăng nhập
         return $this->withdrawMethodRepository->create($data);
     }
 }

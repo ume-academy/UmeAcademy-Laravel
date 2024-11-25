@@ -12,11 +12,12 @@ class WithdrawMethodController extends Controller {
        private WithdrawMethodService $withdrawMethodService,
     ){}
 
-    public function addPaymentInfomation(WithdrawMethodRequest  $data){
+    public function addPaymentInfomation(WithdrawMethodRequest $request){
         try {
+            $data = $request->all();
             $PaymentInfomation = $this->withdrawMethodService->addPaymentInfomation($data);
             return response()->json(
-                ['message' => 'Thêm mới thông tin thanh toán thành công',
+                ['message' => 'Thêm mới thông tin rút tiền thành công',
                 'data' => new WithdrawMethodResource( $PaymentInfomation)            
             ], 200);
 

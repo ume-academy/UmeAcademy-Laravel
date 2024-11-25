@@ -5,5 +5,5 @@ namespace App\Repositories\Interfaces;
 interface WithdrawMethodRepositoryInterface
 {
     // 
-    public function create( $data);
+    public function create(array $data);
 }

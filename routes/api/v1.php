@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\V1\FeeController;
 use App\Http\Controllers\Api\V1\PaymentMethodController;
 use App\Http\Controllers\Api\V1\Teacher\TeacherRegistrationController;
 use App\Http\Controllers\Api\V1\UserController;
+use App\Http\Controllers\Api\V1\WithdrawMethodController;
 use App\Services\EmailVerificationService;
 
 Route::prefix('/auth')
@@ -104,6 +105,9 @@ Route::prefix('/teacher')
         Route::post('/course/{id}/course-approval-request', [CourseController::class, 'requestApprovalCourse']);
 
         Route::get('/wallet-balance', [TeacherController::class, 'getWalletBalance']);
+        //Payment_Infomation
+        Route::post('/withdraw-method', [WithdrawMethodController::class, 'addPaymentInfomation']);
+
 
         Route::get('/course/{id}/students', [CourseController::class, 'getStudentsOfCourse']);
 

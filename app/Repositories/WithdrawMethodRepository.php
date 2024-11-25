@@ -8,7 +8,7 @@ use App\Repositories\Interfaces\WithdrawMethodRepositoryInterface;
 class WithdrawMethodRepository implements WithdrawMethodRepositoryInterface
 {
     // 
-    public function create($data){
+    public function create(array $data){   
         return WithdrawMethod::create($data);
 
     }

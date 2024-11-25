@@ -23,7 +23,7 @@ class WithdrawMethodRequest extends FormRequest
     {
         return [
             // 'name_bank' => 'required|max:255',
-            // 'name_account' => 'required|string|max:255',
+            'name_account' => 'nullable|string|max:255',
             // 'branch' => 'nullable|string|max:255', // Chi nhánh: không bắt buộc, chuỗi
             // 'number_account' => 'required|number|digits_between:8,16', // Số tài khoản: bắt buộc, độ dài từ 8-16 ký tự
             // //
