@@ -15,4 +15,5 @@ interface CourseRepositoryInterface
     public function getCourseOfStudent($user, $perPage);
     public function update(int $id, array $data);
     public function getByIds(array $ids);
+    public function updateStatus(int $id, $status);
 }
