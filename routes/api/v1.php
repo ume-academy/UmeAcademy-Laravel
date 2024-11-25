@@ -70,6 +70,7 @@ Route::prefix('admin')
         Route::post('/payment-methods', [PaymentMethodController::class, 'createPaymentMethod']);
         Route::put('/payment-methods/{id}', [PaymentMethodController::class, 'updatePaymentMethod']);
         Route::delete('/payment-methods/{id}', [PaymentMethodController::class, 'deletePaymentMethod']);
+        Route::get('/payment-methods/{id}', [PaymentMethodController::class, 'detailPaymentMethod']);
 
         Route::get('/users', [UserController::class, 'getListUser']);
     }
@@ -103,6 +104,9 @@ Route::prefix('/teacher')
         Route::post('/course/{id}/course-approval-request', [CourseController::class, 'requestApprovalCourse']);
 
         Route::get('/wallet-balance', [TeacherController::class, 'getWalletBalance']);
+
+        Route::get('/course/{id}/students', [CourseController::class, 'getStudentsOfCourse']);
+
         Route::get('/wallet-transaction', [TeacherController::class, 'getWalletTransaction']);
     }
 );

@@ -11,6 +11,8 @@ use App\Http\Resources\Course\CourseResource;
 use App\Http\Resources\Course\InfoTeacherCourseResource;
 use App\Http\Resources\Course\OverviewCourseResource;
 use App\Http\Resources\Course\StatisticCourseResource;
+use App\Http\Resources\Course\StudentCourseResource;
+use App\Http\Resources\UserResource;
 use App\Services\CourseService;
 use Illuminate\Http\Request;
 
@@ -178,6 +180,18 @@ class CourseController extends Controller
 
             $courses = $this->courseService->getCourseByIds($ids);
             return CourseResource::collection($courses);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function getStudentsOfCourse(Request $req, $id) {
+        try {
+            $perPage = $req->input('per_page', 10);
+
+            $students = $this->courseService->getStudentsOfCourse($id, $perPage);
+
+            return StudentCourseResource::collection($students);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }

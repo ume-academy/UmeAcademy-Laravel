@@ -46,12 +46,15 @@ class ContentCoursePurchasedResource extends JsonResource
 
     private function formatLessons($lessons): array
     {
-        return $lessons->map(function ($lesson) {
+        $completedLessonIds = $this->lesson_completed_ids ?? [];
+
+        return $lessons->map(function ($lesson) use ($completedLessonIds) {
             return [
                 'id' => $lesson->id,
                 'name' => $lesson->name,
                 'video_link' => $lesson->video ? url('videos/courses/' . $lesson->video->name) : null,
                 'video_duration' => $lesson->video ? $lesson->video->duration : 0,
+                'is_completed' => in_array($lesson->id, $completedLessonIds),
             ];
         })->toArray();
     }
