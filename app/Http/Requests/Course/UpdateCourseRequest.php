@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class StoreCourseRequest extends FormRequest
+class UpdateCourseRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,7 +26,7 @@ class StoreCourseRequest extends FormRequest
         return [
             'name' => 'required|string',
             'summary' => 'required|string',
-            'thumbnail' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'thumbnail' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'category_id' => 'required|exists:categories,id',
             'level_id' => 'required|exists:levels,id',
         ];
@@ -41,7 +41,6 @@ class StoreCourseRequest extends FormRequest
             'summary.required' => 'Tóm tắt không được trống.',
             'summary.string' => 'Tóm tắt phải là một chuỗi.',
             
-            'thumbnail.required' => 'Hình thu nhỏ không được trống.',
             'thumbnail.image' => 'Hình thu nhỏ phải là một ảnh.',
             'thumbnail.mimes' => 'Hình thu nhỏ phải có định dạng jpeg, png, jpg, gif hoặc svg.',
             'thumbnail.max' => 'Hình thu nhỏ không được vượt quá 2MB.',
@@ -58,5 +57,5 @@ class StoreCourseRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'errors' => $validator->errors()
         ], 500));
-    } 
+    }
 }

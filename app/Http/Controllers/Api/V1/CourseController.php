@@ -4,12 +4,15 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Course\StoreCourseRequest;
+use App\Http\Requests\Course\UpdateCourseRequest;
 use App\Http\Resources\Course\ContentCoursePurchasedResource;
 use App\Http\Resources\Course\ContentCourseResource;
 use App\Http\Resources\Course\CourseResource;
 use App\Http\Resources\Course\InfoTeacherCourseResource;
 use App\Http\Resources\Course\OverviewCourseResource;
 use App\Http\Resources\Course\StatisticCourseResource;
+use App\Http\Resources\Course\StudentCourseResource;
+use App\Http\Resources\UserResource;
 use App\Services\CourseService;
 use Illuminate\Http\Request;
 
@@ -53,10 +56,17 @@ class CourseController extends Controller
         try {
             $course = $this->courseService->getInfoCourse($id);
             
-            return (new CourseResource($course))->additional([
-                'is_wishlist' => $course->is_wishlist,
-                'is_enrolled' => $course->is_enrolled
-            ]);
+            $courseData = (new CourseResource($course))->resolve();
+
+            // merge vào data
+            $response = [
+                'data' => array_merge($courseData, [
+                    'is_wishlist' => $course->is_wishlist,
+                    'is_enrolled' => $course->is_enrolled,
+                ]),
+            ];
+
+            return response()->json($response, 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
@@ -107,6 +117,81 @@ class CourseController extends Controller
             $course = $this->courseService->getPurchasedCourseContent($id);
             
             return new ContentCoursePurchasedResource($course);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function getPurchasedCourses(Request $req) {
+        try {
+            $perPage = $req->input('per_page', 8);
+
+            $courses = $this->courseService->getPurchasedCourses($perPage);
+            return CourseResource::collection($courses);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function getCourse($id) {
+        try {
+            $course = $this->courseService->getCourse($id);
+            return new CourseResource($course);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function updateCourse(UpdateCourseRequest $req, $id) {
+        try {
+            $data = $req->all();
+            
+            $course = $this->courseService->updateCourse($id, $data);
+            return new CourseResource($course);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function requestApprovalCourse($id) {
+        try {
+            $this->courseService->requestApprovalCourse($id);
+            return response()->json(['message' => 'Gửi yêu cầu phê duyệt khóa học thành công']);
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function updateTargetCourse(Request $req, $id) {
+        try {
+            $data = $req->only('data');
+
+            $course = $this->courseService->updateTargetCourse($id, $data);
+            return new OverviewCourseResource($course);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function getCourseByIds(Request $req) {
+        try {
+            $ids = $req->input('ids');
+
+            $courses = $this->courseService->getCourseByIds($ids);
+            return CourseResource::collection($courses);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function getStudentsOfCourse(Request $req, $id) {
+        try {
+            $perPage = $req->input('per_page', 10);
+
+            $students = $this->courseService->getStudentsOfCourse($id, $perPage);
+
+            return StudentCourseResource::collection($students);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }

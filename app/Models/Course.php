@@ -22,6 +22,8 @@ class Course extends Model
         'total_chapter',
         'rating',
         'status',
+        'course_requirement',
+        'course_learning_benefit',
         'category_id',
         'level_id',
         'teacher_id'
@@ -58,7 +60,7 @@ class Course extends Model
 
     public function courseEnrolled()
     {
-        return $this->belongsToMany(User::class, 'course_enrolleds', 'course_id', 'user_id');
+        return $this->belongsToMany(User::class, 'course_enrolleds', 'course_id', 'user_id')->withPivot('created_at');
     }
 
     // Tính tổng số chương của khóa học
@@ -104,4 +106,9 @@ class Course extends Model
     {
         return $this->courseEnrolled()->where('user_id', $userId)->exists();
     }
+
+    protected $casts = [
+        'course_requirement' => 'array',
+        'course_learning_benefit' => 'array',
+    ];
 }

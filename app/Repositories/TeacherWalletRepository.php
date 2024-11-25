@@ -20,4 +20,8 @@ class TeacherWalletRepository implements TeacherWalletRepositoryInterface
 
         return $teacherWallet->update($data);
     }
+
+    public function getByTeacherId(int $id) {
+        return TeacherWallet::where('teacher_id', $id)->first();
+    }
 }

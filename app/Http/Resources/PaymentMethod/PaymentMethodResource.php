@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources\Course;
+namespace App\Http\Resources\PaymentMethod;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class OverviewCourseResource extends JsonResource
+class PaymentMethodResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,10 +17,7 @@ class OverviewCourseResource extends JsonResource
         return [
             'id' => $this->id ?? null,
             'name' => $this->name ?? null,
-            'summary' => $this->summary ?? null,
-            'description' => $this->description ?? null,
-            'course_requirement' => $this->course_requirement,
-            'course_learning_benefit' => $this->course_learning_benefit,
+            'created_at' => $this->created_at ?? null
         ];
     }
 }

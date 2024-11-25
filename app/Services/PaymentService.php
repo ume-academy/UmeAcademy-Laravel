@@ -56,8 +56,10 @@ class PaymentService
 
                 // Voucher usage
                 $voucherUsage = $this->voucherUsageRepo->getByTransaction($transaction->id);
-                $this->voucherUsageRepo->updateStatus($voucherUsage->id, 1);
-
+                if($voucherUsage) {
+                    $this->voucherUsageRepo->updateStatus($voucherUsage->id, 1);
+                }
+                
                 // Course enrolled
                 $course = $this->courseRepo->getById($transaction->course_id);
                 $this->courseRepo->syncCourseEnrolled($course, [$transaction->user_id]);
@@ -98,7 +100,9 @@ class PaymentService
 
         // Voucher usage 
         $voucherUsage = $this->voucherUsageRepo->getByTransaction($transaction->id);
-        $this->voucherUsageRepo->delete($voucherUsage->id);
+        if($voucherUsage) {
+            $this->voucherUsageRepo->delete($voucherUsage->id);
+        }
     }
 
 

@@ -44,4 +44,17 @@ class LessonService
         }
         
     }
+
+    public function updateLesson($lessonId, $data) {
+        $teacher = $this->validateTeacher();
+
+        // Kiểm tra khóa học và chapter
+        $course = $this->validateCourse($teacher, $data['course_id']);
+        $chapter = $this->validateChapter($course, $data['chapter_id']);
+        $this->validateLesson($chapter, $lessonId);
+
+        $data = ['name' => $data['name']];
+
+        return $this->lessonRepo->update($lessonId, $data);
+    }
 }

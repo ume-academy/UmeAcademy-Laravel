@@ -10,4 +10,8 @@ class TeacherRepository implements TeacherRepositoryInterface
     public function create(array $data) {
         return Teacher::create($data);
     }
+
+    public function getById(int $id) {
+        return Teacher::findOrFail($id);
+    }
 }

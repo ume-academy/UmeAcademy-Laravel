@@ -15,6 +15,8 @@ class ContentCoursePurchasedResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'name' => $this->name ?? null,
+            'thumbnail' => $this->thumbnail ? url('images/courses/'. $this->thumbnail) : null,
             'total_chapter' => $this->total_chapter ?? 0,
             'total_lesson' => $this->total_lesson ?? 0,
             'total_duration' => $this->duration ?? 0,
@@ -44,12 +46,15 @@ class ContentCoursePurchasedResource extends JsonResource
 
     private function formatLessons($lessons): array
     {
-        return $lessons->map(function ($lesson) {
+        $completedLessonIds = $this->lesson_completed_ids ?? [];
+
+        return $lessons->map(function ($lesson) use ($completedLessonIds) {
             return [
                 'id' => $lesson->id,
                 'name' => $lesson->name,
                 'video_link' => $lesson->video ? url('videos/courses/' . $lesson->video->name) : null,
                 'video_duration' => $lesson->video ? $lesson->video->duration : 0,
+                'is_completed' => in_array($lesson->id, $completedLessonIds),
             ];
         })->toArray();
     }

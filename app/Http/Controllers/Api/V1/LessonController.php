@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Lesson\StoreLessonRequest;
+use App\Http\Requests\Lesson\UpdateLessonRequest;
 use App\Http\Requests\Video\StoreVideoRequest;
 use App\Http\Resources\Lesson\LessonResource;
 use App\Http\Resources\Video\VideoResource;
@@ -60,6 +61,23 @@ class LessonController extends Controller
             $this->lessonService->markLessonCompleted($data);
 
             return response()->json(['success' => 'Đã hoàn thành bài học']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function updateLesson(UpdateLessonRequest $req, $id, $chapterId, $lessonId) {
+        try {
+            $data = $req->only(['name']);
+            $data['chapter_id'] = $chapterId;
+            $data['course_id'] = $id;
+
+            $lesson = $this->lessonService->updateLesson($lessonId, $data);
+
+            if($lesson) {
+                return response()->json(['message' => 'Cập nhật bài học thành công'], 200);
+            }
+            
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }

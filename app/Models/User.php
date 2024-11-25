@@ -70,11 +70,21 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         return [];
     }
 
+    public function isTeacher()
+    {
+        return $this->teacher(); 
+    }
+
     public function teacher() {
         return $this->hasOne(Teacher::class);
     }
 
     public function reviews() {
         return $this->hasMany(Review::class);
+    }
+
+    public function enrolledCourses()
+    {
+        return $this->belongsToMany(Course::class, 'course_enrolleds', 'user_id', 'course_id');
     }
 }

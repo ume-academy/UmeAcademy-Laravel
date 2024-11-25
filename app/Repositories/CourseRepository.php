@@ -21,6 +21,10 @@ class CourseRepository implements CourseRepositoryInterface
         return Course::where('teacher_id', $id)->paginate($perPage);
     }
 
+    public function getCourseOfTeacher(int $id) {
+        return Course::where('teacher_id', $id)->where('status', 2)->get();
+    }
+
     // Chỉ tìm được khóa học đã xuất bản
     public function getById(int $id) {
         return Course::where('status', 2)->findOrFail($id);
@@ -40,5 +44,27 @@ class CourseRepository implements CourseRepositoryInterface
     public function syncCourseEnrolled(Course $course, array $userIds)
     {
         return $course->courseEnrolled()->attach($userIds);
+    }
+
+    // Lấy khóa học đã mua của học sinh
+    public function getCourseOfStudent($user, $perPage) {
+        return $user->enrolledCourses()->paginate($perPage);
+    }
+
+    public function update(int $id, array $data) {
+        $course = $this->find($id);
+
+        return $course->update($data);
+    }
+    
+    public function getByIds(array $ids) {
+        return Course::whereIn('id', $ids)->where('status', 2)->get();
+    }
+    
+    public function updateStatus(int $id, $status) {
+        $course = $this->find($id);
+
+        $course->status = $status;
+        $course->save();
     }
 }

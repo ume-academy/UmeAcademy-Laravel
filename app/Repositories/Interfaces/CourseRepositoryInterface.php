@@ -12,4 +12,9 @@ interface CourseRepositoryInterface
     public function getById(int $id);
     public function completedLessons(int $courseId, int $userId);
     public function syncCourseEnrolled(Course $course, array $userIds);
+    public function getCourseOfStudent($user, $perPage);
+    public function update(int $id, array $data);
+    public function getByIds(array $ids);
+    public function updateStatus(int $id, $status);
+    public function getCourseOfTeacher(int $id);
 }

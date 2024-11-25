@@ -2,8 +2,7 @@
 
 namespace App\Repositories\Interfaces;
 
-interface TeacherRepositoryInterface
+interface CourseApprovalRepositoryInterface
 {
     public function create(array $data);
-    public function getById(int $id);
 }
