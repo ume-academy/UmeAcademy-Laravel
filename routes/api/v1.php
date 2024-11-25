@@ -117,7 +117,7 @@ Route::prefix('/learning')
     }
 );
 //user
-Route::post('user{id}/profile', [UserController::class, 'updateProfile']);
+Route::post('user/{id}/profile', [UserController::class, 'updateProfile']);
 
 
 // Category
