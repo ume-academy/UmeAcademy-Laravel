@@ -103,6 +103,7 @@ Route::prefix('/teacher')
         Route::post('/course/{id}/course-approval-request', [CourseController::class, 'requestApprovalCourse']);
 
         Route::get('/wallet-balance', [TeacherController::class, 'getWalletBalance']);
+        Route::get('/wallet-transaction', [TeacherController::class, 'getWalletTransaction']);
     }
 );
 
