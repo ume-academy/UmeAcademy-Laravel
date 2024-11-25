@@ -45,4 +45,14 @@ class PaymentMethodService
 
         return $this->paymentMethodRepo->delete($id);
     }
+
+    public function detailPaymentMethod($id) {
+        $user = JWTAuth::parseToken()->authenticate();
+
+        if(!$user || !$user->hasRole('admin')) {
+            throw new AuthorizationException('Unauthorized');
+        }
+
+        return $this->paymentMethodRepo->find($id);
+    }
 }
