@@ -21,6 +21,10 @@ class CourseRepository implements CourseRepositoryInterface
         return Course::where('teacher_id', $id)->paginate($perPage);
     }
 
+    public function getCourseOfTeacher(int $id) {
+        return Course::where('teacher_id', $id)->where('status', 2)->get();
+    }
+
     // Chỉ tìm được khóa học đã xuất bản
     public function getById(int $id) {
         return Course::where('status', 2)->findOrFail($id);

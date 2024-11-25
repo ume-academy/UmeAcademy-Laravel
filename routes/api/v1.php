@@ -108,6 +108,8 @@ Route::prefix('/teacher')
         Route::get('/course/{id}/students', [CourseController::class, 'getStudentsOfCourse']);
 
         Route::get('/wallet-transaction', [TeacherController::class, 'getWalletTransaction']);
+
+        Route::get('/statistic', [TeacherController::class, 'getStatistic']);
     }
 );
 
