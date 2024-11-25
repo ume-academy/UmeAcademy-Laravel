@@ -24,4 +24,11 @@ class WithdrawMethodService
         //Lấy id của teacher đang đăng nhập
         return $this->withdrawMethodRepository->create($data);
     }
+    public function getWithdrawMethod(int $teacherId){
+        $teacher = $this->validateTeacher();
+        if (!$teacher) {
+            throw new \Exception("Teacher validation failed."); // Adjust as needed
+            }
+            return $this->withdrawMethodRepository->getWithdrawMethod($teacherId);
+    }
 }

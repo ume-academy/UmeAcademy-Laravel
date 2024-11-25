@@ -107,6 +107,7 @@ Route::prefix('/teacher')
         Route::get('/wallet-balance', [TeacherController::class, 'getWalletBalance']);
         //Payment_Infomation
         Route::post('/withdraw-method', [WithdrawMethodController::class, 'addPaymentInfomation']);
+        Route::get('/{id}/withdraw-method', [WithdrawMethodController::class, 'getWithdrawMethod']);
 
 
         Route::get('/course/{id}/students', [CourseController::class, 'getStudentsOfCourse']);

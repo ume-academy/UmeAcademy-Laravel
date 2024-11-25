@@ -24,6 +24,16 @@ class WithdrawMethodController extends Controller {
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
+
+    }
+    public function getWithdrawMethod($teacherId) {
+        try {
+            $method = $this->withdrawMethodService->getWithdrawMethod($teacherId);
+
+            return WithdrawMethodResource::collection($method);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
 }
