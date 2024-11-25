@@ -17,6 +17,11 @@ class UserRepository implements UserRepositoryInterface
     {
         return User::find($id);
     }
+    public function update($userId,array $data){
+        $user = User::find($userId);
+        $user->update($data);
+        return $user;
+    }
 
     public function findByEmail($email)
     {

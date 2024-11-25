@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\FeeController;
 use App\Http\Controllers\Api\V1\PaymentMethodController;
 use App\Http\Controllers\Api\V1\Teacher\TeacherRegistrationController;
+use App\Http\Controllers\Api\V1\UserController;
 use App\Services\EmailVerificationService;
 
 Route::prefix('/auth')
@@ -109,6 +110,9 @@ Route::prefix('/learning')
         Route::post('/course/{id}/chapter/{chapterId}/lesson/{lessonId}/complete', [LessonController::class, 'markLessonCompleted']);
     }
 );
+//user
+Route::post('user{id}/profile', [UserController::class, 'updateProfile']);
+
 
 // Category
 Route::get('/categories', [CategoryController::class, 'getAllCategories']);
