@@ -60,7 +60,7 @@ class Course extends Model
 
     public function courseEnrolled()
     {
-        return $this->belongsToMany(User::class, 'course_enrolleds', 'course_id', 'user_id');
+        return $this->belongsToMany(User::class, 'course_enrolleds', 'course_id', 'user_id')->withPivot('created_at');
     }
 
     // Tính tổng số chương của khóa học

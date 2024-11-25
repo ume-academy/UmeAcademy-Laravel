@@ -105,13 +105,15 @@ class CourseService
             
             $course['completed_lesson'] = $completedLessons->count();
 
-            $course['completed_lesson_in_chapter'] = $course->chapters->map(function ($chapter) use ($user) {
-                // Lấy số bài học đã hoàn thành trong chapter này
-                $completedInChapter = $chapter->completedLessonsCount($user->id);
-    
-                return $completedInChapter;
+            // Tạo mảng các ID bài học đã hoàn thành theo chapter
+            $completedLessonInChapter = $course->chapters->map(function ($chapter) use ($user) {
+                $completedInChapter = $chapter->completedLessons($user->id);
+                return $completedInChapter->pluck('id');
             });
             
+            $course['completed_lesson_in_chapter'] = $completedLessonInChapter->map(fn($ids) => $ids->count())->toArray();
+            $course['lesson_completed_ids'] = $completedLessonInChapter->flatten()->unique()->values()->toArray();
+
             return $course;
         } else {
             throw new \Exception('Bạn chưa mua khóa học'); 
@@ -221,6 +223,25 @@ class CourseService
         return $this->courseRepo->getByIds($data);
     }
 
+    public function getStudentsOfCourse($id, $perPage) {
+        $teacher = $this->validateTeacher();
+
+        $course = $this->courseRepo->getById($id);
+
+        // Kiểm tra quyền sở hữu của khóa học
+        $this->validateCourse($teacher, $id);
+
+        $students = $course->courseEnrolled()->paginate($perPage);
+
+        // Duyệt qua từng học viên và thêm thông tin về tiến độ
+        $students->getCollection()->transform(function ($user) use ($course) {
+            $user->progress = $this->courseRepo->completedLessons($course->id, $user->pivot->user_id)->count() / $course->total_lesson * 100;
+            
+            return $user;
+        });
+
+        return $students;
+    }
 
     // Xử lý ảnh thumbnail
     private function handleThumbnail($file)

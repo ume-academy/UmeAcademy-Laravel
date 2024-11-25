@@ -29,4 +29,8 @@ class PaymentMethodRepository implements PaymentMethodRepositoryInterface
 
         return $paymentMethod->delete();
     }
+
+    public function find(int $id) {
+        return PaymentMethod::findOrFail($id);
+    }
 }

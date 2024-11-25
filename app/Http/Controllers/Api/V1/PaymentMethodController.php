@@ -61,4 +61,14 @@ class PaymentMethodController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function detailPaymentMethod($id) {
+        try {
+            $method = $this->paymentMethodService->detailPaymentMethod($id);
+            
+            return new PaymentMethodResource($method);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }
