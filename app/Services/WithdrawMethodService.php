@@ -9,26 +9,22 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class WithdrawMethodService
 {
     use ValidationTrait;
-    // 
+
     public function __construct(
-        private WithdrawMethodRepositoryInterface $withdrawMethodRepository
-    ) {
-    }
-    public function addPaymentInfomation(array $data)
+        private WithdrawMethodRepositoryInterface $withdrawMethodRepo
+    ) {}
+
+    public function addWithdrawMethod(array $data)
     {
         $teacher = $this->validateTeacher();
-        // $user = JWTAuth::parseToken()->authenticate();
-        if (!$teacher) {
-            throw new \Exception("Teacher validation failed."); // Adjust as needed
-        }
-        //Lấy id của teacher đang đăng nhập
-        return $this->withdrawMethodRepository->create($data);
+        $data['teacher_id'] = $teacher->id;
+        
+        return $this->withdrawMethodRepo->create($data);
     }
-    public function getWithdrawMethod(int $teacherId){
+    
+    public function getWithdrawMethod(){
         $teacher = $this->validateTeacher();
-        if (!$teacher) {
-            throw new \Exception("Teacher validation failed."); // Adjust as needed
-            }
-            return $this->withdrawMethodRepository->getWithdrawMethod($teacherId);
+        
+        return $this->withdrawMethodRepo->getWithdrawMethod($teacher->id);
     }
 }

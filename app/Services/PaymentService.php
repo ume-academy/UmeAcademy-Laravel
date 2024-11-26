@@ -65,11 +65,12 @@ class PaymentService
                 $this->courseRepo->syncCourseEnrolled($course, [$transaction->user_id]);
 
                 // Teacher wallet
-                $dataTeacherWallet = [
-                    'temporary_balance' => $transaction->revenue_teacher,
-                    'total_earnings' => $transaction->revenue_teacher
-                ];
                 $teacherWallet = $this->teacherWalletRepo->getByTeacher($course->teacher_id);
+
+                $dataTeacherWallet = [
+                    'temporary_balance' => intval($teacherWallet->temporary_balance) + intval($transaction->revenue_teacher),
+                    'total_earnings' => intval($teacherWallet->total_earnings) + intval($transaction->revenue_teacher)
+                ];
                 $this->teacherWalletRepo->update($course->teacher_id, $dataTeacherWallet);
 
                 // Transaction wallet teacher

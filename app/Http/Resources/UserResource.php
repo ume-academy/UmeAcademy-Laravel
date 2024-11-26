@@ -18,7 +18,7 @@ class UserResource extends JsonResource
             'fullname' => $this->fullname,
             'email' => $this->email,
             'email_verified' => (bool) $this->email_verified_at,
-            "avatar" => $this->avatar,
+            "avatar" => $this->avatar ? url('/images/users/' . $this->avatar) : null,
             "is_teacher" => (bool) $this->isTeacher,
             "bio"=> $this->bio,
             "is_lock"=> $this->is_lock,

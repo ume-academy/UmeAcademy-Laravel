@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\WithdrawMethod;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class WithdrawMethodRequest extends FormRequest
 {
@@ -22,18 +24,33 @@ class WithdrawMethodRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // 'name_bank' => 'required|max:255',
-            'name_account' => 'nullable|string|max:255',
-            // 'branch' => 'nullable|string|max:255', // Chi nhánh: không bắt buộc, chuỗi
-            // 'number_account' => 'required|number|digits_between:8,16', // Số tài khoản: bắt buộc, độ dài từ 8-16 ký tự
-            // //
+            'name_bank' => 'required',
+            'name_account' => 'required|string',
+            'branch' => 'required|string',
+            'number_account' => 'required|numeric',
         ];
     }
+
     public function messages(): array
     {
         return [
-            'name_bank.required' => 'Tên là bắt buộc.',            
+            'name_bank.required' => 'Tên ngân hàng là bắt buộc.',
+
+            'name_account.required' => 'Tên chủ tài khoản là bắt buộc.',
+            'name_account.string' => 'Tên chủ tài khoản phải là một chuỗi ký tự.',
+
+            'branch.required' => 'Chi nhánh là bắt buộc.',
+            'branch.string' => 'Chi nhánh phải là một chuỗi ký tự.',
+
+            'number_account.required' => 'Số tài khoản là bắt buộc.',
+            'number_account.numeric' => 'Số tài khoản phải là một số.',
         ];
+        
     }
     
+    protected function failedValidation(Validator $validator) {
+        throw new HttpResponseException(response()->json([
+            'errors' => $validator->errors()
+        ], 500));
+    } 
 }

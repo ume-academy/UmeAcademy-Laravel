@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Requests\User;
+namespace App\Http\Requests\Revenue;
+
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-class updateProfileRequest extends FormRequest
+
+class RevenueRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,20 +24,19 @@ class updateProfileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'fullname' => 'required|string|max:255',
-            'avatar' => 'image|mimes:jpg,jpeg,png|max:2048',
+            'start_date' => 'nullable|date|before_or_equal:end_date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
         ];
     }
+
     public function messages()
     {
         return [
-            'fullname.required' => 'Tên là bắt buộc.',
-            'fullname.string' => 'Tên chỉ bao gồm chữ',
-            'fullname.max' => 'Tên độ dài không quá 255 ký tự',
-
-            'avatar.image' => 'Avatar phải là image',
-            'avatar.mimes' => 'Avatar phải thuộc định dạng jpg,png,jpeg ',
-            'avatar.max' => 'Max 2MB',
+            'start_date.date' => 'Ngày bắt đầu phải là một ngày hợp lệ.',
+            'start_date.before_or_equal' => 'Ngày bắt đầu phải trước hoặc bằng ngày kết thúc.',
+            
+            'end_date.date' => 'Ngày kết thúc phải là một ngày hợp lệ.',
+            'end_date.after_or_equal' => 'Ngày kết thúc phải sau hoặc bằng ngày bắt đầu.',
         ];
     }
 
@@ -43,5 +44,5 @@ class updateProfileRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'errors' => $validator->errors()
         ], 500));
-    } 
+    }
 }

@@ -12,13 +12,15 @@ class WithdrawMethod extends Model
     protected $fillable = [
         'name_bank',
         'name_account',
+        'number_account',
         'branch',
         'min_withdraw',
         'teacher_id',
     ];
-    // public function teacher()
-    // {
-    //     return $this->belongsTo(Teacher::class); // Define the inverse of the relationship
-    // }
+
+    public function teacher()
+    {
+        return $this->belongsTo(Teacher::class);
+    }
         
 }
