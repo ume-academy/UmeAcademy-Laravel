@@ -127,6 +127,9 @@ Route::prefix('/learning')
         Route::post('/course/{id}/chapter/{chapterId}/lesson/{lessonId}/complete', [LessonController::class, 'markLessonCompleted']);
     }
 );
+//user
+Route::post('user/{id}/profile', [UserController::class, 'updateProfile']);
+
 
 // Category
 Route::get('/categories', [CategoryController::class, 'getAllCategories']);

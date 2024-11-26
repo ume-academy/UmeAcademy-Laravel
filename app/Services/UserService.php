@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserService
@@ -22,6 +23,11 @@ class UserService
         }
 
         return $user;
+    }
+    public function updateUser(int $userId, $data)
+    {
+        //$userId = Auth::id();// Lấy ID của người dùng hiện tại
+        return $this->userRepository->update($userId, $data);
     }
 
     public function getListUser($perPage) {
