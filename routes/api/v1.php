@@ -105,16 +105,17 @@ Route::prefix('/teacher')
         Route::post('/course/{id}/course-approval-request', [CourseController::class, 'requestApprovalCourse']);
 
         Route::get('/wallet-balance', [TeacherController::class, 'getWalletBalance']);
-        //Payment_Infomation
-        Route::post('/withdraw-method', [WithdrawMethodController::class, 'addPaymentInfomation']);
-        Route::get('/{id}/withdraw-method', [WithdrawMethodController::class, 'getWithdrawMethod']);
 
+        // Withdraw
+        Route::post('/withdraw-method', [WithdrawMethodController::class, 'addWithdrawMethod']);
+        Route::get('/withdraw-method', [WithdrawMethodController::class, 'getWithdrawMethod']);
 
         Route::get('/course/{id}/students', [CourseController::class, 'getStudentsOfCourse']);
 
         Route::get('/wallet-transaction', [TeacherController::class, 'getWalletTransaction']);
 
         Route::get('/statistic', [TeacherController::class, 'getStatistic']);
+        Route::post('/revenue', [TeacherController::class, 'getRevenue']);
     }
 );
 
@@ -127,9 +128,9 @@ Route::prefix('/learning')
         Route::post('/course/{id}/chapter/{chapterId}/lesson/{lessonId}/complete', [LessonController::class, 'markLessonCompleted']);
     }
 );
-//user
-Route::post('user/{id}/profile', [UserController::class, 'updateProfile']);
 
+// user
+Route::put('/profile', [UserController::class, 'updateProfile']);
 
 // Category
 Route::get('/categories', [CategoryController::class, 'getAllCategories']);
@@ -144,6 +145,7 @@ Route::get('/course/{id}/reviews', [ReviewController::class, 'getReviewCourse'])
 Route::get('/courses', [CourseController::class, 'getCourseByIds']);
 
 // Payment
+Route::get('/payment-methods', [PaymentMethodController::class, 'getAllPaymentMethod']);
 Route::post('/checkout', [PaymentController::class, 'checkout']);
 Route::post('/vouchers/check', [VoucherController::class, 'checkVoucher']);
 Route::post('/confirm-webhook', [PaymentController::class, 'confirmWebhook']);
@@ -151,4 +153,3 @@ Route::get('/cancel', [PaymentController::class, 'cancel']);
 
 Route::get('teacher/{id}', [TeacherController::class, 'getInfoTeacher']);
 
-Route::get('/payment-methods', [PaymentMethodController::class, 'getAllPaymentMethod']);

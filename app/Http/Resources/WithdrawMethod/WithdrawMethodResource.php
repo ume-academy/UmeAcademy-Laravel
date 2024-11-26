@@ -15,14 +15,16 @@ class WithdrawMethodResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'name_bank' => $this->name_bank,
-            'name_account' => $this->name_account,
-            'branch' => $this->branch,
-            'min_withdraw' => $this->min_withdraw,
-            'teacher_id' => $this->teacher_id,
+            'id' => $this->id ?? null,
+            'name_bank' => $this->name_bank ?? null,
+            'name_account' => $this->name_account ?? null,
+            'branch' => $this->branch ?? null,
+            'min_withdraw' => $this->min_withdraw ?? null,
+            'teacher' => [
+                'id' => $this->teacher->id ?? null,
+                'name' => $this->teacher?->user->fullname ?? null,
+            ],
             'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
         ];
     }
 }

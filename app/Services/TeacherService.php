@@ -3,11 +3,13 @@
 namespace App\Services;
 
 use App\Exceptions\Teacher\AlreadyTeacherException;
+use App\Models\TeacherWalletTransaction;
 use App\Repositories\Interfaces\CourseRepositoryInterface;
 use App\Repositories\Interfaces\TeacherRepositoryInterface;
 use App\Repositories\Interfaces\TeacherWalletRepositoryInterface;
 use App\Repositories\Interfaces\TeacherWalletTransactionRepositoryInterface;
 use App\Traits\ValidationTrait;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -83,11 +85,49 @@ class TeacherService
         $courses = $this->courseRepo->getCourseOfTeacher($teacher->id);
 
         $data = [
-            'revenue' => $wallet->available_balance,
+            'revenue' => $wallet->total_earnings,
             'total_student' => $courses->sum('total_student'),
             'total_rating' => $courses->sum('rating') / $courses->count()
         ];
 
         return $data;
+    }
+
+    public function getRevenue($data) {
+        $teacher = $this->validateTeacher();
+    
+        // Xử lý ngày bắt đầu và ngày kết thúc
+        $startDate = $data['start_date'] ?? now()->startOfYear()->toDateString(); 
+        $endDate = $data['end_date'] ?? now()->toDateString();
+
+        $transactions = $this->teacherWalletTransactionRepo->filterRevenue($teacher->id, $startDate, $endDate);
+    
+        // Chuyển thành dạng ['date' => 'total_revenue']
+        $transactionData = $transactions->pluck('total_revenue', 'date')->toArray();
+
+        // Tạo danh sách tất cả các ngày trong khoảng thời gian
+        $allDates = $this->getAllDates($startDate, $endDate);
+
+        $result = collect($allDates)->map(function ($date) use ($transactionData) {
+            return [
+                'date' => $date,
+                'revenue' => $transactionData[$date] ?? 0,
+            ];
+        });
+    
+        return $result->toArray();
+    }
+    
+    private function getAllDates($startDate, $endDate) {
+        $allDates = [];
+        $currentDate = Carbon::parse($startDate);
+        $endDate = Carbon::parse($endDate);
+    
+        while ($currentDate <= $endDate) {
+            $allDates[] = $currentDate->toDateString();
+            $currentDate->addDay();
+        }
+    
+        return $allDates;
     }
 }

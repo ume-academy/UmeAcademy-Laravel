@@ -3,31 +3,28 @@
 namespace App\Services;
 
 use App\Repositories\Interfaces\UserRepositoryInterface;
+use App\Traits\HandleFileTrait;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserService
 {
+    use HandleFileTrait;
+
     public function __construct(
-        private UserRepositoryInterface $userRepository
-    )
-    {}
+        private UserRepositoryInterface $userRepo
+    ){}
 
     public function me(int $userId) 
     {
-        $user = $this->userRepository->findById($userId);
+        $user = $this->userRepo->findById($userId);
 
         if (!$user) {
             throw new \Exception('User not found.');
         }
 
         return $user;
-    }
-    public function updateUser(int $userId, $data)
-    {
-        //$userId = Auth::id();// Lấy ID của người dùng hiện tại
-        return $this->userRepository->update($userId, $data);
     }
 
     public function getListUser($perPage) {
@@ -37,6 +34,29 @@ class UserService
             throw new AuthorizationException('Unauthorized');
         }
 
-        return $this->userRepository->getAllUser($perPage);
+        return $this->userRepo->getAllUser($perPage);
+    }
+    
+    public function updateProfile($data)
+    {
+        $user = JWTAuth::parseToken()->authenticate();
+
+        if (isset($data['avatar'])) {
+            $data['avatar'] = $this->handleAvatar($data['avatar']);
+        } else {
+            $data['avatar'] = $user->avatar;
+        }
+
+        // Cập nhật vào db
+        return $this->userRepo->update($user->id, $data);
+    }
+
+
+    private function handleAvatar($file)
+    {
+        $fileName = HandleFileTrait::generateName($file);
+        HandleFileTrait::uploadFile($file, $fileName, 'users');
+        
+        return $fileName;
     }
 }

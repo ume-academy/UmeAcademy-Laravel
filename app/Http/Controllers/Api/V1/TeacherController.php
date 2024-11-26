@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Revenue\RevenueRequest;
 use App\Http\Resources\Teacher\TeacherResource;
 use App\Http\Resources\Wallet\WalletResource;
 use App\Services\TeacherService;
@@ -69,6 +70,18 @@ class TeacherController extends Controller
             $statistic = $this->teacherService->getStatistic();
 
             return response()->json(['data' => $statistic]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function getRevenue(RevenueRequest $req) {
+        try {
+            $data = $req->only(['start_date', 'end_date']);
+
+            $revenue = $this->teacherService->getRevenue($data);
+
+            return response()->json(['data' => $revenue]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
