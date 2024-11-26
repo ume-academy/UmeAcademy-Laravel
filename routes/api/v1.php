@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\FeeController;
 use App\Http\Controllers\Api\V1\PaymentMethodController;
 use App\Http\Controllers\Api\V1\Teacher\TeacherRegistrationController;
+use App\Http\Controllers\Api\V1\TransactionController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\WithdrawMethodController;
 use App\Services\EmailVerificationService;
@@ -130,7 +131,13 @@ Route::prefix('/learning')
 );
 
 // user
-Route::put('/profile', [UserController::class, 'updateProfile']);
+Route::middleware('verify.jwt.token')
+    ->group(function () {
+        Route::put('/profile', [UserController::class, 'updateProfile']);
+
+        Route::get('/transaction-history', [TransactionController::class, 'getTransactionHistory']);
+    }
+);
 
 // Category
 Route::get('/categories', [CategoryController::class, 'getAllCategories']);
