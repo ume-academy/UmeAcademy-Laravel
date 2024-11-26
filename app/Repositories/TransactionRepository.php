@@ -22,4 +22,8 @@ class TransactionRepository implements TransactionRepositoryInterface
         $transaction->status = $status;
         $transaction->save();
     }
+
+    public function getByUserId(int $id, $perPage) {
+        return Transaction::where('user_id', $id)->paginate($perPage);
+    }
 }
