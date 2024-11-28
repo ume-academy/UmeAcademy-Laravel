@@ -74,4 +74,11 @@ class UserRepository implements UserRepositoryInterface
         $user->save();
         return $user;
     }
+
+    public function updatePassword(int $userId, string $newPassword): bool
+    {
+        $user = User::findOrFail($userId);
+        $user->password = bcrypt($newPassword);
+        return $user->save();
+    }
 }

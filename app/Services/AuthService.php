@@ -35,6 +35,11 @@ class AuthService
         // Đăng nhập và trả về người dùng
         $user = $loginMethod->login($credentials);
 
+        // Kiểm tra xem tài khoản có bị khóa không
+        if ($user->is_lock) {
+            throw new \Exception('Tài khoản của bạn đã bị khóa.', 403);
+        }
+
         // Tạo token sau khi đăng nhập thành công
         return $this->tokenService->generateTokens($user);
     }

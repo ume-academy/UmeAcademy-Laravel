@@ -2,11 +2,12 @@
 
 namespace App\Services;
 
-use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Traits\HandleFileTrait;
-use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\Access\AuthorizationException;
+use App\Repositories\Interfaces\UserRepositoryInterface;
 
 class UserService
 {
@@ -77,5 +78,18 @@ class UserService
         HandleFileTrait::uploadFile($file, $fileName, 'users');
         
         return $fileName;
+    }
+
+    public function changePassword(int $userId, string $oldPassword, string $newPassword)
+    {
+        $user = auth()->user();
+
+        // Kiểm tra mật khẩu cũ
+        if (!Hash::check($oldPassword, $user->password)) {
+            throw new \Exception('Mật khẩu cũ không chính xác.');
+        }
+
+        // Cập nhật mật khẩu mới
+        return $this->userRepo->updatePassword($userId, $newPassword);
     }
 }

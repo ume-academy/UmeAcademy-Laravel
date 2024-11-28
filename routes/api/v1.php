@@ -150,6 +150,8 @@ Route::middleware('verify.jwt.token')
         Route::put('/profile', [UserController::class, 'updateProfile']);
 
         Route::get('/transaction-history', [TransactionController::class, 'getTransactionHistory']);
+
+        Route::post('/change-password', [UserController::class, 'changePassword']);
     }
 );
 

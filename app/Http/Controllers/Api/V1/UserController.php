@@ -7,6 +7,8 @@ use App\Http\Requests\User\UpdateProfileRequest;
 use App\Http\Resources\UserResource;
 use App\Services\UserService;
 use Illuminate\Http\Request;
+use App\Http\Requests\User\ChagePasswordRequest;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserController extends Controller
 {
@@ -61,4 +63,19 @@ class UserController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    // changePassword
+    public function changePassword(ChagePasswordRequest $request)
+    {
+        try {
+            // Lấy thông tin user từ JWT token
+            $user = JWTAuth::parseToken()->authenticate();
+
+            $this->userService->changePassword($user->id, $request->old_password, $request->new_password);
+            return response()->json(['message' => 'Mật khẩu đã được thay đổi thành công.'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
+    }
+    
 }

@@ -53,6 +53,11 @@ class VerifyJWTToken
             return response()->json(['error' => 'Email chưa được xác minh.'], 403);
         }
 
+        // Kiểm tra xem tài khoản có bị khóa không?
+        if ($user->is_lock) {
+            return response()->json(['error' => 'Tài khoản của bạn đã bị khóa.'], 403);
+        }
+
         return $next($request);
     }
 }
