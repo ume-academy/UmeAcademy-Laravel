@@ -10,6 +10,7 @@ use App\Repositories\Interfaces\TeacherWalletRepositoryInterface;
 use App\Repositories\Interfaces\TeacherWalletTransactionRepositoryInterface;
 use App\Traits\ValidationTrait;
 use Carbon\Carbon;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -116,6 +117,25 @@ class TeacherService
         });
     
         return $result->toArray();
+    }
+
+    public function getStatisticOfTeacher($id) {
+        $user = JWTAuth::parseToken()->authenticate();
+
+        if(!$user || !$user->hasRole('admin')) {
+            throw new AuthorizationException('Unauthorized');
+        }
+        
+        $wallet =  $this->teacherWalletRepo->getByTeacherId($id);
+        $courses = $this->courseRepo->getCourseOfTeacher($id);
+        
+        $data = [
+            'revenue' => $wallet->total_earnings,
+            'total_student' => $courses->sum('total_student'),
+            'total_rating' => $courses->sum('rating') / $courses->count()
+        ];
+
+        return $data;
     }
     
     private function getAllDates($startDate, $endDate) {

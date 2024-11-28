@@ -86,4 +86,14 @@ class TeacherController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function getStatisticOfTeacher($id) {
+        try {
+            $statistic = $this->teacherService->getStatisticOfTeacher($id);
+
+            return response()->json(['data' => $statistic]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }

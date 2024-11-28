@@ -80,6 +80,8 @@ Route::prefix('admin')
 
         Route::post('user/{id}/lock', [UserController::class, 'lock']);
         Route::post('user/{id}/unlock', [UserController::class, 'unlock']);
+
+        Route::get('/teacher/{id}/statistic', [TeacherController::class, 'getStatisticOfTeacher']);
     }
 );
 
