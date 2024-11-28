@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\V1\EmailVerificationController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\FeeController;
 use App\Http\Controllers\Api\V1\PaymentMethodController;
+use App\Http\Controllers\Api\V1\SearchController;
 use App\Http\Controllers\Api\V1\Teacher\TeacherRegistrationController;
 use App\Http\Controllers\Api\V1\TransactionController;
 use App\Http\Controllers\Api\V1\UserController;
@@ -159,4 +160,7 @@ Route::post('/confirm-webhook', [PaymentController::class, 'confirmWebhook']);
 Route::get('/cancel', [PaymentController::class, 'cancel']);
 
 Route::get('teacher/{id}', [TeacherController::class, 'getInfoTeacher']);
+
+// Search 
+Route::get('/courses/category/{id}', [SearchController::class, 'searchByCategory']);
 

@@ -68,7 +68,7 @@ class PaymentService
                 $teacherWallet = $this->teacherWalletRepo->getByTeacher($course->teacher_id);
 
                 $dataTeacherWallet = [
-                    'temporary_balance' => intval($teacherWallet->temporary_balance) + intval($transaction->revenue_teacher),
+                    'available_balance' => intval($teacherWallet->available_balance) + intval($transaction->revenue_teacher),
                     'total_earnings' => intval($teacherWallet->total_earnings) + intval($transaction->revenue_teacher)
                 ];
                 $this->teacherWalletRepo->update($course->teacher_id, $dataTeacherWallet);
@@ -76,7 +76,7 @@ class PaymentService
                 // Transaction wallet teacher
                 $dataTeacherWalletTransaction = [
                     'code' => $this->generateTransactionCode(),
-                    'type' => 'temporary_receive_money',
+                    'type' => 'available_receive_money',
                     'balance_tracking' => $transaction->revenue_teacher,
                     'teacher_wallet_id' => $teacherWallet->id
                 ];
