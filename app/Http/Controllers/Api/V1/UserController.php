@@ -41,4 +41,24 @@ class UserController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function lock($id) {
+        try {
+            $user = $this->userService->lock($id);
+
+            return new UserResource($user);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function unlock($id) {
+        try {
+            $user = $this->userService->unlock($id);
+
+            return new UserResource($user);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }

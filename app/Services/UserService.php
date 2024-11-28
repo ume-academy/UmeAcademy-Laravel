@@ -51,6 +51,25 @@ class UserService
         return $this->userRepo->update($user->id, $data);
     }
 
+    public function lock($id) {
+        $user = JWTAuth::parseToken()->authenticate();
+        
+        if(!$user || !$user->hasRole('admin')) {
+            throw new AuthorizationException('Unauthorized');
+        }
+
+        return $this->userRepo->lock($id);
+    }
+
+    public function unlock($id) {
+        $user = JWTAuth::parseToken()->authenticate();
+        
+        if(!$user || !$user->hasRole('admin')) {
+            throw new AuthorizationException('Unauthorized');
+        }
+
+        return $this->userRepo->unlock($id);
+    }
 
     private function handleAvatar($file)
     {

@@ -58,4 +58,20 @@ class UserRepository implements UserRepositoryInterface
     public function getAllUser($perPage) {
         return User::paginate($perPage);
     }
+
+    public function lock(int $id) {
+        $user = $this->findById($id);
+
+        $user->is_lock = true;
+        $user->save();
+        return $user;
+    }
+
+    public function unlock(int $id) {
+        $user = $this->findById($id);
+
+        $user->is_lock = false;
+        $user->save();
+        return $user;
+    }
 }
