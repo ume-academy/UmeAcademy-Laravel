@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Course;
 use App\Repositories\Interfaces\CourseRepositoryInterface;
+use Exception;
 
 class CourseRepository implements CourseRepositoryInterface
 {
@@ -71,4 +72,44 @@ class CourseRepository implements CourseRepositoryInterface
     public function getByCategory(int $id, $perPage) {
         return Course::where('category_id', $id)->where('status', 2)->paginate($perPage);
     }
+
+    public function filter($params)
+    {
+        $query = Course::query();
+
+        // Lọc theo tên danh mục
+        if (!empty($params['categories'])) {
+            $query->whereHas('category', function ($q) use ($params) {
+                $q->whereIn('name', $params['categories']);  
+            });
+        }
+        
+        // Lọc theo từ khóa
+        if (!empty($params['name'])) {
+            $query->where('name', 'like', '%' . $params['name'] . '%');
+        }
+
+        // Lọc theo giá
+        if (!empty($params['price'])) {
+            $query->where('price', '<=', $params['price']);
+        }
+
+        // Lọc theo đánh giá
+        if (!empty($params['rating'])) {
+            $query->where('rating', '>=', $params['rating']);
+        }
+
+        // Lọc theo trình độ
+        if (!empty($params['levels'])) {
+            $query->whereHas('level', function ($q) use ($params) {
+                $q->whereIn('name', $params['levels']);  
+            });
+        }
+
+        // Chỉ lấy các khóa học đã xuất bản
+        $query->where('status', 2);
+
+        return $query->paginate($params['per_page']);
+    }
+
 }

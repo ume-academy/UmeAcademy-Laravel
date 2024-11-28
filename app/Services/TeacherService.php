@@ -98,10 +98,10 @@ class TeacherService
     
         // Xử lý ngày bắt đầu và ngày kết thúc
         $startDate = $data['start_date'] ?? now()->startOfYear()->toDateString(); 
-        $endDate = $data['end_date'] ?? now()->toDateString();
+        $endDate = $data['end_date'] ?? now()->addDay()->toDateString();
 
         $transactions = $this->teacherWalletTransactionRepo->filterRevenue($teacher->id, $startDate, $endDate);
-    
+
         // Chuyển thành dạng ['date' => 'total_revenue']
         $transactionData = $transactions->pluck('total_revenue', 'date')->toArray();
 
@@ -123,7 +123,7 @@ class TeacherService
         $currentDate = Carbon::parse($startDate);
         $endDate = Carbon::parse($endDate);
     
-        while ($currentDate <= $endDate) {
+        while ($currentDate < $endDate) {
             $allDates[] = $currentDate->toDateString();
             $currentDate->addDay();
         }

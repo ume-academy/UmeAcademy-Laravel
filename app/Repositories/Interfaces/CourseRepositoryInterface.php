@@ -18,4 +18,5 @@ interface CourseRepositoryInterface
     public function updateStatus(int $id, $status);
     public function getCourseOfTeacher(int $id);
     public function getByCategory(int $id, $perPage);
+    public function filter($params);
 }
