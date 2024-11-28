@@ -6,8 +6,8 @@ use Exception;
 
 class TooManyVerificationRequestsException extends Exception
 {
-    public function __construct($message = 'Bạn đã yêu cầu quá nhiều hãy thử lại sau ít phút.')
+    public function __construct($message = 'Bạn đã yêu cầu quá nhiều hãy thử lại sau ít phút.', $code = 429)
     {
-        parent::__construct($message);
+        parent::__construct($message, $code);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use App\Contracts\EmailVerificationInterface;
 use App\Exceptions\Auth\UserNotFoundException;
@@ -53,19 +54,22 @@ class EmailVerificationService implements EmailVerificationInterface
         $user = $this->userRepository->findByEmail($email);
 
         if (!$user) 
-            throw new UserNotFoundException('Không tìm thấy email.');
+            throw new UserNotFoundException('Không tìm thấy email.', 404);
 
         if ($this->isEmailVerified($user)) 
-            throw new EmailAlreadyVerifiedException('Email đã được xác minh.');
+            throw new EmailAlreadyVerifiedException('Email đã được xác minh.', 409);
 
         if (!$this->canResendVerification($user->id)) 
             throw new TooManyVerificationRequestsException(
-                'Vui lòng chờ ' . $this->getRemainingTime($user->id) . ' giây trước khi yêu cầu email xác minh mới.'
+                'Vui lòng chờ ' . $this->getRemainingTime($user->id) . ' giây trước khi yêu cầu email xác minh mới.',
+                429
             );
 
         $user->sendEmailVerificationNotification();
 
         $this->setCooldown($user->id);
+
+        return response()->json(['message' => 'Đã gửi lại email xác minh tài khoản.']);
     }
 
     public function canResendVerification(int $userId)

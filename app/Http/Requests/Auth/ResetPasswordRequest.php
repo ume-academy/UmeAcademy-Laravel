@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class ResendEmailRequest extends FormRequest
+class ResetPasswordRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,14 +25,22 @@ class ResendEmailRequest extends FormRequest
     {
         return [
             'email' => 'required|email',
+            'password' => 'required|string|min:8|confirmed',
+            'token' => 'required|string',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'email.required' => 'Trường email là bắt buộc.',
-            'email.email' => 'Email không đúng định dạng',
+            'email.required' => 'Email không được để trống.',
+            'email.email' => 'Email không hợp lệ. Vui lòng nhập một địa chỉ email hợp lệ.',
+            'password.required' => 'Mật khẩu không được để trống.',
+            'password.string' => 'Mật khẩu phải là một chuỗi ký tự.',
+            'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự.',
+            'password.confirmed' => 'Mật khẩu xác nhận không khớp.',
+            'token.required' => 'Token không được để trống.',
+            'token.string' => 'Token phải là một chuỗi ký tự.',
         ];
     }
 

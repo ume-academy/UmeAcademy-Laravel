@@ -1,38 +1,43 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\V1\CategoryController;
-use App\Http\Controllers\Api\V1\ChapterController;
+use App\Http\Controllers\Api\V1\FeeController;
+use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\CourseController;
 use App\Http\Controllers\Api\V1\LessonController;
-use App\Http\Controllers\Api\V1\PaymentController;
 use App\Http\Controllers\Api\V1\ReviewController;
+use App\Http\Controllers\Api\V1\ChapterController;
+use App\Http\Controllers\Api\V1\PaymentController;
 use App\Http\Controllers\Api\V1\TeacherController;
 use App\Http\Controllers\Api\V1\VoucherController;
-use App\Http\Controllers\Api\V1\EmailVerificationController;
-use App\Http\Controllers\Api\V1\AuthController;
-use App\Http\Controllers\Api\V1\FeeController;
 use App\Http\Controllers\Api\V1\LevelController;
-use App\Http\Controllers\Api\V1\PaymentMethodController;
 use App\Http\Controllers\Api\V1\SearchController;
 use App\Http\Controllers\Api\V1\Teacher\TeacherRegistrationController;
+use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\TransactionController;
-use App\Http\Controllers\Api\V1\UserController;
+use App\Http\Controllers\Api\V1\PaymentMethodController;
+use App\Http\Controllers\Api\V1\ForgotPasswordController;
 use App\Http\Controllers\Api\V1\WithdrawMethodController;
-use App\Services\EmailVerificationService;
+use App\Http\Controllers\Api\V1\EmailVerificationController;
 
 Route::prefix('/auth')
     ->group(function () {
 
         Route::post('/register/{type}', [AuthController::class, 'register']);
 
-        Route::get('/email/verify/{id}/{hash}', [EmailVerificationService::class, 'verifyEmail'])
+        Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])
             ->name('verification.verify');
 
-        Route::post('/email/resendVerificationEmail', [EmailVerificationService::class, 'resendVerificationEmail'])
+        Route::post('/resend-verify-email', [EmailVerificationController::class, 'resend'])
             ->name('verification.resend');
 
         Route::post('/login/{type}', [AuthController::class, 'login']);
+
+        Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail']);
+
+        Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'])
+            ->name('password.reset');
 
         // Các route cần xác thực JWT
         Route::middleware('verify.jwt.token')

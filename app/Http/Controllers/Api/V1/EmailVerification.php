@@ -13,11 +13,19 @@ class EmailVerification
     {}
     public function verify(int $userId, string $hash)
     {
-        $this->emailVerificationService->verifyEmail($userId, $hash);
+        try {
+            return $this->emailVerificationService->verifyEmail($userId, $hash);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     public function resend(ResendEmailRequest $request)
     {
-        
+        try {
+            return $this->emailVerificationService->resendVerificationEmail($request->email);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 }

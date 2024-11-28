@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class ResendEmailRequest extends FormRequest
+class ForgotPasswordRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,15 +24,16 @@ class ResendEmailRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email',
+            'email' => 'required|email|exists:users,email',
         ];
     }
 
-    public function messages(): array
+    public function messages()
     {
         return [
             'email.required' => 'Trường email là bắt buộc.',
-            'email.email' => 'Email không đúng định dạng',
+            'email.email' => 'Email không đúng định dạng.',
+            'email.exists' => 'Email này chưa được đăng ký. Hãy kiểm tra lại.',
         ];
     }
 
