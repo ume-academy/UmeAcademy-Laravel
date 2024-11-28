@@ -24,4 +24,16 @@ class SearchController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function searchCourse(Request $req) {
+        try {
+            $data = $req->all();
+            
+            $courses = $this->searchService->searchCourse($data);
+            return CourseResource::collection($courses);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+
+    }
 }

@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\V1\VoucherController;
 use App\Http\Controllers\Api\V1\EmailVerificationController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\FeeController;
+use App\Http\Controllers\Api\V1\LevelController;
 use App\Http\Controllers\Api\V1\PaymentMethodController;
 use App\Http\Controllers\Api\V1\SearchController;
 use App\Http\Controllers\Api\V1\Teacher\TeacherRegistrationController;
@@ -143,6 +144,9 @@ Route::middleware('verify.jwt.token')
 // Category
 Route::get('/categories', [CategoryController::class, 'getAllCategories']);
 
+// Level
+Route::get('/levels', [LevelController::class, 'getAllLevel']);
+
 // Course
 Route::get('/course/{id}/information', [CourseController::class, 'getInfoCourse']);
 Route::get('/course/{id}/statistic', [CourseController::class, 'getStatisticCourse']);
@@ -163,4 +167,5 @@ Route::get('teacher/{id}', [TeacherController::class, 'getInfoTeacher']);
 
 // Search 
 Route::get('/courses/category/{id}', [SearchController::class, 'searchByCategory']);
+Route::get('/courses/search', [SearchController::class, 'searchCourse']);
 
