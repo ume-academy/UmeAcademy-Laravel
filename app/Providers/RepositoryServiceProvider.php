@@ -3,47 +3,50 @@
 namespace App\Providers;
 
 
-use App\Repositories\CategoryRepository;
-use App\Repositories\ChapterRepository;
-use App\Repositories\CourseApprovalRepository;
-use App\Repositories\CourseRepository;
-use App\Repositories\FeePlatformRepository;
-use App\Repositories\Interfaces\CategoryRepositoryInterface;
-use App\Repositories\Interfaces\ChapterRepositoryInterface;
-use App\Repositories\Interfaces\CourseApprovalRepositoryInterface;
-use App\Repositories\Interfaces\CourseRepositoryInterface;
-use App\Repositories\Interfaces\FeePlatformRepositoryInterface;
-use App\Repositories\Interfaces\LessonRepositoryInterface;
-use App\Repositories\Interfaces\LevelRepositoryInterface;
-use App\Repositories\Interfaces\WithdrawMethodRepositoryInterface;
-use App\Repositories\Interfaces\PaymentMethodRepositoryInterface;
+use App\Models\Wallet;
 use App\Repositories\UserRepository;
+use App\Repositories\LevelRepository;
 use App\Repositories\TokenRepository;
-use App\Repositories\TeacherRepository;
-use Illuminate\Support\ServiceProvider;
-use App\Repositories\RefreshTokenRepository;
-use App\Repositories\Interfaces\UserRepositoryInterface;
-use App\Repositories\Interfaces\RefreshTokenRepositoryInterface;
-use App\Repositories\Interfaces\ReviewRepositoryInterface;
-use App\Repositories\Interfaces\TeacherRepositoryInterface;
-use App\Repositories\Interfaces\VoucherRepositoryInterface;
-use App\Repositories\Interfaces\TeacherWalletRepositoryInterface;
-use App\Repositories\Interfaces\TeacherWalletTransactionRepositoryInterface;
-use App\Repositories\Interfaces\TransactionRepositoryInterface;
-use App\Repositories\Interfaces\VideoRepositoryInterface;
-use App\Repositories\Interfaces\VoucherUsageRepositoryInterface;
+use App\Repositories\VideoRepository;
+use App\Repositories\CourseRepository;
 use App\Repositories\LessonRepository;
 use App\Repositories\ReviewRepository;
+use App\Repositories\ChapterRepository;
+use App\Repositories\TeacherRepository;
 use App\Repositories\VoucherRepository;
-use App\Repositories\TeacherWalletRepository;
-use App\Repositories\TeacherWalletTransactionRepository;
+use Illuminate\Support\ServiceProvider;
+use App\Repositories\CategoryRepository;
+use App\Repositories\UserWalletRepository;
+use App\Repositories\FeePlatformRepository;
 use App\Repositories\TransactionRepository;
-use App\Repositories\VideoRepository;
+use App\Repositories\RefreshTokenRepository;
 use App\Repositories\VoucherUsageRepository;
-use App\Repositories\Interfaces\TokenRepositoryInterface;
-use App\Repositories\LevelRepository;
-use App\Repositories\WithdrawMethodRepository;
 use App\Repositories\PaymentMethodRepository;
+use App\Repositories\TeacherWalletRepository;
+use App\Repositories\CourseApprovalRepository;
+use App\Repositories\WithdrawMethodRepository;
+use App\Repositories\Interfaces\UserRepositoryInterface;
+use App\Repositories\TeacherWalletTransactionRepository;
+use App\Repositories\Interfaces\LevelRepositoryInterface;
+use App\Repositories\Interfaces\TokenRepositoryInterface;
+use App\Repositories\Interfaces\VideoRepositoryInterface;
+use App\Repositories\Interfaces\CourseRepositoryInterface;
+use App\Repositories\Interfaces\LessonRepositoryInterface;
+use App\Repositories\Interfaces\ReviewRepositoryInterface;
+use App\Repositories\Interfaces\ChapterRepositoryInterface;
+use App\Repositories\Interfaces\TeacherRepositoryInterface;
+use App\Repositories\Interfaces\VoucherRepositoryInterface;
+use App\Repositories\Interfaces\CategoryRepositoryInterface;
+use App\Repositories\Interfaces\UserWalletRepositoryInterface;
+use App\Repositories\Interfaces\FeePlatformRepositoryInterface;
+use App\Repositories\Interfaces\TransactionRepositoryInterface;
+use App\Repositories\Interfaces\VoucherUsageRepositoryInterface;
+use App\Repositories\Interfaces\PaymentMethodRepositoryInterface;
+use App\Repositories\Interfaces\TeacherWalletRepositoryInterface;
+use App\Repositories\Interfaces\CourseApprovalRepositoryInterface;
+use App\Repositories\Interfaces\WithdrawMethodRepositoryInterface;
+use App\Repositories\Interfaces\TeacherWalletTransactionRepositoryInterface;
+
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -71,6 +74,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(CourseApprovalRepositoryInterface::class, CourseApprovalRepository::class);
         $this->app->bind(PaymentMethodRepositoryInterface::class, PaymentMethodRepository::class);
         $this->app->bind(LevelRepositoryInterface::class, LevelRepository::class);
+        $this->app->bind(UserWalletRepositoryInterface::class, UserWalletRepository::class);
     }
 
     /**

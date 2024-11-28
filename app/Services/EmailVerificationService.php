@@ -9,30 +9,43 @@ use App\Exceptions\Auth\EmailAlreadyVerifiedException;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Exceptions\Auth\InvalidVerificationLinkException;
 use App\Exceptions\Auth\TooManyVerificationRequestsException;
+use App\Repositories\Interfaces\UserWalletRepositoryInterface;
 
 class EmailVerificationService implements EmailVerificationInterface
 {
     private const VERIFICATION_THROTTLE = 60; // 60 giây
 
     public function __construct(
-        private UserRepositoryInterface $userRepository
+        private UserRepositoryInterface $userRepository,
+        private UserWalletRepositoryInterface $userWalletRepository,
     ) {}
 
     public function verifyEmail(int $userId, string $hash)
     {
-        $user = $this->userRepository->findById($userId);
-        
-        if (!$user) 
-            throw new UserNotFoundException('Không tim thấy người dùng.');
+        try {
+            $user = $this->userRepository->findById($userId);
+            
+            if (!$user) 
+                throw new UserNotFoundException('Không tim thấy người dùng.');
 
-        if (!hash_equals((string) $hash, sha1($user->getEmailForVerification()))) 
-            throw new InvalidVerificationLinkException('Link xác minh không hợp lệ.');
+            if (!hash_equals((string) $hash, sha1($user->getEmailForVerification()))) 
+                throw new InvalidVerificationLinkException('Link xác minh không hợp lệ.');
 
-        if ($this->isEmailVerified($user)) 
-            throw new EmailAlreadyVerifiedException('Email đã được xác minh.');
+            if ($this->isEmailVerified($user)) 
+                throw new EmailAlreadyVerifiedException('Email đã được xác minh.');
 
-        // Đánh dấu email đã được xác minh
-        $user->markEmailAsVerified($user);
+            // Đánh dấu email đã được xác minh
+            $user->markEmailAsVerified($user);
+            
+            // Tạo ví sau khi người dùng xác minh email thành công
+            $this->userWalletRepository->createWallet($user->id);
+
+            // 
+            return redirect()->away('https://umeacademy.online/login');
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     public function resendVerificationEmail(string $email)
