@@ -65,6 +65,9 @@ Route::prefix('admin')
     ->group(function () {
         // Category
         Route::post('/categories', [CategoryController::class, 'storeCategories']);
+        Route::get('/categories/{id}', [CategoryController::class, 'getCategory']);
+        Route::put('/categories/{id}', [CategoryController::class, 'updateCategory']);
+        Route::delete('/categories/{id}', [CategoryController::class, 'deleteCategory']);
 
         // Fee
         Route::put('/fee/{id}', [FeeController::class, 'update']);
@@ -82,6 +85,8 @@ Route::prefix('admin')
         Route::post('user/{id}/unlock', [UserController::class, 'unlock']);
 
         Route::get('/teacher/{id}/statistic', [TeacherController::class, 'getStatisticOfTeacher']);
+
+        Route::post('/course/{id}/approval', [CourseController::class, 'approval']);
     }
 );
 
