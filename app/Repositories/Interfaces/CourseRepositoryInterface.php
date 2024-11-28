@@ -19,4 +19,5 @@ interface CourseRepositoryInterface
     public function getCourseOfTeacher(int $id);
     public function getByCategory(int $id, $perPage);
     public function filter($params);
+    public function getAllCourse($perPage);
 }
