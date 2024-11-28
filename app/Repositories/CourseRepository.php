@@ -66,7 +66,7 @@ class CourseRepository implements CourseRepositoryInterface
         $course = $this->find($id);
 
         $course->status = $status;
-        $course->save();
+        return $course->save();
     }
 
     public function getByCategory(int $id, $perPage) {

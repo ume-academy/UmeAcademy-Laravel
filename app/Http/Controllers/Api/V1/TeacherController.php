@@ -79,7 +79,7 @@ class TeacherController extends Controller
         try {
             $data = $req->only(['start_date', 'end_date']);
 
-            return $revenue = $this->teacherService->getRevenue($data);
+            $revenue = $this->teacherService->getRevenue($data);
 
             return response()->json(['data' => $revenue]);
         } catch (\Exception $e) {

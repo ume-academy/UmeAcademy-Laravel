@@ -7,6 +7,8 @@ use App\Repositories\Interfaces\CourseApprovalRepositoryInterface;
 use App\Repositories\Interfaces\CourseRepositoryInterface;
 use App\Traits\HandleFileTrait;
 use App\Traits\ValidationTrait;
+use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
@@ -241,6 +243,22 @@ class CourseService
         });
 
         return $students;
+    }
+
+    public function approval($id) {
+        $user = JWTAuth::parseToken()->authenticate();
+
+        if(!$user || !$user->hasRole('admin')) {
+            throw new AuthorizationException('Unauthorized');
+        }
+
+        $course = $this->courseRepo->find($id);
+
+        if($course->status == 2) {
+            throw new Exception('Khóa học đã được phê duyệt');
+        }
+
+        return $this->courseRepo->updateStatus($id, 2);
     }
 
     // Xử lý ảnh thumbnail
