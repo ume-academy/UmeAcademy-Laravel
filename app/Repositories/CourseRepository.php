@@ -67,4 +67,8 @@ class CourseRepository implements CourseRepositoryInterface
         $course->status = $status;
         $course->save();
     }
+
+    public function getByCategory(int $id, $perPage) {
+        return Course::where('category_id', $id)->where('status', 2)->paginate($perPage);
+    }
 }
