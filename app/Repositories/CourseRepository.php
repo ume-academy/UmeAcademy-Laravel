@@ -112,4 +112,7 @@ class CourseRepository implements CourseRepositoryInterface
         return $query->paginate($params['per_page']);
     }
 
+    public function getAllCourse($perPage) {
+        return Course::paginate($perPage);
+    }
 }

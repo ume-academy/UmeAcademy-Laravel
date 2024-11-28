@@ -87,6 +87,8 @@ Route::prefix('admin')
         Route::get('/teacher/{id}/statistic', [TeacherController::class, 'getStatisticOfTeacher']);
 
         Route::post('/course/{id}/approval', [CourseController::class, 'approval']);
+
+        Route::get('/courses', [CourseController::class, 'getAllCourse']);
     }
 );
 

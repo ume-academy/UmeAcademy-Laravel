@@ -208,4 +208,16 @@ class CourseController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function getAllCourse(Request $req) {
+        try {
+            $perPage = $req->input('per_page', 10);
+
+            $courses = $this->courseService->getAllCourse($perPage);
+
+            return CourseResource::collection($courses);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }

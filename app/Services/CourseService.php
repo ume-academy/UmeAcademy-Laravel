@@ -261,6 +261,16 @@ class CourseService
         return $this->courseRepo->updateStatus($id, 2);
     }
 
+    public function getAllCourse($perPage) {
+        $user = JWTAuth::parseToken()->authenticate();
+
+        if(!$user || !$user->hasRole('admin')) {
+            throw new AuthorizationException('Unauthorized');
+        }
+
+        return $this->courseRepo->getAllCourse($perPage);
+    }
+
     // Xử lý ảnh thumbnail
     private function handleThumbnail($file)
     {
