@@ -77,6 +77,9 @@ Route::prefix('admin')
         Route::get('/payment-methods/{id}', [PaymentMethodController::class, 'detailPaymentMethod']);
 
         Route::get('/users', [UserController::class, 'getListUser']);
+
+        Route::post('user/{id}/lock', [UserController::class, 'lock']);
+        Route::post('user/{id}/unlock', [UserController::class, 'unlock']);
     }
 );
 
