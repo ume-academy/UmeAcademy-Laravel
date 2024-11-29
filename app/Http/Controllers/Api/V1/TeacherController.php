@@ -18,7 +18,10 @@ class TeacherController extends Controller
     public function registerTeacher() {
         try {
             $this->teacherService->registerTeacher();
-            return response()->json(['message' => 'Đăng ký trở thành giảng viên thành công.'], 200);
+            return response()->json([
+                'status' => true,
+                'message' => 'Đăng ký trở thành giảng viên thành công.'
+            ], 200);
 
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);

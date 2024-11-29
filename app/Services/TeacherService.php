@@ -88,7 +88,8 @@ class TeacherService
         $data = [
             'revenue' => $wallet->total_earnings,
             'total_student' => $courses->sum('total_student'),
-            'total_rating' => $courses->sum('rating') / $courses->count()
+            'total_rating' => round($courses->sum('rating') / $courses->count(), 2)
+
         ];
 
         return $data;
@@ -132,7 +133,7 @@ class TeacherService
         $data = [
             'revenue' => $wallet->total_earnings,
             'total_student' => $courses->sum('total_student'),
-            'total_rating' => $courses->sum('rating') / $courses->count()
+            'total_rating' => round($courses->sum('rating') / $courses->count(), 2)
         ];
 
         return $data;

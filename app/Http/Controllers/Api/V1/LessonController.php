@@ -5,17 +5,21 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Lesson\StoreLessonRequest;
 use App\Http\Requests\Lesson\UpdateLessonRequest;
+use App\Http\Requests\Resource\StoreResourceRequest;
 use App\Http\Requests\Video\StoreVideoRequest;
 use App\Http\Resources\Lesson\LessonResource;
+use App\Http\Resources\Resource\ResourceResource;
 use App\Http\Resources\Video\VideoResource;
 use App\Services\LessonService;
+use App\Services\ResourceService;
 use App\Services\VideoService;
 
 class LessonController extends Controller
 {
     public function __construct(
         private LessonService $lessonService,
-        private VideoService $videoService
+        private VideoService $videoService,
+        private ResourceService $resourceService,
     ){}
 
     public function createLesson(StoreLessonRequest $req, $id, $chapterId) {
@@ -46,6 +50,23 @@ class LessonController extends Controller
             $video = $this->videoService->createVideo($data);
 
             return new VideoResource($video);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function createResource(StoreResourceRequest $req, $id, $chapterId, $lessonId) {
+        try {
+            $data = [
+                'resource' => $req->file('name'),
+                'course_id' => $id,
+                'chapter_id' => $chapterId,
+                'lesson_id' => $lessonId,
+            ];
+
+            $resource = $this->resourceService->createResource($data);
+
+            return new ResourceResource($resource);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }

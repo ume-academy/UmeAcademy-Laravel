@@ -113,6 +113,8 @@ Route::prefix('/teacher')
         
         Route::post('/course/{id}/chapter/{chapterId}/lesson/{lessonId}/videos', [LessonController::class, 'createVideo']);
 
+        Route::post('/course/{id}/chapter/{chapterId}/lesson/{lessonId}/resources', [LessonController::class, 'createResource']);
+
         Route::post('/course/{id}/vouchers', [VoucherController::class, 'createVoucher']);
 
         Route::get('/course/{id}/vouchers', [VoucherController::class, 'getVouchersOfCourse']);

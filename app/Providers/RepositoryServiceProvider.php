@@ -44,9 +44,10 @@ use App\Repositories\Interfaces\VoucherUsageRepositoryInterface;
 use App\Repositories\Interfaces\PaymentMethodRepositoryInterface;
 use App\Repositories\Interfaces\TeacherWalletRepositoryInterface;
 use App\Repositories\Interfaces\CourseApprovalRepositoryInterface;
+use App\Repositories\Interfaces\ResourceRepositoryInterface;
 use App\Repositories\Interfaces\WithdrawMethodRepositoryInterface;
 use App\Repositories\Interfaces\TeacherWalletTransactionRepositoryInterface;
-
+use App\Repositories\ResourceRepository;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -75,6 +76,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(PaymentMethodRepositoryInterface::class, PaymentMethodRepository::class);
         $this->app->bind(LevelRepositoryInterface::class, LevelRepository::class);
         $this->app->bind(UserWalletRepositoryInterface::class, UserWalletRepository::class);
+        $this->app->bind(ResourceRepositoryInterface::class, ResourceRepository::class);
     }
 
     /**
