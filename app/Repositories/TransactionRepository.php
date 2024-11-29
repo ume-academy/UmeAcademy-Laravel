@@ -26,4 +26,8 @@ class TransactionRepository implements TransactionRepositoryInterface
     public function getByUserId(int $id, $perPage) {
         return Transaction::where('user_id', $id)->paginate($perPage);
     }
+
+    public function getAll($perPage) {
+        return Transaction::paginate($perPage);
+    }
 }

@@ -95,6 +95,9 @@ Route::prefix('admin')
 
         Route::get('/courses', [CourseController::class, 'getAllCourse']);
         Route::get('/course/{id}', [CourseController::class, 'getDetailCourse']);
+
+        // Transaction 
+        Route::get('/transactions', [TransactionController::class, 'getAllTransaction']);
     }
 );
 
