@@ -50,7 +50,7 @@ class VideoService
             $video = $this->videoRepo->create($videoData);
 
             if ($video) {
-                HandleFileTrait::uploadFile($data['video'], $videoData['name'], 'courses', true);
+                HandleFileTrait::uploadFile($data['video'], $videoData['name'], 'courses', 'videos');
             }
 
             // Xóa file tạm sau khi xử lý

@@ -14,17 +14,17 @@ trait HandleFileTrait
         return $fileName;
     }
 
-    public static function uploadFile(UploadedFile $file, $fileName, $folder = '', $video = false)
+    public static function uploadFile(UploadedFile $file, $fileName, $folder = '', $type = 'images')
     {
-        $directory = $video ? 'videos/' : 'images/';
+        $directory = $type . '/';
 
         // Lưu file vào thư mục storage/app/$directory/$folder
         return $file->storeAs($directory . $folder, $fileName);
     }
 
-    public static function removeFile($filename, $folder = '', $video = false)
+    public static function removeFile($filename, $folder = '', $type = 'images')
     {
-        $directory = $video ? 'videos/' : 'images/';
+        $directory = $type . '/';
         
         // Tạo đường dẫn đầy đủ cho file
         $path = $directory . $folder . '/' . $filename;

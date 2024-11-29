@@ -45,7 +45,8 @@ class CourseResource extends JsonResource
             'badges' => [
                 'badge' => $this->badge ?? null,
                 'category' => $this->category->name ?? null 
-            ]
+            ],
+            'created_at' => $this->created_at ?? null
         ];
     }
 }

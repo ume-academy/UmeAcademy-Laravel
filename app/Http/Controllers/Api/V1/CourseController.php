@@ -197,12 +197,14 @@ class CourseController extends Controller
         }
     }
 
-    public function approval($id) {
+    public function approval(Request $req, $id) {
         try {
-            $course = $this->courseService->approval($id);
+            $status = $req->input('status');
+           
+            $course = $this->courseService->approval($id, $status);
 
             if($course) {
-                return response()->json(['message' => 'Phê duyệt thành công']);
+                return response()->json(['message' => 'Cập nhật thành công']);
             }
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);

@@ -245,20 +245,14 @@ class CourseService
         return $students;
     }
 
-    public function approval($id) {
+    public function approval($id, $status) {
         $user = JWTAuth::parseToken()->authenticate();
 
         if(!$user || !$user->hasRole('admin')) {
             throw new AuthorizationException('Unauthorized');
         }
 
-        $course = $this->courseRepo->find($id);
-
-        if($course->status == 2) {
-            throw new Exception('Khóa học đã được phê duyệt');
-        }
-
-        return $this->courseRepo->updateStatus($id, 2);
+        return $this->courseRepo->updateStatus($id, $status);
     }
 
     public function getAllCourse($perPage) {
@@ -295,7 +289,7 @@ class CourseService
     private function handleVideo($file)
     {
         $fileName = HandleFileTrait::generateName($file);
-        HandleFileTrait::uploadFile($file, $fileName, 'courses', true);
+        HandleFileTrait::uploadFile($file, $fileName, 'courses', 'videos');
         
         return $fileName;
     }
