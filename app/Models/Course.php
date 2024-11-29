@@ -58,6 +58,10 @@ class Course extends Model
         return $this->belongsToMany(User::class, 'wishlists', 'course_id', 'user_id');
     }
 
+    public function vouchers() {
+        return $this->hasMany(Voucher::class);
+    }
+
     public function courseEnrolled()
     {
         return $this->belongsToMany(User::class, 'course_enrolleds', 'course_id', 'user_id')->withPivot('created_at');
