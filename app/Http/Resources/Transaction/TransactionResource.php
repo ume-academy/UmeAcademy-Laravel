@@ -31,6 +31,7 @@ class TransactionResource extends JsonResource
                 'id' => $this->paymentMethod->id ?? null,
                 'name' => $this->paymentMethod->name ?? null,
             ],
+            'status' => $this->status,
             'created_at' => $this->created_at ?? null
         ];
     }

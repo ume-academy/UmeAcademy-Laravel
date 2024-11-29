@@ -24,4 +24,16 @@ class TransactionController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function getAllTransaction(Request $req) {
+        try {
+            $perPage = $req->input('per_page', 10);
+
+            $transactions = $this->transactionService->getAllTransaction($perPage);
+            return TransactionResource::collection($transactions);
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }
