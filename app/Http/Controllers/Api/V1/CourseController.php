@@ -8,6 +8,7 @@ use App\Http\Requests\Course\UpdateCourseRequest;
 use App\Http\Resources\Course\ContentCoursePurchasedResource;
 use App\Http\Resources\Course\ContentCourseResource;
 use App\Http\Resources\Course\CourseResource;
+use App\Http\Resources\Course\DetailCourseResource;
 use App\Http\Resources\Course\InfoTeacherCourseResource;
 use App\Http\Resources\Course\OverviewCourseResource;
 use App\Http\Resources\Course\StatisticCourseResource;
@@ -218,6 +219,15 @@ class CourseController extends Controller
             $courses = $this->courseService->getAllCourse($perPage);
 
             return CourseResource::collection($courses);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function getDetailCourse($id) {
+        try {
+            $course = $this->courseService->getDetailCourse($id);
+            return new DetailCourseResource($course);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }

@@ -94,6 +94,7 @@ Route::prefix('admin')
         Route::post('/course/{id}/approval', [CourseController::class, 'approval']);
 
         Route::get('/courses', [CourseController::class, 'getAllCourse']);
+        Route::get('/course/{id}', [CourseController::class, 'getDetailCourse']);
     }
 );
 

@@ -252,6 +252,12 @@ class CourseService
             throw new AuthorizationException('Unauthorized');
         }
 
+        $course = $this->courseRepo->find($id);
+
+        if($course->status == 2) {
+            throw new \Exception('Khóa học đã được phê duyệt');
+        }
+
         return $this->courseRepo->updateStatus($id, $status);
     }
 
@@ -263,6 +269,16 @@ class CourseService
         }
 
         return $this->courseRepo->getAllCourse($perPage);
+    }
+
+    public function getDetailCourse($id) {
+        $user = JWTAuth::parseToken()->authenticate();
+
+        if(!$user || !$user->hasRole('admin')) {
+            throw new AuthorizationException('Unauthorized');
+        }
+
+        return $this->courseRepo->find($id);
     }
 
     // Xử lý ảnh thumbnail
