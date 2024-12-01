@@ -98,6 +98,10 @@ Route::prefix('admin')
 
         // Transaction 
         Route::get('/transactions', [TransactionController::class, 'getAllTransaction']);
+
+        // Withdraw request
+        Route::get('/withdraw-request', [WithdrawMethodController::class, 'getWithdrawRequest']);
+        Route::put('/withdraw-request/{id}', [WithdrawMethodController::class, 'updateStatus']);
     }
 );
 

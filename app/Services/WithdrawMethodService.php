@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\WithdrawMethod;
 use App\Repositories\Interfaces\WithdrawMethodRepositoryInterface;
 use App\Traits\ValidationTrait;
+use Illuminate\Auth\Access\AuthorizationException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class WithdrawMethodService
@@ -44,5 +45,31 @@ class WithdrawMethodService
         }
 
         return $this->withdrawMethodRepo->update($id, $data);
+    }
+
+    public function getWithdrawRequest($perPage) {
+        $user = JWTAuth::parseToken()->authenticate();
+
+        if(!$user || !$user->hasRole('admin')) {
+            throw new AuthorizationException('Unauthorized');
+        }
+
+        return $this->withdrawMethodRepo->getAllRequest($perPage);
+    }
+
+    public function updateStatus($id, $status) {
+        $user = JWTAuth::parseToken()->authenticate();
+
+        if(!$user || !$user->hasRole('admin')) {
+            throw new AuthorizationException('Unauthorized');
+        }
+
+        $request = $this->withdrawMethodRepo->find($id);
+
+        if($request->status == 1) {
+            throw new \Exception('Yêu cầu đã được phê duyệt');
+        }
+
+        return $this->withdrawMethodRepo->updateStatus($id, $status);
     }
 }
