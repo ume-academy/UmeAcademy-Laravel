@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\V1\PaymentMethodController;
 use App\Http\Controllers\Api\V1\ForgotPasswordController;
 use App\Http\Controllers\Api\V1\WithdrawMethodController;
 use App\Http\Controllers\Api\V1\EmailVerificationController;
+use App\Http\Controllers\Api\V1\StudentController;
 
 Route::prefix('/auth')
     ->group(function () {
@@ -61,6 +62,10 @@ Route::prefix('teachers')
 
 Route::middleware('verify.jwt.token')->group(function() {
     Route::get('/purchased-courses', [CourseController::class, 'getPurchasedCourses']);
+
+    // Wallet
+    Route::get('/wallet-balance', [StudentController::class, 'getWalletBalance']);
+    Route::get('/wallet-transaction', [StudentController::class, 'getWalletTransaction']);
 });
 
 
@@ -135,6 +140,7 @@ Route::prefix('/teacher')
         Route::post('/course/{id}/course-approval-request', [CourseController::class, 'requestApprovalCourse']);
 
         Route::get('/wallet-balance', [TeacherController::class, 'getWalletBalance']);
+        Route::get('/wallet-transaction', [TeacherController::class, 'getWalletTransaction']);
 
         // Withdraw
         Route::post('/withdraw-method', [WithdrawMethodController::class, 'addWithdrawMethod']);
@@ -142,8 +148,6 @@ Route::prefix('/teacher')
         Route::put('/withdraw-method/{id}', [WithdrawMethodController::class, 'updateWithdrawMethod']);
 
         Route::get('/course/{id}/students', [CourseController::class, 'getStudentsOfCourse']);
-
-        Route::get('/wallet-transaction', [TeacherController::class, 'getWalletTransaction']);
 
         Route::get('/statistic', [TeacherController::class, 'getStatistic']);
         Route::post('/revenue', [TeacherController::class, 'getRevenue']);
