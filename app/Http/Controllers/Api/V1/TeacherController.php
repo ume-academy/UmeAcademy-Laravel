@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Revenue\RevenueRequest;
+use App\Http\Resources\Course\CourseResource;
 use App\Http\Resources\Teacher\TeacherResource;
 use App\Http\Resources\Wallet\WalletResource;
 use App\Services\TeacherService;
@@ -95,6 +96,29 @@ class TeacherController extends Controller
             $statistic = $this->teacherService->getStatisticOfTeacher($id);
 
             return response()->json(['data' => $statistic]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function getWalletTransactionByTeacher(Request $req, $id) {
+        try {
+            $perPage = $req->input('per_page', 10);
+
+            $transactions = $this->teacherService->getWalletTransactionByTeacher($id, $perPage);
+            return WalletResource::collection($transactions);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function getCoursesByTeacher(Request $req, $id) {
+        try {
+            $perPage = $req->input('per_page', 10);
+
+            $courses = $this->teacherService->getCoursesByTeacher($id, $perPage);
+
+            return CourseResource::collection($courses);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
