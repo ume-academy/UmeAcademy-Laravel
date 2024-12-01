@@ -16,7 +16,7 @@ class StudentCourseResource extends JsonResource
     {
         return [
             'fullname' => $this->fullname ?? null,  
-            'avatar' => $this->avatar ?? null,   
+            'avatar' => $this->avatar ? url('/images/users/'. $this->avatar) : null,   
             'email' => $this->email ?? null,     
             'registered_at' => $this->pivot->created_at ?? null, 
             'progress' => $this->progress ?? null
