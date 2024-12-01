@@ -32,5 +32,26 @@ class WithdrawMethodController extends Controller {
         }
     }
 
+    public function getBanks() {
+        try {
+            $banks = $this->withdrawMethodService->getBanks();
+
+            return response()->json(['data' => $banks]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function updateWithdrawMethod(WithdrawMethodRequest $request, $id) {
+        try {
+            $data = $request->all();
+            $method = $this->withdrawMethodService->updateWithdrawMethod($id, $data);
+            
+            return new WithdrawMethodResource($method);
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }
 

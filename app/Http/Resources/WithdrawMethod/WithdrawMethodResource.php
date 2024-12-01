@@ -18,7 +18,7 @@ class WithdrawMethodResource extends JsonResource
             'id' => $this->id ?? null,
             'name_bank' => $this->name_bank ?? null,
             'name_account' => $this->name_account ?? null,
-            'branch' => $this->branch ?? null,
+            'number_account' => $this->number_account ?? null,
             'min_withdraw' => $this->min_withdraw ?? null,
             'teacher' => [
                 'id' => $this->teacher->id ?? null,

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class WithdrawMethod extends Model
 {
@@ -22,5 +23,22 @@ class WithdrawMethod extends Model
     {
         return $this->belongsTo(Teacher::class);
     }
-        
+     
+    public static function getEnumValues($field)
+    {
+        $table = (new static)->getTable(); // Lấy tên bảng từ model
+        $type = DB::select("SHOW COLUMNS FROM {$table} WHERE Field = ?", [$field]);
+
+        if (!empty($type)) {
+            preg_match('/^enum\((.*)\)$/', $type[0]->Type, $matches);
+            $enum = array_map(function ($value) {
+                return trim($value, "'");
+            }, explode(',', $matches[1]));
+
+            return $enum;
+        }
+
+        return [];
+    }
+
 }
