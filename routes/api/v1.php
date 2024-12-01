@@ -112,6 +112,9 @@ Route::prefix('admin')
         // Wallet transaction 
         Route::get('/student/{id}/wallet-transactions', [StudentController::class, 'getWalletTransactionByStudent']);
         Route::get('/student/{id}/purchased-courses', [StudentController::class, 'getPurchasedCoursesByStudent']);
+
+        Route::get('/teacher/{id}/wallet-transactions', [TeacherController::class, 'getWalletTransactionByTeacher']);
+        Route::get('/teacher/{id}/courses', [TeacherController::class, 'getCoursesByTeacher']);
     }
 );
 
