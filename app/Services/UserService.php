@@ -92,4 +92,14 @@ class UserService
         // Cập nhật mật khẩu mới
         return $this->userRepo->updatePassword($userId, $newPassword);
     }
+
+    public function getUser($id) {
+        $user = JWTAuth::parseToken()->authenticate();
+        
+        if(!$user || !$user->hasRole('admin')) {
+            throw new AuthorizationException('Unauthorized');
+        }
+
+        return $this->userRepo->findById($id);
+    }
 }

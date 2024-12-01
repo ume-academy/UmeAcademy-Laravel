@@ -64,6 +64,16 @@ class UserController extends Controller
         }
     }
 
+    public function getUser($id) {
+        try {
+            $user = $this->userService->getUser($id);
+
+            return new UserResource($user);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
     // changePassword
     public function changePassword(ChagePasswordRequest $request)
     {
