@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\WithdrawalRequest;
 use App\Models\WithdrawMethod;
 use App\Repositories\Interfaces\WithdrawMethodRepositoryInterface;
 
@@ -25,5 +26,22 @@ class WithdrawMethodRepository implements WithdrawMethodRepositoryInterface
 
         $method->update($data);
         return $method;
+    }
+
+    public function getAllRequest($perPage) {
+        return WithdrawalRequest::paginate($perPage);
+    }
+
+    public function find(int $id) {
+        return WithdrawalRequest::findOrFail($id);
+    }
+
+    public function updateStatus(int $id, $status) {
+        $request = $this->find($id);
+
+        $request->status = $status;
+        $request->save();
+        
+        return $request;
     }
 }
