@@ -26,7 +26,7 @@ class WithdrawMethodRequest extends FormRequest
         return [
             'name_bank' => 'required',
             'name_account' => 'required|string',
-            'branch' => 'required|string',
+            // 'branch' => 'required|string',
             'number_account' => 'required|numeric',
         ];
     }
@@ -39,8 +39,8 @@ class WithdrawMethodRequest extends FormRequest
             'name_account.required' => 'Tên chủ tài khoản là bắt buộc.',
             'name_account.string' => 'Tên chủ tài khoản phải là một chuỗi ký tự.',
 
-            'branch.required' => 'Chi nhánh là bắt buộc.',
-            'branch.string' => 'Chi nhánh phải là một chuỗi ký tự.',
+            // 'branch.required' => 'Chi nhánh là bắt buộc.',
+            // 'branch.string' => 'Chi nhánh phải là một chuỗi ký tự.',
 
             'number_account.required' => 'Số tài khoản là bắt buộc.',
             'number_account.numeric' => 'Số tài khoản phải là một số.',

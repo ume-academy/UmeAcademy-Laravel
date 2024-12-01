@@ -15,4 +15,15 @@ class WithdrawMethodRepository implements WithdrawMethodRepositoryInterface
         return WithdrawMethod::where('teacher_id', $teacherId)->first();
 
     }
+
+    public function getAllBank() {
+        return WithdrawMethod::getEnumValues('name_bank');
+    }
+
+    public function update($id, $data) {
+        $method = WithdrawMethod::findOrFail($id);
+
+        $method->update($data);
+        return $method;
+    }
 }

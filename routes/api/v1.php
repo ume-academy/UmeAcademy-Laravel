@@ -135,6 +135,7 @@ Route::prefix('/teacher')
         // Withdraw
         Route::post('/withdraw-method', [WithdrawMethodController::class, 'addWithdrawMethod']);
         Route::get('/withdraw-method', [WithdrawMethodController::class, 'getWithdrawMethod']);
+        Route::put('/withdraw-method/{id}', [WithdrawMethodController::class, 'updateWithdrawMethod']);
 
         Route::get('/course/{id}/students', [CourseController::class, 'getStudentsOfCourse']);
 
@@ -193,4 +194,7 @@ Route::get('teacher/{id}', [TeacherController::class, 'getInfoTeacher']);
 // Search 
 Route::get('/courses/category/{id}', [SearchController::class, 'searchByCategory']);
 Route::get('/courses/search', [SearchController::class, 'searchCourse']);
+
+// Bank 
+Route::get('/banks', [WithdrawMethodController::class, 'getBanks']);
 
