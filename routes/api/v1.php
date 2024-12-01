@@ -90,6 +90,7 @@ Route::prefix('admin')
         Route::get('/payment-methods/{id}', [PaymentMethodController::class, 'detailPaymentMethod']);
 
         Route::get('/users', [UserController::class, 'getListUser']);
+        Route::get('/user/{id}', [UserController::class, 'getUser']);
 
         Route::post('user/{id}/lock', [UserController::class, 'lock']);
         Route::post('user/{id}/unlock', [UserController::class, 'unlock']);
@@ -107,6 +108,10 @@ Route::prefix('admin')
         // Withdraw request
         Route::get('/withdraw-request', [WithdrawMethodController::class, 'getWithdrawRequest']);
         Route::put('/withdraw-request/{id}', [WithdrawMethodController::class, 'updateStatus']);
+
+        // Wallet transaction 
+        Route::get('/student/{id}/wallet-transactions', [StudentController::class, 'getWalletTransactionByStudent']);
+        Route::get('/student/{id}/purchased-courses', [StudentController::class, 'getPurchasedCoursesByStudent']);
     }
 );
 
