@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\V1\PaymentMethodController;
 use App\Http\Controllers\Api\V1\ForgotPasswordController;
 use App\Http\Controllers\Api\V1\WithdrawMethodController;
 use App\Http\Controllers\Api\V1\EmailVerificationController;
+use App\Http\Controllers\Api\V1\RefundController;
 use App\Http\Controllers\Api\V1\StudentController;
 
 Route::prefix('/auth')
@@ -115,6 +116,10 @@ Route::prefix('admin')
 
         Route::get('/teacher/{id}/wallet-transactions', [TeacherController::class, 'getWalletTransactionByTeacher']);
         Route::get('/teacher/{id}/courses', [TeacherController::class, 'getCoursesByTeacher']);
+
+        // Refund request
+        Route::get('/refund-request', [RefundController::class, 'getAllRefundRequest']);
+        Route::put('/refund-request/{id}', [RefundController::class, 'updateStatus']);
     }
 );
 
