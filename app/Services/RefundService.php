@@ -31,7 +31,7 @@ class RefundService
 
         $request = $this->refundRepo->find($id);
 
-        if($request->status == 1) {
+        if($request->status == 1 || $request->status == 0) {
             throw new \Exception('Yêu cầu đã được phê duyệt');
         }
 
