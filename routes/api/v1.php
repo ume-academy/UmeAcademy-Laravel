@@ -21,6 +21,7 @@ use App\Http\Controllers\Api\V1\ForgotPasswordController;
 use App\Http\Controllers\Api\V1\WithdrawMethodController;
 use App\Http\Controllers\Api\V1\EmailVerificationController;
 use App\Http\Controllers\Api\V1\RefundController;
+use App\Http\Controllers\Api\V1\RoleController;
 use App\Http\Controllers\Api\V1\StudentController;
 
 Route::prefix('/auth')
@@ -120,6 +121,13 @@ Route::prefix('admin')
         // Refund request
         Route::get('/refund-request', [RefundController::class, 'getAllRefundRequest']);
         Route::put('/refund-request/{id}', [RefundController::class, 'updateStatus']);
+
+        // Role
+        Route::get('/roles', [RoleController::class, 'getAllRole']);
+        Route::post('/roles', [RoleController::class, 'createRole']);
+        Route::get('/roles/{id}', [RoleController::class, 'getRole']);
+        Route::put('/roles/{id}', [RoleController::class, 'updateRole']);
+        Route::delete('/roles/{id}', [RoleController::class, 'deleteRole']);
     }
 );
 
