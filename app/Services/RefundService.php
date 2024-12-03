@@ -13,22 +13,10 @@ class RefundService
     ){}
 
     public function getAllRefundRequest($perPage) {
-        $user = JWTAuth::parseToken()->authenticate();
-
-        if(!$user || !$user->hasRole('admin')) {
-            throw new AuthorizationException('Unauthorized');
-        }
-
         return $this->refundRepo->getAll($perPage);
     }
 
     public function updateStatus($id, $status) {
-        $user = JWTAuth::parseToken()->authenticate();
-
-        if(!$user || !$user->hasRole('admin')) {
-            throw new AuthorizationException('Unauthorized');
-        }
-
         $request = $this->refundRepo->find($id);
 
         if($request->status == 1 || $request->status == 0) {

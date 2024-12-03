@@ -120,12 +120,6 @@ class TeacherService
     }
 
     public function getStatisticOfTeacher($id) {
-        $user = JWTAuth::parseToken()->authenticate();
-
-        if(!$user || !$user->hasRole('admin')) {
-            throw new AuthorizationException('Unauthorized');
-        }
-        
         $wallet =  $this->teacherWalletRepo->getByTeacherId($id);
         $courses = $this->courseRepo->getCourseOfTeacher($id);
         
@@ -139,24 +133,12 @@ class TeacherService
     }
     
     public function getWalletTransactionByTeacher($id, $perPage) {
-        $user = JWTAuth::parseToken()->authenticate();
-
-        if(!$user || !$user->hasRole('admin')) {
-            throw new AuthorizationException('Unauthorized');
-        }
-
         $wallet =  $this->teacherWalletRepo->getByTeacherId($id);
         
         return $this->teacherWalletTransactionRepo->getByWalletId($wallet->id, $perPage);
     }
 
     public function getCoursesByTeacher($id, $perPage) {
-        $user = JWTAuth::parseToken()->authenticate();
-
-        if(!$user || !$user->hasRole('admin')) {
-            throw new AuthorizationException('Unauthorized');
-        }
-
         return $this->courseRepo->getByTeacher($id, $perPage);
     }
 

@@ -6,6 +6,7 @@ use App\Http\Requests\Category\UpdateCategoryRequest;
 use App\Http\Resources\Category\CategoryResource;
 use App\Services\CategoryService;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class CategoryController extends Controller
 {
@@ -27,9 +28,13 @@ class CategoryController extends Controller
     public function storeCategories(StoreCategoryRequest $req)
     {
         try {
-            $data = ['name' => $req->input('name'), 
-            'parent_id' => $req->input('parent_id')] ;
+            $data = [
+                'name' => $req->input('name'), 
+                'parent_id' => $req->input('parent_id')
+            ] ;
+
             $category = $this->categoryService->createCategory($data);
+            
             return response()->json([
                 'status' => 'true',  
                 'message' => 'Tạo mới Category thành công',  

@@ -19,12 +19,6 @@ class TransactionService
     }
 
     public function getAllTransaction($perPage) {
-        $user = JWTAuth::parseToken()->authenticate();
-
-        if(!$user || !$user->hasRole('admin')) {
-            throw new AuthorizationException('Unauthorized');
-        }
-
         return $this->transactionRepo->getAll($perPage);
     }
 }

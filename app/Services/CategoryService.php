@@ -20,42 +20,18 @@ class CategoryService
     }
 
     public function createCategory($data){
-        $user = JWTAuth::parseToken()->authenticate();
-
-        if(!$user || !$user->hasRole('admin')) {
-            throw new AuthorizationException('Unauthorized');
-        }
-
         return $this->CategoryRepository->create($data);
     }
 
     public function getCategory($id) {
-        $user = JWTAuth::parseToken()->authenticate();
-
-        if(!$user || !$user->hasRole('admin')) {
-            throw new AuthorizationException('Unauthorized');
-        }
-
         return $this->CategoryRepository->getById($id);
     }
 
     public function updateCategory($id, $data) {
-        $user = JWTAuth::parseToken()->authenticate();
-
-        if(!$user || !$user->hasRole('admin')) {
-            throw new AuthorizationException('Unauthorized');
-        }
-
         return $this->CategoryRepository->update($id, $data);
     }
 
     public function deleteCategory($id) {
-        $user = JWTAuth::parseToken()->authenticate();
-
-        if(!$user || !$user->hasRole('admin')) {
-            throw new AuthorizationException('Unauthorized');
-        }
-
         return $this->CategoryRepository->delete($id);
     }
 }
