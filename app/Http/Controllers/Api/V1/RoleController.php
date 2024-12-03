@@ -71,4 +71,26 @@ class RoleController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function assignPermission(Request $req, $id) {
+        try {
+            $data = $req->all();
+
+            $permissions = $this->roleService->assignPermission($id, $data);
+    
+            return response()->json(['data' => $permissions]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function getPermissionOfRole($id) {
+        try {
+            $permissions = $this->roleService->getPermissionOfRole($id);
+    
+            return response()->json(['data' => $permissions]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }

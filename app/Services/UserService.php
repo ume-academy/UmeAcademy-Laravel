@@ -29,12 +29,6 @@ class UserService
     }
 
     public function getListUser($perPage) {
-        $user = JWTAuth::parseToken()->authenticate();
-        
-        if(!$user || !$user->hasRole('admin')) {
-            throw new AuthorizationException('Unauthorized');
-        }
-
         return $this->userRepo->getAllUser($perPage);
     }
     
@@ -53,22 +47,10 @@ class UserService
     }
 
     public function lock($id) {
-        $user = JWTAuth::parseToken()->authenticate();
-        
-        if(!$user || !$user->hasRole('admin')) {
-            throw new AuthorizationException('Unauthorized');
-        }
-
         return $this->userRepo->lock($id);
     }
 
     public function unlock($id) {
-        $user = JWTAuth::parseToken()->authenticate();
-        
-        if(!$user || !$user->hasRole('admin')) {
-            throw new AuthorizationException('Unauthorized');
-        }
-
         return $this->userRepo->unlock($id);
     }
 
@@ -94,12 +76,6 @@ class UserService
     }
 
     public function getUser($id) {
-        $user = JWTAuth::parseToken()->authenticate();
-        
-        if(!$user || !$user->hasRole('admin')) {
-            throw new AuthorizationException('Unauthorized');
-        }
-
         return $this->userRepo->findById($id);
     }
 }

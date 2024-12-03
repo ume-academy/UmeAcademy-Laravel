@@ -48,22 +48,10 @@ class WithdrawMethodService
     }
 
     public function getWithdrawRequest($perPage) {
-        $user = JWTAuth::parseToken()->authenticate();
-
-        if(!$user || !$user->hasRole('admin')) {
-            throw new AuthorizationException('Unauthorized');
-        }
-
         return $this->withdrawMethodRepo->getAllRequest($perPage);
     }
 
     public function updateStatus($id, $status) {
-        $user = JWTAuth::parseToken()->authenticate();
-
-        if(!$user || !$user->hasRole('admin')) {
-            throw new AuthorizationException('Unauthorized');
-        }
-
         $request = $this->withdrawMethodRepo->find($id);
 
         if($request->status == 1 || $request->status == 0) {

@@ -20,9 +20,11 @@ use App\Http\Controllers\Api\V1\PaymentMethodController;
 use App\Http\Controllers\Api\V1\ForgotPasswordController;
 use App\Http\Controllers\Api\V1\WithdrawMethodController;
 use App\Http\Controllers\Api\V1\EmailVerificationController;
+use App\Http\Controllers\Api\V1\PermissionController;
 use App\Http\Controllers\Api\V1\RefundController;
 use App\Http\Controllers\Api\V1\RoleController;
 use App\Http\Controllers\Api\V1\StudentController;
+use Spatie\Permission\Models\Role;
 
 Route::prefix('/auth')
     ->group(function () {
@@ -76,58 +78,64 @@ Route::prefix('admin')
     ->middleware('verify.jwt.token')
     ->group(function () {
         // Category
-        Route::post('/categories', [CategoryController::class, 'storeCategories']);
-        Route::get('/categories/{id}', [CategoryController::class, 'getCategory']);
-        Route::put('/categories/{id}', [CategoryController::class, 'updateCategory']);
-        Route::delete('/categories/{id}', [CategoryController::class, 'deleteCategory']);
+        Route::post('/categories', [CategoryController::class, 'storeCategories'])->middleware('can:create-category');
+        Route::get('/categories/{id}', [CategoryController::class, 'getCategory'])->middleware('can:view-category');
+        Route::put('/categories/{id}', [CategoryController::class, 'updateCategory'])->middleware('can:update-category');
+        Route::delete('/categories/{id}', [CategoryController::class, 'deleteCategory'])->middleware('can:delete-category');
 
         // Fee
-        Route::put('/fee/{id}', [FeeController::class, 'update']);
-        Route::get('/fee/{id}', [FeeController::class, 'get']);
+        Route::put('/fee/{id}', [FeeController::class, 'update'])->middleware('can:update-fee');
+        Route::get('/fee/{id}', [FeeController::class, 'get'])->middleware('can:view-fee');
 
         // Payment method
-        Route::post('/payment-methods', [PaymentMethodController::class, 'createPaymentMethod']);
-        Route::put('/payment-methods/{id}', [PaymentMethodController::class, 'updatePaymentMethod']);
-        Route::delete('/payment-methods/{id}', [PaymentMethodController::class, 'deletePaymentMethod']);
-        Route::get('/payment-methods/{id}', [PaymentMethodController::class, 'detailPaymentMethod']);
+        Route::post('/payment-methods', [PaymentMethodController::class, 'createPaymentMethod'])->middleware('can:create-payment-method');
+        Route::put('/payment-methods/{id}', [PaymentMethodController::class, 'updatePaymentMethod'])->middleware('can:update-payment-method');
+        Route::delete('/payment-methods/{id}', [PaymentMethodController::class, 'deletePaymentMethod'])->middleware('delete:view-payment-method');
+        Route::get('/payment-methods/{id}', [PaymentMethodController::class, 'detailPaymentMethod'])->middleware('can:view-payment-method');
 
-        Route::get('/users', [UserController::class, 'getListUser']);
-        Route::get('/user/{id}', [UserController::class, 'getUser']);
+        Route::get('/users', [UserController::class, 'getListUser'])->middleware('can:view-users');
+        Route::get('/user/{id}', [UserController::class, 'getUser'])->middleware('can:view-user');
 
-        Route::post('user/{id}/lock', [UserController::class, 'lock']);
-        Route::post('user/{id}/unlock', [UserController::class, 'unlock']);
+        Route::post('user/{id}/lock', [UserController::class, 'lock'])->middleware('can:lock-user');
+        Route::post('user/{id}/unlock', [UserController::class, 'unlock'])->middleware('can:unlock-user');
 
-        Route::get('/teacher/{id}/statistic', [TeacherController::class, 'getStatisticOfTeacher']);
+        Route::get('/teacher/{id}/statistic', [TeacherController::class, 'getStatisticOfTeacher'])->middleware('can:view-teacher-statistic');
 
-        Route::post('/course/{id}/approval', [CourseController::class, 'approval']);
+        Route::post('/course/{id}/approval', [CourseController::class, 'approval'])->middleware('can:approve-course');
 
-        Route::get('/courses', [CourseController::class, 'getAllCourse']);
-        Route::get('/course/{id}', [CourseController::class, 'getDetailCourse']);
+        Route::get('/courses', [CourseController::class, 'getAllCourse'])->middleware('can:view-courses');
+        Route::get('/course/{id}', [CourseController::class, 'getDetailCourse'])->middleware('can:view-course');
 
         // Transaction 
-        Route::get('/transactions', [TransactionController::class, 'getAllTransaction']);
+        Route::get('/transactions', [TransactionController::class, 'getAllTransaction'])->middleware('can:view-transactions');
 
         // Withdraw request
-        Route::get('/withdraw-request', [WithdrawMethodController::class, 'getWithdrawRequest']);
-        Route::put('/withdraw-request/{id}', [WithdrawMethodController::class, 'updateStatus']);
+        Route::get('/withdraw-request', [WithdrawMethodController::class, 'getWithdrawRequest'])->middleware('can:view-withdraw-requests');
+        Route::put('/withdraw-request/{id}', [WithdrawMethodController::class, 'updateStatus'])->middleware('can:update-withdraw-status');
 
         // Wallet transaction 
-        Route::get('/student/{id}/wallet-transactions', [StudentController::class, 'getWalletTransactionByStudent']);
-        Route::get('/student/{id}/purchased-courses', [StudentController::class, 'getPurchasedCoursesByStudent']);
+        Route::get('/student/{id}/wallet-transactions', [StudentController::class, 'getWalletTransactionByStudent'])->middleware('can:view-student-wallet-transactions');
+        Route::get('/student/{id}/purchased-courses', [StudentController::class, 'getPurchasedCoursesByStudent'])->middleware('can:view-student-purchased-courses');
 
-        Route::get('/teacher/{id}/wallet-transactions', [TeacherController::class, 'getWalletTransactionByTeacher']);
-        Route::get('/teacher/{id}/courses', [TeacherController::class, 'getCoursesByTeacher']);
+        Route::get('/teacher/{id}/wallet-transactions', [TeacherController::class, 'getWalletTransactionByTeacher'])->middleware('can:view-teacher-wallet-transactions');
+        Route::get('/teacher/{id}/courses', [TeacherController::class, 'getCoursesByTeacher'])->middleware('can:view-teacher-courses');
 
         // Refund request
-        Route::get('/refund-request', [RefundController::class, 'getAllRefundRequest']);
-        Route::put('/refund-request/{id}', [RefundController::class, 'updateStatus']);
+        Route::get('/refund-request', [RefundController::class, 'getAllRefundRequest'])->middleware('can:view-refund-requests');
+        Route::put('/refund-request/{id}', [RefundController::class, 'updateStatus'])->middleware('can:update-refund-status');
 
         // Role
-        Route::get('/roles', [RoleController::class, 'getAllRole']);
-        Route::post('/roles', [RoleController::class, 'createRole']);
-        Route::get('/roles/{id}', [RoleController::class, 'getRole']);
-        Route::put('/roles/{id}', [RoleController::class, 'updateRole']);
-        Route::delete('/roles/{id}', [RoleController::class, 'deleteRole']);
+        Route::get('/roles', [RoleController::class, 'getAllRole'])->middleware('can:view-roles');
+        Route::post('/roles', [RoleController::class, 'createRole'])->middleware('can:create-role');
+        Route::get('/roles/{id}', [RoleController::class, 'getRole'])->middleware('can:view-role');
+        Route::put('/roles/{id}', [RoleController::class, 'updateRole'])->middleware('can:update-role');
+        Route::delete('/roles/{id}', [RoleController::class, 'deleteRole'])->middleware('can:delete-role');
+
+        Route::post('/roles/{id}/permissions', [RoleController::class, 'assignPermission'])->middleware('can:assign-permissions');
+        Route::get('/roles/{id}/permissions', [RoleController::class, 'getPermissionOfRole'])->middleware('can:view-role-permissions');
+
+        // Permission
+        Route::get('/permissions', [PermissionController::class, 'getAllPermission'])->middleware('can:view-permissions');
     }
 );
 
@@ -226,4 +234,3 @@ Route::get('/courses/search', [SearchController::class, 'searchCourse']);
 
 // Bank 
 Route::get('/banks', [WithdrawMethodController::class, 'getBanks']);
-

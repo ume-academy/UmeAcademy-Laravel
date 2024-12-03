@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -70,6 +71,12 @@ class Handler extends ExceptionHandler
                     'error' => 'Method not allowed.',
                     'message' => 'The HTTP method used for this request is not allowed on this route.',
                 ], 405);
+            }
+
+            if ($exception instanceof AuthorizationException) {
+                return response()->json([
+                    'error' => 'Unauthorized.'
+                ], 403);
             }
         }
 

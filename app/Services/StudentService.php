@@ -42,12 +42,6 @@ class StudentService
     }
 
     public function getWalletTransactionByStudent($id, $perPage) {
-        $user = JWTAuth::parseToken()->authenticate();
-
-        if(!$user || !$user->hasRole('admin')) {
-            throw new AuthorizationException('Unauthorized');
-        }
-
         $wallet =  $this->studentWalletRepo->getByStudentId($id);
         
         if(!$wallet) {
@@ -58,12 +52,6 @@ class StudentService
     }
 
     public function getPurchasedCoursesByStudent($id, $perPage) {
-        $user = JWTAuth::parseToken()->authenticate();
-
-        if(!$user || !$user->hasRole('admin')) {
-            throw new AuthorizationException('Unauthorized');
-        }
-
         $student = $this->userRepo->findById($id);
 
         return $this->courseRepo->getCourseOfStudent($student, $perPage);

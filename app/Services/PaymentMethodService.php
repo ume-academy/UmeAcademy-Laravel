@@ -17,42 +17,18 @@ class PaymentMethodService
     }
 
     public function createPaymentMethod($data) {
-        $user = JWTAuth::parseToken()->authenticate();
-
-        if(!$user || !$user->hasRole('admin')) {
-            throw new AuthorizationException('Unauthorized');
-        }
-
         return $this->paymentMethodRepo->create($data);
     }
 
     public function updatePaymentMethod($id, $data) {
-        $user = JWTAuth::parseToken()->authenticate();
-
-        if(!$user || !$user->hasRole('admin')) {
-            throw new AuthorizationException('Unauthorized');
-        }
-
         return $this->paymentMethodRepo->update($id, $data);
     }
 
     public function deletePaymentMethod($id) {
-        $user = JWTAuth::parseToken()->authenticate();
-
-        if(!$user || !$user->hasRole('admin')) {
-            throw new AuthorizationException('Unauthorized');
-        }
-
         return $this->paymentMethodRepo->delete($id);
     }
 
     public function detailPaymentMethod($id) {
-        $user = JWTAuth::parseToken()->authenticate();
-
-        if(!$user || !$user->hasRole('admin')) {
-            throw new AuthorizationException('Unauthorized');
-        }
-
         return $this->paymentMethodRepo->find($id);
     }
 }
