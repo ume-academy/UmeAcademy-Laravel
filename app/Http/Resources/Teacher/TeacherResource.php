@@ -16,7 +16,7 @@ class TeacherResource extends JsonResource
     {
         return [
             'id' => $this->id ?? null,
-            'name' => $this->user->fullname ?? null,
+            'fullname' => $this->user->fullname ?? null,
             'email' => $this->user->email ?? null,
             'avatar' => $this->user->avatar ? url('images/users/'. $this->user->avatar) : null,
             'total_course' => $this->courses()->count(),

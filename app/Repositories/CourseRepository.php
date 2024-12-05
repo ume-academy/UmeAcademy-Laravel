@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Course;
 use App\Repositories\Interfaces\CourseRepositoryInterface;
 use Exception;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class CourseRepository implements CourseRepositoryInterface
 {
@@ -80,7 +81,7 @@ class CourseRepository implements CourseRepositoryInterface
         // Lọc theo tên danh mục
         if (!empty($params['categories'])) {
             $query->whereHas('category', function ($q) use ($params) {
-                $q->whereIn('name', $params['categories']);  
+                $q->whereIn('name', $params['categories']);
             });
         }
         
@@ -94,11 +95,6 @@ class CourseRepository implements CourseRepositoryInterface
             $query->where('price', '<=', $params['price']);
         }
 
-        // Lọc theo đánh giá
-        if (!empty($params['rating'])) {
-            $query->where('rating', '>=', $params['rating']);
-        }
-
         // Lọc theo trình độ
         if (!empty($params['levels'])) {
             $query->whereHas('level', function ($q) use ($params) {
@@ -106,10 +102,28 @@ class CourseRepository implements CourseRepositoryInterface
             });
         }
 
-        // Chỉ lấy các khóa học đã xuất bản
         $query->where('status', 2);
 
-        return $query->paginate($params['per_page']);
+        $courses = $query->get();
+
+        if (!empty($params['rating'])) {
+            $courses = $courses->filter(function ($course) use ($params) {
+                return $course->rating >= $params['rating'];
+            });
+        }
+
+        $page = $params['page'] ?? 1;
+        $perPage = $params['per_page'] ?? 10;
+
+        $paginatedCourses = new LengthAwarePaginator(
+            $courses->forPage($page, $perPage),
+            $courses->count(),
+            $perPage,
+            $page,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        return $paginatedCourses;
     }
 
     public function getAllCourse($perPage) {
