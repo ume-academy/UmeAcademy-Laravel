@@ -8,6 +8,8 @@ use App\Http\Resources\UserResource;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use App\Http\Requests\User\ChagePasswordRequest;
+use App\Http\Requests\User\UserSystemRequest;
+use App\Http\Resources\User\UserSystemResource;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserController extends Controller
@@ -88,4 +90,37 @@ class UserController extends Controller
         }
     }
     
+    public function getListUserSystem(Request $req) {
+        try {
+            $perPage = $req->input('per_page', 10);
+
+            $users = $this->userService->getListUserSystem($perPage);
+
+            return UserSystemResource::collection($users);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function assignRole(Request $req, $id) {
+        try {
+            $role = $req->input('role');
+            $user = $this->userService->assignRole($id, $role);
+
+            return new UserSystemResource($user);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function createUserSystem(UserSystemRequest $req) {
+        try {
+            $data = $req->all();
+            $user = $this->userService->createUserSystem($data);
+
+            return new UserSystemResource($user);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }

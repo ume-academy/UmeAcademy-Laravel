@@ -24,7 +24,7 @@ use App\Http\Controllers\Api\V1\PermissionController;
 use App\Http\Controllers\Api\V1\RefundController;
 use App\Http\Controllers\Api\V1\RoleController;
 use App\Http\Controllers\Api\V1\StudentController;
-use Spatie\Permission\Models\Role;
+use App\Models\User;
 
 Route::prefix('/auth')
     ->group(function () {
@@ -90,7 +90,7 @@ Route::prefix('admin')
         // Payment method
         Route::post('/payment-methods', [PaymentMethodController::class, 'createPaymentMethod'])->middleware('can:create-payment-method');
         Route::put('/payment-methods/{id}', [PaymentMethodController::class, 'updatePaymentMethod'])->middleware('can:update-payment-method');
-        Route::delete('/payment-methods/{id}', [PaymentMethodController::class, 'deletePaymentMethod'])->middleware('delete:view-payment-method');
+        Route::delete('/payment-methods/{id}', [PaymentMethodController::class, 'deletePaymentMethod'])->middleware('can:delete-payment-method');
         Route::get('/payment-methods/{id}', [PaymentMethodController::class, 'detailPaymentMethod'])->middleware('can:view-payment-method');
 
         Route::get('/users', [UserController::class, 'getListUser'])->middleware('can:view-users');
@@ -136,6 +136,11 @@ Route::prefix('admin')
 
         // Permission
         Route::get('/permissions', [PermissionController::class, 'getAllPermission'])->middleware('can:view-permissions');
+
+        // User system
+        Route::get('/user-system', [UserController::class, 'getListUserSystem'])->middleware('can:view-user-system');
+        Route::post('/user-system/{id}/roles', [UserController::class, 'assignRole'])->middleware('can:assign-role');
+        Route::post('/user-system', [UserController::class, 'createUserSystem'])->middleware('can:create-user-system');
     }
 );
 
@@ -180,6 +185,8 @@ Route::prefix('/teacher')
 
         Route::get('/statistic', [TeacherController::class, 'getStatistic']);
         Route::post('/revenue', [TeacherController::class, 'getRevenue']);
+
+        Route::get('/profile', [TeacherController::class, 'getProfile']);
     }
 );
 

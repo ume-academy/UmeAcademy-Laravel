@@ -142,6 +142,12 @@ class TeacherService
         return $this->courseRepo->getByTeacher($id, $perPage);
     }
 
+    public function getProfile() {
+        $teacher =  $this->validateTeacher();
+
+        return $teacher;
+    }
+
     private function getAllDates($startDate, $endDate) {
         $allDates = [];
         $currentDate = Carbon::parse($startDate);

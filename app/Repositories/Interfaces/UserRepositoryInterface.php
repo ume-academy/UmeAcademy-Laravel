@@ -14,4 +14,6 @@ interface UserRepositoryInterface
     public function unlock(int $id);
 
     public function updatePassword(int $userId, string $newPassword);
+    public function getUserRoles(array $roles, $perPage);
+    public function isSystemUser(int $id);
 }
