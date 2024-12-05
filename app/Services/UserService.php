@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Access\AuthorizationException;
 use App\Repositories\Interfaces\UserRepositoryInterface;
+use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 
 class UserService
 {
@@ -77,5 +79,45 @@ class UserService
 
     public function getUser($id) {
         return $this->userRepo->findById($id);
+    }
+
+    public function getListUserSystem($perPage) {
+        // Lấy tất cả vai trò
+        $roles = Role::pluck('name')->toArray();
+    
+        // Lấy danh sách người dùng có bất kỳ vai trò nào trong danh sách
+        return $this->userRepo->getUserRoles($roles, $perPage);
+    }
+
+    public function assignRole($id, $role) {
+        $user = $this->userRepo->findById($id);
+
+        if(!$this->userRepo->isSystemUser($user->id)) {
+            throw new \Exception('User không phải là user hệ thống');
+        }
+
+        $user->syncRoles([$role]);
+
+        return $user;
+    }
+
+    public function createUserSystem($data) {
+        DB::beginTransaction();
+        $data['email_verified_at'] = now();
+    
+        try {
+            $user = $this->userRepo->create($data);
+    
+            if ($user) {
+                $user->syncRoles([$data['role']]);
+            }
+    
+            DB::commit();
+            return $user;
+        } catch (\Exception $e) {
+            DB::rollback();
+    
+            throw $e;
+        }
     }
 }

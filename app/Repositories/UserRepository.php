@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\User;
 use Illuminate\Support\Str;
 use App\Repositories\Interfaces\UserRepositoryInterface;
+use Spatie\Permission\Models\Role;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -80,5 +81,16 @@ class UserRepository implements UserRepositoryInterface
         $user = User::findOrFail($userId);
         $user->password = bcrypt($newPassword);
         return $user->save();
+    }
+
+    public function getUserRoles(array $roles, $perPage) {
+        return User::role($roles)->paginate($perPage);
+    }
+
+    public function isSystemUser(int $id) {
+        $user = $this->findById($id);
+        $systemRoles = Role::pluck('name')->toArray(); 
+        
+        return $user->hasAnyRole($systemRoles);
     }
 }
