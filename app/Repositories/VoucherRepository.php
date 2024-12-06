@@ -16,10 +16,14 @@ class VoucherRepository implements VoucherRepositoryInterface
     }
 
     public function getByCode($code) {
-        return Voucher::where('code', $code)->first();
+        return Voucher::whereRaw('BINARY `code` = ?', [$code])->first();
     }
 
     public function find(int $id) {
         return Voucher::findOrFail($id);
+    }
+
+    public function getAllVoucher($perPage) {
+        return Voucher::where('creator_type', 'admin')->paginate($perPage);
     }
 }

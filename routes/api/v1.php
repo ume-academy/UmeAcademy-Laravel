@@ -143,6 +143,7 @@ Route::prefix('admin')
 
         // Voucher
         Route::post('/voucher', [VoucherController::class, 'createVoucherSystem'])->middleware('can:create-voucher');
+        Route::get('/voucher', [VoucherController::class, 'getVoucherSystem'])->middleware('can:view-vouchers');
     }
 );
 

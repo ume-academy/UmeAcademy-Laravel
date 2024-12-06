@@ -17,6 +17,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class PaymentService
 {
     use VoucherTrait;
+
     private const PAYMENT_METHOD_BANKING = 2;
 
     public function __construct(
@@ -30,13 +31,22 @@ class PaymentService
         private TeacherWalletTransactionRepositoryInterface $teacherWalletTransactionRepo,
     ){}
 
-    public function checkout($data) {
+    public function checkout($data)
+    {
         $data = $this->formatCheckoutData($data);
 
-        if($data['payment_method_id'] == self::PAYMENT_METHOD_BANKING) {
+        if ($data['discount_price'] == 0) {
+            $response = [
+                'orderCode' => intval(substr(strval(microtime(true) * 10000), -6)),
+                'status' => true,
+            ];
+
+            $this->saveData($response, $data);
+            return $this->handleTransaction($response['orderCode']);
+        } else if ($data['payment_method_id'] == self::PAYMENT_METHOD_BANKING) {
             $response = $this->payOSService->checkout($data);
 
-            if($response) {
+            if ($response) {
                 $this->saveData($response, $data);
             }
 
@@ -46,68 +56,71 @@ class PaymentService
         }
     }
 
-    public function confirmWebhook($data) {
-        if(isset($data['success']) && $data['success'] == true) {
-            DB::beginTransaction();
-            try {
-                // Transaction
-                $transaction = $this->transactionRepo->getByCode($data['data']['orderCode']);
-                $this->transactionRepo->updateStatus($transaction->id, 'success');
-
-                // Voucher usage
-                $voucherUsage = $this->voucherUsageRepo->getByTransaction($transaction->id);
-                if($voucherUsage) {
-                    $this->voucherUsageRepo->updateStatus($voucherUsage->id, 1);
-                }
-                
-                // Course enrolled
-                $course = $this->courseRepo->getById($transaction->course_id);
-                $this->courseRepo->syncCourseEnrolled($course, [$transaction->user_id]);
-
-                // Teacher wallet
-                $teacherWallet = $this->teacherWalletRepo->getByTeacher($course->teacher_id);
-
-                $dataTeacherWallet = [
-                    'available_balance' => intval($teacherWallet->available_balance) + intval($transaction->revenue_teacher),
-                    'total_earnings' => intval($teacherWallet->total_earnings) + intval($transaction->revenue_teacher)
-                ];
-                $this->teacherWalletRepo->update($course->teacher_id, $dataTeacherWallet);
-
-                // Transaction wallet teacher
-                $dataTeacherWalletTransaction = [
-                    'code' => $this->generateTransactionCode(),
-                    'type' => 'available_receive_money',
-                    'balance_tracking' => $transaction->revenue_teacher,
-                    'teacher_wallet_id' => $teacherWallet->id
-                ];
-                $this->teacherWalletTransactionRepo->create($dataTeacherWalletTransaction);
-
-                DB::commit();
-                return 'success';
-            } catch (\Exception $e) {
-                DB::rollBack();
-                return response()->json(['error' => $e->getMessage()], 500);
-            }
-            
-        } else {   
+    public function confirmWebhook($data)
+    {
+        if (isset($data['success']) && $data['success'] == true) {
+            return $this->handleTransaction($data['data']['orderCode']);
+        } else {
             return 'cancelled';
         }
     }
 
-    public function cancel($data) {
-        // Transaction
+    public function cancel($data)
+    {
         $transaction = $this->transactionRepo->getByCode($data['orderCode']);
         $this->transactionRepo->updateStatus($transaction->id, 'canceled');
 
-        // Voucher usage 
         $voucherUsage = $this->voucherUsageRepo->getByTransaction($transaction->id);
-        if($voucherUsage) {
+        if ($voucherUsage) {
             $this->voucherUsageRepo->delete($voucherUsage->id);
         }
     }
 
+    private function handleTransaction(string $orderCode)
+    {
+        DB::beginTransaction();
+        try {
+            // Transaction
+            $transaction = $this->transactionRepo->getByCode($orderCode);
+            $this->transactionRepo->updateStatus($transaction->id, 'success');
 
-    private function formatCheckoutData($data) {
+            // Voucher usage
+            $voucherUsage = $this->voucherUsageRepo->getByTransaction($transaction->id);
+            if ($voucherUsage) {
+                $this->voucherUsageRepo->updateStatus($voucherUsage->id, 1);
+            }
+
+            // Course enrolled
+            $course = $this->courseRepo->getById($transaction->course_id);
+            $this->courseRepo->syncCourseEnrolled($course, [$transaction->user_id]);
+
+            // Teacher wallet
+            $teacherWallet = $this->teacherWalletRepo->getByTeacher($course->teacher_id);
+            $dataTeacherWallet = [
+                'available_balance' => intval($teacherWallet->available_balance) + intval($transaction->revenue_teacher),
+                'total_earnings' => intval($teacherWallet->total_earnings) + intval($transaction->revenue_teacher),
+            ];
+            $this->teacherWalletRepo->update($course->teacher_id, $dataTeacherWallet);
+
+            // Transaction wallet teacher
+            $dataTeacherWalletTransaction = [
+                'code' => $this->generateTransactionCode(),
+                'type' => 'available_receive_money',
+                'balance_tracking' => $transaction->revenue_teacher,
+                'teacher_wallet_id' => $teacherWallet->id,
+            ];
+            $this->teacherWalletTransactionRepo->create($dataTeacherWalletTransaction);
+
+            DB::commit();
+            return 'success';
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    private function formatCheckoutData($data)
+    {
         $user = JWTAuth::parseToken()->authenticate();
         $data['user_id'] = $user->id;
 
@@ -121,20 +134,21 @@ class PaymentService
         if (isset($data['voucher_id'])) {
             $voucher = $this->voucherRepo->find($data['voucher_id']);
             $voucher = $this->check($voucher, $course);
-    
+
             $data['discount_price'] = $data['origin_price'] * (1 - $voucher->discount / 100);
             $data['revenue_teacher'] = $voucher->teacher
-                                        ? $data['discount_price'] * (1 - $data['fee_platform'] / 100)
-                                        : $data['origin_price'] * (1 - $data['fee_platform'] / 100);
+                ? $data['discount_price'] * (1 - $data['fee_platform'] / 100)
+                : $data['origin_price'] * (1 - $data['fee_platform'] / 100);
         } else {
             $data['discount_price'] = $data['origin_price'];
             $data['revenue_teacher'] = $data['origin_price'] * (1 - $data['fee_platform'] / 100);
         }
-    
+
         return $data;
     }
 
-    private function saveData($response, $data) {
+    private function saveData($response, $data)
+    {
         $transactionData = [
             'transaction_code' => $response['orderCode'],
             'origin_price' => $data['origin_price'],
@@ -144,20 +158,20 @@ class PaymentService
             'user_id' => $data['user_id'],
             'course_id' => $data['course_id'],
             'payment_method_id' => $data['payment_method_id'],
-            'status' => $response['status']
+            'status' => $response['status'],
         ];
-        
+
         $transaction = $this->transactionRepo->create($transactionData);
 
-        if(isset($data['voucher_id'])) {
+        if (isset($data['voucher_id'])) {
             $voucherUsageData = [
                 'user_id' => $data['user_id'],
                 'transaction_id' => $transaction->id,
                 'voucher_id' => $data['voucher_id'] ?? null,
-                'used_at' => now()->toDateTimeString()
+                'used_at' => now()->toDateTimeString(),
             ];
-    
-            $voucherUsage = $this->voucherUsageRepo->create($voucherUsageData);
+
+            $this->voucherUsageRepo->create($voucherUsageData);
         }
     }
 

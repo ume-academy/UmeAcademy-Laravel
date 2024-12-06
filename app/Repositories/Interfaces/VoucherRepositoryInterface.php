@@ -8,4 +8,5 @@ interface VoucherRepositoryInterface
     public function getAllByCourse(int $id);
     public function getByCode($code);
     public function find(int $id);
+    public function getAllVoucher($perPage);
 }
