@@ -137,7 +137,7 @@ class CourseController extends Controller
     public function getCourse($id) {
         try {
             $course = $this->courseService->getCourse($id);
-            return new CourseResource($course);
+            return new DetailCourseResource($course);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
@@ -228,6 +228,14 @@ class CourseController extends Controller
         try {
             $course = $this->courseService->getDetailCourse($id);
             return new DetailCourseResource($course);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function certificate($id) {
+        try {
+            return $this->courseService->certificate($id);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }

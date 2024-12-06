@@ -59,4 +59,26 @@ class VoucherController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function createVoucherSystem(StoreVoucherRequest $req) {
+        try {
+            $data = $req->only([
+                'code',
+                'quantity',
+                'discount',
+                'start_date',
+                'end_date',
+            ]);
+
+            $voucher = $this->voucherService->createVoucherSystem($data);
+
+            return new VoucherResource($voucher);
+        } catch (QueryException $e) {
+            if ($e->errorInfo[1] == 1062) { 
+                return response()->json(['error' => "Code đã tồn tại"], 500);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }

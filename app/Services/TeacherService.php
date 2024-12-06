@@ -148,6 +148,12 @@ class TeacherService
         return $teacher;
     }
 
+    public function updateProfile($data) {
+        $user = JWTAuth::parseToken()->authenticate();
+
+        return $this->teacherRepo->update($user->teacher->id, $data);
+    }
+
     private function getAllDates($startDate, $endDate) {
         $allDates = [];
         $currentDate = Carbon::parse($startDate);

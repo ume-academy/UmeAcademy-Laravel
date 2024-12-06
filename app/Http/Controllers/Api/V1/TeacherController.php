@@ -133,4 +133,16 @@ class TeacherController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function updateProfile(Request $req) {
+        try {
+            $data = $req->only(['bio', 'job_title', 'facebook', 'twitter', 'linkedin', 'youtube']);
+
+            $teacher = $this->teacherService->updateProfile($data);
+
+            return new TeacherResource($teacher);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }

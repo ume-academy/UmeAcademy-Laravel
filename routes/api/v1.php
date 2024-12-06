@@ -24,7 +24,6 @@ use App\Http\Controllers\Api\V1\PermissionController;
 use App\Http\Controllers\Api\V1\RefundController;
 use App\Http\Controllers\Api\V1\RoleController;
 use App\Http\Controllers\Api\V1\StudentController;
-use App\Models\User;
 
 Route::prefix('/auth')
     ->group(function () {
@@ -141,6 +140,9 @@ Route::prefix('admin')
         Route::get('/user-system', [UserController::class, 'getListUserSystem'])->middleware('can:view-user-system');
         Route::post('/user-system/{id}/roles', [UserController::class, 'assignRole'])->middleware('can:assign-role');
         Route::post('/user-system', [UserController::class, 'createUserSystem'])->middleware('can:create-user-system');
+
+        // Voucher
+        Route::post('/voucher', [VoucherController::class, 'createVoucherSystem'])->middleware('can:create-voucher');
     }
 );
 
@@ -187,6 +189,7 @@ Route::prefix('/teacher')
         Route::post('/revenue', [TeacherController::class, 'getRevenue']);
 
         Route::get('/profile', [TeacherController::class, 'getProfile']);
+        Route::put('/profile', [TeacherController::class, 'updateProfile']);
     }
 );
 
@@ -197,6 +200,8 @@ Route::prefix('/learning')
         Route::get('/course/{id}/content', [CourseController::class, 'getPurchasedCourseContent']);
 
         Route::post('/course/{id}/chapter/{chapterId}/lesson/{lessonId}/complete', [LessonController::class, 'markLessonCompleted']);
+
+        Route::get('/course/{id}/certificate', [CourseController::class, 'certificate']);
     }
 );
 
