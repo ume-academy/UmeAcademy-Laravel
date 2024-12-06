@@ -20,7 +20,7 @@ class TeacherResource extends JsonResource
             'email' => $this->user->email ?? null,
             'avatar' => $this->user->avatar ? url('images/users/'. $this->user->avatar) : null,
             'total_course' => $this->courses()->count(),
-            'bio' => $this->user->bio ?? null,
+            'bio' => $this->bio ? $this->bio : $this->user->bio,
             "rating" => $this->rating ?? 5,
             "job_title" => $this->job_title ?? null,
             "facebook" => $this->facebook ?? null,

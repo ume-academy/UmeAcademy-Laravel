@@ -44,4 +44,10 @@ class VoucherService
 
         return $this->check($voucher, $course);
     }
+
+    public function createVoucherSystem($data) {
+        $data['creator_type'] = 'admin';
+
+        return $this->voucherRepo->create($data);
+    }
 }

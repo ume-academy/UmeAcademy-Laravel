@@ -14,4 +14,11 @@ class TeacherRepository implements TeacherRepositoryInterface
     public function getById(int $id) {
         return Teacher::findOrFail($id);
     }
+    
+    public function update(int $id, array $data) {
+        $teacher = $this->getById($id);
+        $teacher->update($data);
+
+        return $teacher;
+    }
 }

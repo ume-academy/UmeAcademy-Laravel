@@ -27,4 +27,10 @@ class Lesson extends Model
     public function lessonCompleted() {
         return $this->belongsToMany(User::class, 'lesson_completeds', 'lesson_id', 'user_id');
     }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'lesson_completeds')
+            ->withPivot('created_at');
+    }
 }
