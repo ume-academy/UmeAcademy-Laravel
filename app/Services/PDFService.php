@@ -47,7 +47,6 @@ class PDFService
                 ->setOption('isPhpEnabled', true)
                 ->setOption('isJavascriptEnabled', true)
                 ->setPaper('A4', 'landscape');
-
-            return $pdf->stream('certificate.pdf');
+                return $pdf->stream('certificate.pdf');
     }
 }

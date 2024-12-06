@@ -50,4 +50,8 @@ class VoucherService
 
         return $this->voucherRepo->create($data);
     }
+
+    public function getVoucherSystem($perPage) {
+        return $this->voucherRepo->getAllVoucher($perPage);
+    }
 }

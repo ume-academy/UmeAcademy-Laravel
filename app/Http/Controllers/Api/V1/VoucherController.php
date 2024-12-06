@@ -8,6 +8,7 @@ use App\Http\Requests\Voucher\StoreVoucherRequest;
 use App\Http\Resources\Voucher\VoucherResource;
 use App\Services\VoucherService;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
 
 class VoucherController extends Controller
 {
@@ -77,6 +78,18 @@ class VoucherController extends Controller
             if ($e->errorInfo[1] == 1062) { 
                 return response()->json(['error' => "Code đã tồn tại"], 500);
             }
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function getVoucherSystem(Request $req) {
+        try {
+            $perPage = $req->input('per_page', 10);
+
+            $vouchers = $this->voucherService->getVoucherSystem($perPage);
+
+            return VoucherResource::collection($vouchers);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
