@@ -117,7 +117,7 @@ class PaymentService
             $this->teacherWalletTransactionRepo->create($dataTeacherWalletTransaction);
 
             DB::commit();
-            return response()->json(['message' => 'Thanh toán thành công']);
+            return response()->json(['data' => 'success']);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['error' => $e->getMessage()], 500);
