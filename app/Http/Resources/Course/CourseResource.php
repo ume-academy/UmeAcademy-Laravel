@@ -46,6 +46,8 @@ class CourseResource extends JsonResource
                 'badge' => $this->badge ?? null,
                 'category' => $this->category->name ?? null 
             ],
+            'is_wishlist' => $this->is_wishlist ?? null,
+            'is_enrolled' => $this->is_enrolled ?? null,
             'created_at' => $this->created_at ?? null
         ];
     }

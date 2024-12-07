@@ -5,6 +5,7 @@ namespace App\Http\Requests\PaymentMethod;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class StorePaymentMethodRequest extends FormRequest
 {
@@ -24,14 +25,15 @@ class StorePaymentMethodRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required',
+            'name' => 'required|unique:payment_methods,name',
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
-            'name.required' => 'Tên là bắt buộc.', 
+            'name.required' => 'Tên là bắt buộc.',
+            'name.unique' => 'Phương thức đã tồn tại.',
         ];
     }
 

@@ -22,6 +22,10 @@ class PayOSService
     public function checkout(array $data) {
         $course = $this->courseRepo->getById($data['course_id']);
 
+        if($data['discount_price'] == 0) {
+            throw new \Exception('Vui lòng chọn phương thức dành cho voucher miễn phí');
+        }
+
         // Khởi tạo PayOS
         $payOS = new PayOS($this->payOSClientId, $this->payOSApiKey, $this->payOSChecksumKey);
 
