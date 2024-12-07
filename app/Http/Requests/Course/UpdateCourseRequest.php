@@ -27,6 +27,7 @@ class UpdateCourseRequest extends FormRequest
             'name' => 'required|string',
             'summary' => 'required|string',
             'thumbnail' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'price' => 'numeric|min:10000',
             'category_id' => 'required|exists:categories,id',
             'level_id' => 'required|exists:levels,id',
         ];
@@ -44,6 +45,9 @@ class UpdateCourseRequest extends FormRequest
             'thumbnail.image' => 'Hình thu nhỏ phải là một ảnh.',
             'thumbnail.mimes' => 'Hình thu nhỏ phải có định dạng jpeg, png, jpg, gif hoặc svg.',
             'thumbnail.max' => 'Hình thu nhỏ không được vượt quá 2MB.',
+
+            'price.numeric' => 'Giá phải là số.',
+            'price.min' => 'Giá thấp nhất là 10000.',
             
             'category_id.required' => 'Danh mục không được trống.',
             'category_id.exists' => 'Danh mục không tồn tại.',

@@ -19,6 +19,7 @@ class PaymentService
     use VoucherTrait;
 
     private const PAYMENT_METHOD_BANKING = 2;
+    private const PAYMENT_METHOD_VOUCHER = 3;
 
     public function __construct(
         private PayOSService $payOSService,
@@ -35,7 +36,11 @@ class PaymentService
     {
         $data = $this->formatCheckoutData($data);
 
-        if ($data['discount_price'] == 0) {
+        if ($data['payment_method_id'] == self::PAYMENT_METHOD_VOUCHER) {
+            if(!$data['discount_price'] == 0) {
+                throw new \Exception('Vui lòng chọn voucher miễn phí của khóa học');
+            }
+
             $response = [
                 'orderCode' => intval(substr(strval(microtime(true) * 10000), -6)),
                 'status' => true,
@@ -112,7 +117,7 @@ class PaymentService
             $this->teacherWalletTransactionRepo->create($dataTeacherWalletTransaction);
 
             DB::commit();
-            return 'success';
+            return response()->json(['message' => 'Thanh toán thành công']);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['error' => $e->getMessage()], 500);
