@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Spatie\Permission\Models\Role;
 
 class UserResource extends JsonResource
 {
@@ -21,6 +22,7 @@ class UserResource extends JsonResource
             'email_verified' => (bool) $this->email_verified_at,
             "avatar" => $this->avatar ? url('/images/users/' . $this->avatar) : null,
             "is_teacher" => (bool) $this->isTeacher,
+            "is_admin" => (bool) $this->hasAnyRole(Role::pluck('name')->toArray()),
             "bio"=> $this->bio,
             "is_lock"=> $this->is_lock,
             "email_verified_at"=> $this->email_verified_at,
