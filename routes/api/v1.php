@@ -76,6 +76,8 @@ Route::middleware('verify.jwt.token')->group(function() {
 Route::prefix('admin')
     ->middleware('verify.jwt.token')
     ->group(function () {
+        Route::post('/check', [UserController::class, 'checkAdmin']);
+
         // Category
         Route::post('/categories', [CategoryController::class, 'storeCategories'])->middleware('can:create-category');
         Route::get('/categories/{id}', [CategoryController::class, 'getCategory'])->middleware('can:view-category');
