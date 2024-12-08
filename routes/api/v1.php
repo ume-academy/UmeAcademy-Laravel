@@ -24,6 +24,7 @@ use App\Http\Controllers\Api\V1\PermissionController;
 use App\Http\Controllers\Api\V1\RefundController;
 use App\Http\Controllers\Api\V1\RoleController;
 use App\Http\Controllers\Api\V1\StudentController;
+use App\Models\Certificate;
 
 Route::prefix('/auth')
     ->group(function () {
@@ -203,8 +204,6 @@ Route::prefix('/learning')
         Route::get('/course/{id}/content', [CourseController::class, 'getPurchasedCourseContent']);
 
         Route::post('/course/{id}/chapter/{chapterId}/lesson/{lessonId}/complete', [LessonController::class, 'markLessonCompleted']);
-
-        Route::get('/course/{id}/certificate', [CourseController::class, 'certificate']);
     }
 );
 

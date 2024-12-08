@@ -224,12 +224,4 @@ class CourseController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
-    public function certificate($id) {
-        try {
-            return $this->courseService->certificate($id);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
-    }
 }

@@ -4,6 +4,7 @@ namespace App\Services\Email;
 
 use App\Contracts\EmailSenderInterface;
 use App\Notifications\Auth\VerificationEmailNotification;
+use App\Notifications\CertificateNotification;
 
 class EmailService implements EmailSenderInterface
 {
@@ -16,6 +17,9 @@ class EmailService implements EmailSenderInterface
         return $email;
     }
 
+    public function sendCertificate($user, $fileName){
+        $user->notify(new CertificateNotification($fileName));
+    }
     // public function sendPasswordResetEmail($user);
     // public function sendLoginAlertEmail($user, $location){
 

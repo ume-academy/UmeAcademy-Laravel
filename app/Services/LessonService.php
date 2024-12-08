@@ -5,18 +5,23 @@ namespace App\Services;
 use App\Repositories\Interfaces\ChapterRepositoryInterface;
 use App\Repositories\Interfaces\CourseRepositoryInterface;
 use App\Repositories\Interfaces\LessonRepositoryInterface;
+use App\Services\Email\EmailService;
 use App\Traits\ValidationTrait;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class LessonService
 {
     use ValidationTrait;
+    private $emailSender;
 
     public function __construct(
         private LessonRepositoryInterface $lessonRepo,
         private CourseRepositoryInterface $courseRepo,
-        private ChapterRepositoryInterface $chapterRepo
-    ){}
+        private ChapterRepositoryInterface $chapterRepo,
+        private PDFService $pdfService,
+    ){
+        $this->emailSender = new EmailService(); 
+    }
 
     public function createLesson(array $data)
     {
@@ -38,7 +43,22 @@ class LessonService
 
         // Kiểm tra xem người dùng đã đk khóa học chưa
         if($course->checkEnrolled($user->id)) {
-            return $this->lessonRepo->syncLessonCompleted($lesson, [$user->id]);
+            $result = $this->lessonRepo->syncLessonCompleted($lesson, [$user->id]);
+
+            $totalLessons = $course->total_lesson;
+
+            $progress = $totalLessons > 0
+                ? $this->courseRepo->completedLessons($course->id, $user->id)->count() / $totalLessons * 100
+                : 0;
+
+            if ($progress == 100) {
+                $fileName = $this->pdfService->createCertificate($course, $user);
+                
+                // Gửi email
+                $this->emailSender->sendCertificate($user, $fileName);
+            }
+
+            return $result;
         } else {
             throw new \Exception('Bạn chưa mua khóa học'); 
         }
