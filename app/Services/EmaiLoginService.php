@@ -21,7 +21,9 @@ class EmaiLoginService
         $user = $this->userRepository->findByEmail($credentials['email']);
 
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
-            throw new \Exception('Tài khoản hoặc mật khẩu không chính xác.');
+            // return $credentials['password'];
+
+            throw new \Exception($credentials['password']);
         }
 
         // Kiểm tra xem email đã xác minh chưa

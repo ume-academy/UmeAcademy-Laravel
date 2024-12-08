@@ -25,6 +25,7 @@ use App\Http\Controllers\Api\V1\RefundController;
 use App\Http\Controllers\Api\V1\RoleController;
 use App\Http\Controllers\Api\V1\StudentController;
 use App\Models\Certificate;
+use App\Http\Controllers\Api\V1\WithdrawRequestController;
 
 Route::prefix('/auth')
     ->group(function () {
@@ -194,6 +195,10 @@ Route::prefix('/teacher')
 
         Route::get('/profile', [TeacherController::class, 'getProfile']);
         Route::put('/profile', [TeacherController::class, 'updateProfile']);
+
+        // Create a withdrawal request
+        Route::post('/withdraw-requests', [WithdrawRequestController::class, 'create']);
+
     }
 );
 
