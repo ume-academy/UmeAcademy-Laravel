@@ -215,6 +215,10 @@ Route::middleware('verify.jwt.token')
         Route::get('/transaction-history', [TransactionController::class, 'getTransactionHistory']);
 
         Route::post('/change-password', [UserController::class, 'changePassword']);
+
+        Route::post('/course/{id}/add-wishlist', [CourseController::class, 'addWishlist']);
+        Route::post('/course/{id}/remove-wishlist', [CourseController::class, 'removeWishlist']);
+        Route::get('/course/wishlist', [CourseController::class, 'getWishlist']);
     }
 );
 

@@ -48,6 +48,24 @@ class CourseRepository implements CourseRepositoryInterface
         return $course->courseEnrolled()->attach($userIds);
     }
 
+    // Đồng bộ dữ liệu vào bảng wishlist
+    public function syncCourseWishlist(Course $course, array $userIds)
+    {
+        return $course->wishList()->attach($userIds);
+    }
+
+    public function removeCourseWishlist(Course $course, array $userIds)
+    {
+        return $course->wishList()->detach($userIds);
+    }
+
+    public function getWishlistByUser(int $id, $perPage)
+    {
+        return Course::whereHas('wishList', function ($query) use ($id) {
+            $query->where('user_id', $id);
+        })->paginate($perPage);
+    }
+
     // Lấy khóa học đã mua của học sinh
     public function getCourseOfStudent($user, $perPage) {
         return $user->enrolledCourses()->paginate($perPage);

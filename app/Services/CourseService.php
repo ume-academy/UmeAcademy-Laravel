@@ -263,6 +263,38 @@ class CourseService
         return $this->courseRepo->find($id);
     }
 
+    public function addWishlist($id) {
+        $course = $this->courseRepo->getById($id);
+
+        $user = JWTAuth::parseToken()->authenticate();
+
+        return $this->courseRepo->syncCourseWishlist($course, [$user->id]);
+    }
+
+    public function removeWishlist($id) {
+        $course = $this->courseRepo->getById($id);
+
+        $user = JWTAuth::parseToken()->authenticate();
+
+        return $this->courseRepo->removeCourseWishlist($course, [$user->id]);
+    }
+
+    public function getWishlist($perPage) {
+        $user = JWTAuth::parseToken()->authenticate();
+
+        $courses = $this->courseRepo->getWishlistByUser($user->id, $perPage);
+
+        foreach ($courses as $course) {
+            $is_wishlist = $course->checkWishlist($user->id);
+            $is_enrolled = $course->checkEnrolled($user->id);
+            
+            $course['is_wishlist'] = $is_wishlist;
+            $course['is_enrolled'] = $is_enrolled;
+        }
+
+        return $courses;
+    }
+
     // Xử lý ảnh thumbnail
     private function handleThumbnail($file)
     {
