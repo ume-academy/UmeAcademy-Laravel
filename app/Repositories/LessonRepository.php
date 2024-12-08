@@ -18,7 +18,17 @@ class LessonRepository implements LessonRepositoryInterface
     // Đồng bộ dữ liệu vào bảng lesson_completeds
     public function syncLessonCompleted(Lesson $lesson, array $userIds)
     {
-        return $lesson->lessonCompleted()->attach($userIds);
+        $timestamp = now();
+        $data = [];
+
+        foreach ($userIds as $userId) {
+            $data[$userId] = [
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
+            ];
+        }
+
+        return $lesson->lessonCompleted()->attach($data);
     }
 
     public function update(int $id, array $data) {

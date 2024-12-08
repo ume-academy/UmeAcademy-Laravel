@@ -23,7 +23,6 @@ class CourseService
         private CourseRepositoryInterface $courseRepo,
         private ChapterRepositoryInterface $chapterRepo,
         private CourseApprovalRepositoryInterface $courseApprovalRepo,
-        private PDFService $pdfService,
     ){}
 
     public function createCourse(array $data)
@@ -262,24 +261,6 @@ class CourseService
 
     public function getDetailCourse($id) {
         return $this->courseRepo->find($id);
-    }
-
-    public function certificate($id)
-    {
-        $user = JWTAuth::parseToken()->authenticate();
-        $course = $this->courseRepo->find($id);
-
-        $totalLessons = $course->total_lesson;
-
-        $progress = $totalLessons > 0
-            ? $this->courseRepo->completedLessons($course->id, $user->id)->count() / $totalLessons * 100
-            : 0;
-
-        if ($progress == 100) {
-            return $this->pdfService->createCertificate($course, $user);
-        } else {
-            throw new \Exception('Bạn chưa hoàn thành khóa học');
-        }
     }
 
     // Xử lý ảnh thumbnail
