@@ -16,7 +16,8 @@ class UserService
     use HandleFileTrait;
 
     public function __construct(
-        private UserRepositoryInterface $userRepo
+        private UserRepositoryInterface $userRepo,
+        private RoleService $roleService
     ){}
 
     public function me(int $userId) 
@@ -119,5 +120,17 @@ class UserService
     
             throw $e;
         }
+    }
+
+    public function checkAdmin() {
+        $user = JWTAuth::parseToken()->authenticate();
+        
+        $roles = $this->roleService->getAllRole(10)->pluck('name')->toArray();
+
+        if ($user->hasAnyRole($roles)) {
+            return true;
+        }
+
+        return false;
     }
 }

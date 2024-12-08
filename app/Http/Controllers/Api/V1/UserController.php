@@ -123,4 +123,14 @@ class UserController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function checkAdmin() {
+        try {
+            $isAdmin = $this->userService->checkAdmin();
+            
+            return response()->json(['is_admin' => $isAdmin], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }
