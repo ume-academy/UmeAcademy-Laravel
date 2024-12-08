@@ -15,6 +15,7 @@ use App\Http\Resources\Course\StatisticCourseResource;
 use App\Http\Resources\Course\StudentCourseResource;
 use App\Http\Resources\UserResource;
 use App\Services\CourseService;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
 class CourseController extends Controller
@@ -220,6 +221,47 @@ class CourseController extends Controller
         try {
             $course = $this->courseService->getDetailCourse($id);
             return new DetailCourseResource($course);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function addWishlist($id) {
+        try {
+            $isWishlist = $this->courseService->addWishlist($id);
+            return response()->json(['data' => 'success']);
+        } catch (QueryException $e) {
+            if ($e->getCode() == 23000) {
+                return response()->json(['error' => 'Khóa học đã được yêu thích!',], 400); 
+            }
+            
+            throw $e;
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function removeWishlist($id) {
+        try {
+            $isWishlist = $this->courseService->removeWishlist($id);
+            return response()->json(['data' => 'success']);
+        } catch (QueryException $e) {
+            if ($e->getCode() == 23000) {
+                return response()->json(['error' => 'Khóa học đã chưa yêu thích!',], 400); 
+            }
+            
+            throw $e;
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function getWishlist(Request $req) {
+        try {
+            $perPage = $req->input('per_page', 10);
+
+            $courses = $this->courseService->getWishlist($perPage);
+            return CourseResource::collection($courses);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
