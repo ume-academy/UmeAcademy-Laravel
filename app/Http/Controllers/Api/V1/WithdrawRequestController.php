@@ -35,7 +35,7 @@ class WithdrawRequestController extends Controller
         ]);
 
         // Kiểm tra số dư 
-        $available_balance = TeacherWallet::where('teacher_id', $teacher->id)->get('available_balance');
+        $available_balance = TeacherWallet::where('teacher_id', $teacher->id)->pluck('available_balance')->first();
         if ($available_balance < $request->input('money')) {
             return response()->json([
                 'error'=> 'Số dư không đủ',
@@ -45,6 +45,7 @@ class WithdrawRequestController extends Controller
         // tru tien cua teacher
         $walletTeacher = TeacherWallet::where('teacher_id', $teacher->id)->first();
         $walletTeacher->available_balance = (int)$available_balance - (int)$request->input('money');
+        $walletTeacher->save();
 
         // Tạo yêu cầu rút tiền
         $withdrawRequest = WithdrawalRequest::create([
