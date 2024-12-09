@@ -196,7 +196,7 @@ Route::prefix('/teacher')
         // Route::post('/withdraw-requests', [WithdrawRequestController::class, 'create']); 
 
         // History withdrawal
-        Route::post('/withdraw-histories', [WithdrawRequestController::class, 'history']); 
+        Route::get('/withdraw-histories', [WithdrawRequestController::class, 'history']); 
 
 
         Route::get('/course/{id}/students', [CourseController::class, 'getStudentsOfCourse']);

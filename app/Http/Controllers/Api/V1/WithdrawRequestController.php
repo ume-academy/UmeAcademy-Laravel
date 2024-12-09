@@ -7,6 +7,7 @@ use App\Models\WithdrawMethod;
 use App\Models\WithdrawalRequest;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\WithdrawMethod\WithdrawRequestResource;
 use App\Models\Teacher;
 use App\Models\TeacherWallet;
 
@@ -30,7 +31,7 @@ class WithdrawRequestController extends Controller
 
         // Validate dữ liệu yêu cầu
         $request->validate([
-            'money' => 'required|numeric|min:1000', // Min rút: 1000
+            'money' => 'required|numeric|min:100000', // Min rút: 100000
             // 'note' => 'nullable|string|max:255'
         ]);
 
@@ -105,13 +106,15 @@ class WithdrawRequestController extends Controller
     
     }
 
-    public function history()
+    public function history(Request $req)
     {
+        $perPage = $req->input('per_page', 10);
+
         // Xác định teacher hiện tại
         $user = JWTAuth::parseToken()->authenticate();
         $teacher = Teacher::where("user_id", $user->id)->first();
 
-        $histories = WithdrawalRequest::where("teacher_id", $teacher->id)->get();
-        return response()->json(['data' => $histories]);
+        $histories = WithdrawalRequest::where("teacher_id", $teacher->id)->paginate($perPage);
+        return WithdrawRequestResource::collection($histories);
     }
 }
