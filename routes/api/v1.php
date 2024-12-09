@@ -26,6 +26,7 @@ use App\Http\Controllers\Api\V1\RoleController;
 use App\Http\Controllers\Api\V1\StudentController;
 use App\Models\Certificate;
 use App\Http\Controllers\Api\V1\WithdrawRequestController;
+use App\Http\Controllers\Api\V1\WebhookSepayController;
 
 Route::prefix('/auth')
     ->group(function () {
@@ -266,3 +267,6 @@ Route::get('/courses/search', [SearchController::class, 'searchCourse']);
 
 // Bank 
 Route::get('/banks', [WithdrawMethodController::class, 'getBanks']);
+
+// Auto Update Status Withdraw Request
+Route::post('/webhook-sepay', [WebhookSepayController::class, 'autoUpdateStatusWithdrawRequest']);

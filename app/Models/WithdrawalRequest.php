@@ -13,7 +13,8 @@ class WithdrawalRequest extends Model
     protected $fillable = [
         'money',
         'status',
-        'teacher_id'
+        'teacher_id',
+        'code',
     ];
 
     public function teacher() {

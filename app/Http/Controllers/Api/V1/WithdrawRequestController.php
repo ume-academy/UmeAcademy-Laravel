@@ -31,7 +31,7 @@ class WithdrawRequestController extends Controller
 
         // Validate dữ liệu yêu cầu
         $request->validate([
-            'money' => 'required|numeric|min:100000', // Min rút: 100000
+            'money' => 'required|numeric|min:1000', // Min rút: 1000
             // 'note' => 'nullable|string|max:255'
         ]);
 
