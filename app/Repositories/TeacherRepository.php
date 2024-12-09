@@ -11,7 +11,7 @@ class TeacherRepository implements TeacherRepositoryInterface
         return Teacher::create($data);
     }
 
-    public function getById(int $id) {
+    public function getById($id) {
         return Teacher::findOrFail($id);
     }
     
