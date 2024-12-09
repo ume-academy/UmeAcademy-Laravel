@@ -148,6 +148,9 @@ Route::prefix('admin')
         // Voucher
         Route::post('/voucher', [VoucherController::class, 'createVoucherSystem'])->middleware('can:create-voucher');
         Route::get('/voucher', [VoucherController::class, 'getVoucherSystem'])->middleware('can:view-vouchers');
+
+        // Approve or reject a request
+        Route::put('/withdraw-requests/{id}', [WithdrawRequestController::class, 'update']);
     }
 );
 
@@ -188,6 +191,14 @@ Route::prefix('/teacher')
         Route::get('/withdraw-method', [WithdrawMethodController::class, 'getWithdrawMethod']);
         Route::put('/withdraw-method/{id}', [WithdrawMethodController::class, 'updateWithdrawMethod']);
 
+        // Create a withdrawal request
+        Route::post('/withdraw-requests', [WithdrawRequestController::class, 'create']);
+        // Route::post('/withdraw-requests', [WithdrawRequestController::class, 'create']); 
+
+        // History withdrawal
+        Route::post('/withdraw-histories', [WithdrawRequestController::class, 'history']); 
+
+
         Route::get('/course/{id}/students', [CourseController::class, 'getStudentsOfCourse']);
 
         Route::get('/statistic', [TeacherController::class, 'getStatistic']);
@@ -196,8 +207,6 @@ Route::prefix('/teacher')
         Route::get('/profile', [TeacherController::class, 'getProfile']);
         Route::put('/profile', [TeacherController::class, 'updateProfile']);
 
-        // Create a withdrawal request
-        Route::post('/withdraw-requests', [WithdrawRequestController::class, 'create']);
 
     }
 );
