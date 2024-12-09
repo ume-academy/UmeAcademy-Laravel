@@ -23,12 +23,12 @@ class EmaiLoginService
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
             // return $credentials['password'];
 
-            throw new \Exception($credentials['password']);
+            throw new \Exception('Tài khoản hoặc mật khẩu không chính xác', 401);
         }
 
         // Kiểm tra xem email đã xác minh chưa
         if (!$user->hasVerifiedEmail()) {
-            throw new \Exception('Email chưa được xác minh.');
+            throw new \Exception('Email chưa được xác minh.', 403);
         }
 
         return $user;

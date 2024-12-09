@@ -16,6 +16,7 @@ class WithdrawRequestResource extends JsonResource
     {
         return [
             'id' => $this->id ?? null,
+            'code' => $this->code ?? null,
             'money' => $this->money ?? null,
             'status' => $this->status ?? null,
             'teacher' => [

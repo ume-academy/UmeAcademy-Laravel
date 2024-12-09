@@ -31,7 +31,7 @@ class WithdrawRequestController extends Controller
 
         // Validate dữ liệu yêu cầu
         $request->validate([
-            'money' => 'required|numeric|min:1000', // Min rút: 1000
+            'money' => 'required|numeric|min:100000', // Min rút: 100 000
             // 'note' => 'nullable|string|max:255'
         ]);
 
@@ -50,6 +50,7 @@ class WithdrawRequestController extends Controller
 
         // Tạo yêu cầu rút tiền
         $withdrawRequest = WithdrawalRequest::create([
+            'code' => uniqid(),
             'teacher_id' => $teacher->id,
             'money' => $request->input('money'),
             'status' => 2, // pending
@@ -66,7 +67,7 @@ class WithdrawRequestController extends Controller
     {
         $user = JWTAuth::parseToken()->authenticate();
 
-        // Kiểm tra quyền admin (bạn có thể dùng role-based middleware ở đây)
+        // Kiểm tra quyền admin 
         // if ($user->role !== 'admin') {
         //     return response()->json([
         //         'status' => 'error',
@@ -95,11 +96,7 @@ class WithdrawRequestController extends Controller
         // $withdrawRequest->note = $request->note;
         $withdrawRequest->save();
 
-        // Nếu yêu cầu được duyệt, bạn có thể thực hiện thanh toán (ví dụ: cập nhật tài khoản teacher)
-        
-
         return response()->json([
-            'status' => 'success',
             'message' => 'Yêu cầu rút tiền đã được cập nhật.',
             'data' => $withdrawRequest
         ], 200);

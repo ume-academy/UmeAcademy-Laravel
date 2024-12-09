@@ -50,7 +50,7 @@ class AuthController extends Controller
             return $token;
 
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json(['error' => $e->getMessage()], $e->getCode());
         } 
     }
 
