@@ -42,7 +42,7 @@ class ContentCourseResource extends JsonResource
                 'id' => $lesson->id,
                 'name' => $lesson->name,
                 'is_preview' => $lesson->video?->is_preview ?? false,
-                'video_link' => $lesson->video?->is_preview ? url('videos/courses/' . $lesson->video->name) : null,
+                'video_link' => isset($lesson->video) ? url('videos/courses/' . $lesson->video->name) : null,
                 'video_duration' => $lesson->video ? $lesson->video->duration : 0,
             ];
         })->toArray();

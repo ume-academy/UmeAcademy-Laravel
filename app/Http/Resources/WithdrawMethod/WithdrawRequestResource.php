@@ -21,7 +21,14 @@ class WithdrawRequestResource extends JsonResource
             'status' => $this->status ?? null,
             'teacher' => [
                 'id' => $this->teacher->id ?? null,
-                'name' => $this->teacher->user->fullname ?? null
+                'name' => $this->teacher->user->fullname ?? null,
+                'bank' => [
+                    "id" => $this->teacher->withdrawMethod->id ?? null,
+                    "name_bank" => $this->teacher->withdrawMethod->name_bank ?? null,
+                    "name_account" => $this->teacher->withdrawMethod->name_account ?? null,
+                    "number_account" => $this->teacher->withdrawMethod->number_account ?? null,
+                    "min_withdraw" => $this->teacher->withdrawMethod->min_withdraw ?? null,
+                ],
             ],
             'created_at' => $this->created_at ?? null
         ];

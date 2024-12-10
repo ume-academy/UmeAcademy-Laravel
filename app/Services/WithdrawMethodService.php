@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\WithdrawalRequest;
 use App\Models\WithdrawMethod;
 use App\Repositories\Interfaces\WithdrawMethodRepositoryInterface;
 use App\Traits\ValidationTrait;
@@ -47,16 +48,19 @@ class WithdrawMethodService
         return $this->withdrawMethodRepo->update($id, $data);
     }
 
-    public function getWithdrawRequest($perPage) {
-        return $this->withdrawMethodRepo->getAllRequest($perPage);
+    public function getWithdrawRequest($startDate, $endDate, $perPage) {
+        $query = WithdrawalRequest::query();
+
+        // Nếu có start_date và end_date, áp dụng lọc theo khoảng ngày
+        if ($startDate && $endDate) {
+            $query->whereBetween('created_at', [$startDate, $endDate]);
+        }
+    
+        return $query->paginate($perPage);
     }
 
     public function updateStatus($id, $status) {
         $request = $this->withdrawMethodRepo->find($id);
-
-        if($request->status == 1 || $request->status == 0) {
-            throw new \Exception('Yêu cầu đã được phê duyệt');
-        }
 
         return $this->withdrawMethodRepo->updateStatus($id, $status);
     }
