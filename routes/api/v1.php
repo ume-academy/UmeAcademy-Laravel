@@ -72,6 +72,10 @@ Route::middleware('verify.jwt.token')->group(function() {
     // Wallet
     Route::get('/wallet-balance', [StudentController::class, 'getWalletBalance']);
     Route::get('/wallet-transaction', [StudentController::class, 'getWalletTransaction']);
+
+    // Student refund request
+    Route::post('/refund/{transactionCode}', [RefundController::class, 'createRefundRequest']);
+
 });
 
 
@@ -152,6 +156,12 @@ Route::prefix('admin')
         // Voucher
         Route::post('/voucher', [VoucherController::class, 'createVoucherSystem'])->middleware('can:create-voucher');
         Route::get('/voucher', [VoucherController::class, 'getVoucherSystem'])->middleware('can:view-vouchers');
+
+        // Approve or reject a request
+        Route::put('/withdraw-requests/{id}', [WithdrawRequestController::class, 'update']);
+
+        // review refund request (xét duyệt yêu cầu hoàn tiền)
+        Route::post('/refund/{transactionCode}/review', [RefundController::class, 'reviewRefundRequest']);
     }
 );
 
