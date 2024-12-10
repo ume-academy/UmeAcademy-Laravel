@@ -33,6 +33,10 @@ class Teacher extends Model
         return $this->hasMany(Course::class);
     }
 
+    public function withdrawMethod() {
+        return $this->hasOne(WithdrawMethod::class);
+    }
+
     public function getRatingAttribute() {
         $totalRating = $this->getTotalCourseRatings();
         $totalReviews = $this->getTotalReviewCount();

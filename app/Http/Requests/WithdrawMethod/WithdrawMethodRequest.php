@@ -24,29 +24,28 @@ class WithdrawMethodRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name_bank' => 'required',
-            'name_account' => 'required|string',
-            // 'branch' => 'required|string',
-            'number_account' => 'required|numeric',
+            'name_bank' => 'required|max:255',
+            'name_account' => 'required|string|max:255',
+            'number_account' => 'required|numeric|digits_between:10,20',
         ];
     }
 
-    public function messages(): array
+    public function messages()
     {
         return [
-            'name_bank.required' => 'Tên ngân hàng là bắt buộc.',
+            'name_bank.required' => 'Tên ngân hàng không được để trống.',
+            'name_bank.max' => 'Tên ngân hàng không được vượt quá 255 ký tự.',
 
-            'name_account.required' => 'Tên chủ tài khoản là bắt buộc.',
-            'name_account.string' => 'Tên chủ tài khoản phải là một chuỗi ký tự.',
-
-            // 'branch.required' => 'Chi nhánh là bắt buộc.',
-            // 'branch.string' => 'Chi nhánh phải là một chuỗi ký tự.',
-
-            'number_account.required' => 'Số tài khoản là bắt buộc.',
-            'number_account.numeric' => 'Số tài khoản phải là một số.',
+            'name_account.required' => 'Tên tài khoản không được để trống.',
+            'name_account.string' => 'Tên tài khoản phải là chuỗi ký tự.',
+            'name_account.max' => 'Tên tài khoản không được vượt quá 255 ký tự.',
+            
+            'number_account.required' => 'Số tài khoản không được để trống.',
+            'number_account.numeric' => 'Số tài khoản phải là số.',
+            'number_account.digits_between' => 'Số tài khoản phải có từ 10 đến 20 chữ số.',
         ];
-        
     }
+
     
     protected function failedValidation(Validator $validator) {
         throw new HttpResponseException(response()->json([

@@ -37,4 +37,30 @@ class FeeController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function getFeeTeacher($id) {
+        try {
+            $fee = $this->feeService->getFeeTeacher($id);
+            return response()->json([
+                'fee' => $fee
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function updateFeeTeacher(UpdateFeeRequest $req,$id) {
+        try {
+            $data = $req->only(['fee']);
+            
+            $this->feeService->updateFeeTeacher($id, $data);
+            return response()->json([
+                'message' => 'Cập nhật hoa hồng thành công'
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }

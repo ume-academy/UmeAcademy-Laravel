@@ -28,8 +28,10 @@ class WithdrawMethodRepository implements WithdrawMethodRepositoryInterface
         return $method;
     }
 
-    public function getAllRequest($perPage) {
-        return WithdrawalRequest::paginate($perPage);
+    public function getAllRequest($startDate, $endDate, $perPage)
+    {
+        return WithdrawalRequest::whereBetween('created_at', [$startDate, $endDate])
+            ->paginate($perPage);
     }
 
     public function find(int $id) {

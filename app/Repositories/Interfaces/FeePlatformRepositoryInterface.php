@@ -8,4 +8,5 @@ interface FeePlatformRepositoryInterface
     public function getFeeTeacher(int $id);
     public function updateFee(int $id, array $data);
     public function getById(int $id);
+    public function updateFeeTeacher(int $id, array $data);
 }

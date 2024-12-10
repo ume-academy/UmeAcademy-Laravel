@@ -8,7 +8,7 @@ interface WithdrawMethodRepositoryInterface
     public function getWithdrawMethod(int $teacherId);
     public function getAllBank();
     public function update($id, $data);
-    public function getAllRequest($perPage);
+    public function getAllRequest($startDate, $endDate, $perPage);
     public function updateStatus(int $id, $status);
     public function find(int $id);
 }

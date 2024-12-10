@@ -19,10 +19,6 @@ class RefundService
     public function updateStatus($id, $status) {
         $request = $this->refundRepo->find($id);
 
-        if($request->status == 1 || $request->status == 0) {
-            throw new \Exception('Yêu cầu đã được phê duyệt');
-        }
-
         return $this->refundRepo->updateStatus($id, $status);
     }
 }

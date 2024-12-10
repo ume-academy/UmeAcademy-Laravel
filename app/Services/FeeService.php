@@ -19,4 +19,12 @@ class FeeService
     public function get($id) {
         return $this->feePlatformRepo->getById($id);
     }
+
+    public function getFeeTeacher($id) {
+        return $this->feePlatformRepo->getFeeTeacher($id);
+    }
+
+    public function updateFeeTeacher($id, $data) {
+        return $this->feePlatformRepo->updateFeeTeacher($id, $data);
+    }
 }
