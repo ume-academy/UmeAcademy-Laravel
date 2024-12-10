@@ -72,6 +72,10 @@ Route::middleware('verify.jwt.token')->group(function() {
     // Wallet
     Route::get('/wallet-balance', [StudentController::class, 'getWalletBalance']);
     Route::get('/wallet-transaction', [StudentController::class, 'getWalletTransaction']);
+
+    // Student refund request
+    Route::post('/refund/{transactionCode}', [RefundController::class, 'processPendingRefunds']);
+
 });
 
 

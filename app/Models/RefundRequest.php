@@ -16,7 +16,8 @@ class RefundRequest extends Model
         'user_id',
         'course_id',
         'teacher_id',
-        'refund_reason'
+        'refund_reason',
+        'transaction_code',
     ];
 
     public function user() {
@@ -29,5 +30,10 @@ class RefundRequest extends Model
 
     public function teacher() {
         return $this->belongsTo(Teacher::class);
+    }
+
+    public function transaction()
+    {
+        return $this->belongsTo(Transaction::class, 'transaction_code', 'transaction_code');
     }
 }
