@@ -11,12 +11,7 @@ class RefundRequest extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'money',
         'status',
-        'user_id',
-        'course_id',
-        'teacher_id',
-        'refund_reason',
         'transaction_code',
     ];
 
