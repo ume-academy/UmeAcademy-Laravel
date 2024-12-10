@@ -91,6 +91,9 @@ Route::prefix('admin')
         Route::put('/fee/{id}', [FeeController::class, 'update'])->middleware('can:update-fee');
         Route::get('/fee/{id}', [FeeController::class, 'get'])->middleware('can:view-fee');
 
+        Route::get('/fee/teacher/{id}', [FeeController::class, 'getFeeTeacher'])->middleware('can:view-fee-teacher');
+        Route::put('/fee/teacher/{id}', [FeeController::class, 'updateFeeTeacher'])->middleware('can:update-fee-teacher');
+
         // Payment method
         Route::post('/payment-methods', [PaymentMethodController::class, 'createPaymentMethod'])->middleware('can:create-payment-method');
         Route::put('/payment-methods/{id}', [PaymentMethodController::class, 'updatePaymentMethod'])->middleware('can:update-payment-method');
@@ -149,9 +152,6 @@ Route::prefix('admin')
         // Voucher
         Route::post('/voucher', [VoucherController::class, 'createVoucherSystem'])->middleware('can:create-voucher');
         Route::get('/voucher', [VoucherController::class, 'getVoucherSystem'])->middleware('can:view-vouchers');
-
-        // Approve or reject a request
-        Route::put('/withdraw-requests/{id}', [WithdrawRequestController::class, 'update']);
     }
 );
 
