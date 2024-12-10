@@ -74,7 +74,7 @@ Route::middleware('verify.jwt.token')->group(function() {
     Route::get('/wallet-transaction', [StudentController::class, 'getWalletTransaction']);
 
     // Student refund request
-    Route::post('/refund/{transactionCode}', [RefundController::class, 'processPendingRefunds']);
+    Route::post('/refund/{transactionCode}', [RefundController::class, 'createRefundRequest']);
 
 });
 
@@ -156,6 +156,9 @@ Route::prefix('admin')
 
         // Approve or reject a request
         Route::put('/withdraw-requests/{id}', [WithdrawRequestController::class, 'update']);
+
+        // review refund request (xét duyệt yêu cầu hoàn tiền)
+        Route::post('/refund/{transactionCode}/review', [RefundController::class, 'reviewRefundRequest']);
     }
 );
 

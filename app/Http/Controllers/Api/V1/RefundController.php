@@ -89,7 +89,41 @@ class RefundController extends Controller
 
             return response()->json([
                 'message' => 'Yêu cầu hoàn tiền được tạo thành công.',
-            ]);
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json(['error'=> $e->getMessage()], 500);
+        }
+    }
+
+    // xét duyệt yêu cầu hoàn tiền
+    public function reviewRefundRequest($transactionCode, Request $request)
+    {
+        try {
+            $refund = RefundRequest::where('transaction_code', $transactionCode)->first();
+
+            // Lấy hành động từ tham số trong request
+            $status = $request->input('status'); 
+
+            switch ($status) {
+                case 1:
+                    $refund->status = 1;
+                    break;
+
+                case 2:
+                    $refund->status = 2;
+                    break;
+
+                case 3:
+                    $refund->status = 3;
+                    break;
+
+                default:
+                    return response()->json(['error' => 'Status không hợp lệ'], 400);
+            }
+
+            $refund->save();
+
+            return response()->json(['message' => 'Đã xử lý hoàn tiền thành công.']);
         } catch (\Exception $e) {
             return response()->json(['error'=> $e->getMessage()], 500);
         }
