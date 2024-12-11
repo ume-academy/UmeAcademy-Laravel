@@ -125,7 +125,22 @@ class CourseService
     public function getPurchasedCourses($perPage) {
         $user = JWTAuth::parseToken()->authenticate();
 
-        return $this->courseRepo->getCourseOfStudent($user, $perPage);
+        $courses = $this->courseRepo->getCourseOfStudentTransaction($user, $perPage);
+
+        foreach ($courses as &$course) {
+            $transaction = $course->transactions; // Transaction được eager load từ repository
+    
+            if ($transaction) {
+                // Kiểm tra điều kiện thời gian giao dịch
+                $course['refund'] = $transaction[0]->created_at->diffInDays(now()) > 7 ? false : true;
+                $course['transaction_code'] = $transaction[0]->transaction_code;
+            } else {
+                $course['refund'] = null;
+                $course['transaction_code'] = null;
+            }
+        }
+
+        return $courses;
     }
 
     public function getCourse($id) {

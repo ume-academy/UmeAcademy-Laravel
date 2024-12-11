@@ -27,7 +27,7 @@ class StoreResourceRequest extends FormRequest
             'name' => [
                 'required',
                 'file',
-                'max:10240',
+                'max:204800',
             ],
         ];
     }
@@ -37,7 +37,7 @@ class StoreResourceRequest extends FormRequest
         return [
             'name.required' => 'Resource là trường bắt buộc.',
             'name.file' => 'Resource phải là một file hợp lệ.',
-            'name.max' => 'Dung lượng resource không được vượt quá 10MB.',
+            'name.max' => 'Dung lượng resource không được vượt quá 200MB.',
         ];
     }
 

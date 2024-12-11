@@ -13,6 +13,7 @@ class RefundRequest extends Model
     protected $fillable = [
         'status',
         'transaction_code',
+        'refund_reason'
     ];
 
     public function user() {

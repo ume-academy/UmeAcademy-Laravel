@@ -13,6 +13,7 @@ use App\Http\Resources\Video\VideoResource;
 use App\Services\LessonService;
 use App\Services\ResourceService;
 use App\Services\VideoService;
+use Illuminate\Http\Request;
 
 class LessonController extends Controller
 {
@@ -48,6 +49,22 @@ class LessonController extends Controller
             ];
 
             $video = $this->videoService->createVideo($data);
+
+            return new VideoResource($video);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function updateVideo(Request $req, $id, $chapterId, $lessonId) {
+        try {
+            $data = [
+                'is_preview' => $req->input('is_preview', 0),
+                'course_id' => $id,
+                'chapter_id' => $chapterId,
+                'lesson_id' => $lessonId,
+            ];
+            $video = $this->videoService->updateVideo($data);
 
             return new VideoResource($video);
         } catch (\Exception $e) {

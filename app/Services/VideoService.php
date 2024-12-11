@@ -86,6 +86,19 @@ class VideoService
         }
     }
 
+    public function updateVideo(array $data)
+    {
+
+        $teacher = $this->validateTeacher();
+
+        $course = $this->validateCourse($teacher, $data['course_id']);
+        $chapter = $this->validateChapter($course, $data['chapter_id']);
+        $lesson = $this->validateLesson($chapter, $data['lesson_id']);
+        $video = $lesson->video;
+        
+        return $video = $this->videoRepo->updateVideo($video->id, $data['is_preview']);
+    }
+
     // Lưu video tạm thời
     private function getPathVideo($file)
     {

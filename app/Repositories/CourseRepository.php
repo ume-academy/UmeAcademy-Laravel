@@ -71,6 +71,18 @@ class CourseRepository implements CourseRepositoryInterface
         return $user->enrolledCourses()->paginate($perPage);
     }
 
+    public function getCourseOfStudentTransaction($user, $perPage) {
+        return Course::whereHas('transactions', function ($query) use ($user) {
+            $query->where('user_id', $user->id)
+                  ->where('status', 2); // Lọc giao dịch thành công
+        })
+        ->with(['transactions' => function ($query) use ($user) {
+            $query->where('user_id', $user->id)
+                  ->where('status', 2); // Lấy giao dịch thành công
+        }])
+        ->paginate($perPage);
+    }
+
     public function update(int $id, array $data) {
         $course = $this->find($id);
 

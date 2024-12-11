@@ -48,6 +48,8 @@ class CourseResource extends JsonResource
             ],
             'is_wishlist' => $this->is_wishlist ?? null,
             'is_enrolled' => $this->is_enrolled ?? null,
+            "refund" => $this->refund ?? null,
+            "transaction_code" => $this->transaction_code ?? null,
             'created_at' => $this->created_at ?? null
         ];
     }

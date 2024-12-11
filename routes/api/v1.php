@@ -131,10 +131,6 @@ Route::prefix('admin')
         Route::get('/teacher/{id}/wallet-transactions', [TeacherController::class, 'getWalletTransactionByTeacher'])->middleware('can:view-teacher-wallet-transactions');
         Route::get('/teacher/{id}/courses', [TeacherController::class, 'getCoursesByTeacher'])->middleware('can:view-teacher-courses');
 
-        // Refund request
-        Route::get('/refund-request', [RefundController::class, 'getAllRefundRequest'])->middleware('can:view-refund-requests');
-        Route::put('/refund-request/{id}', [RefundController::class, 'updateStatus'])->middleware('can:update-refund-status');
-
         // Role
         Route::get('/roles', [RoleController::class, 'getAllRole'])->middleware('can:view-roles');
         Route::post('/roles', [RoleController::class, 'createRole'])->middleware('can:create-role');
@@ -157,11 +153,10 @@ Route::prefix('admin')
         Route::post('/voucher', [VoucherController::class, 'createVoucherSystem'])->middleware('can:create-voucher');
         Route::get('/voucher', [VoucherController::class, 'getVoucherSystem'])->middleware('can:view-vouchers');
 
-        // Approve or reject a request
-        Route::put('/withdraw-requests/{id}', [WithdrawRequestController::class, 'update']);
-
         // review refund request (xét duyệt yêu cầu hoàn tiền)
-        Route::post('/refund/{transactionCode}/review', [RefundController::class, 'reviewRefundRequest']);
+        Route::get('/refund-request', [RefundController::class, 'getAllRefundRequest'])->middleware('can:view-refund-requests');
+        
+        Route::post('/refund/{transactionCode}/review', [RefundController::class, 'reviewRefundRequest'])->middleware('can:update-refund-status');
     }
 );
 
@@ -180,6 +175,7 @@ Route::prefix('/teacher')
         Route::put('/course/{id}/chapter/{chapterId}/lesson/{lessonId}', [LessonController::class, 'updateLesson']);
         
         Route::post('/course/{id}/chapter/{chapterId}/lesson/{lessonId}/videos', [LessonController::class, 'createVideo']);
+        Route::put('/course/{id}/chapter/{chapterId}/lesson/{lessonId}/videos', [LessonController::class, 'updateVideo']);
 
         Route::post('/course/{id}/chapter/{chapterId}/lesson/{lessonId}/resources', [LessonController::class, 'createResource']);
 
@@ -204,7 +200,6 @@ Route::prefix('/teacher')
 
         // Create a withdrawal request
         Route::post('/withdraw-requests', [WithdrawRequestController::class, 'create']);
-        // Route::post('/withdraw-requests', [WithdrawRequestController::class, 'create']); 
 
         // History withdrawal
         Route::get('/withdraw-histories', [WithdrawRequestController::class, 'history']); 

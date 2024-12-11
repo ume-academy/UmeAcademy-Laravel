@@ -16,11 +16,9 @@ class RefundResource extends JsonResource
     {
         return [
             'id' => $this->id ?? null,
-            'money' => $this->money ?? null,
+            'transaction_code' => $this->transaction_code ?? null,
             'refund_reason' => $this->refund_reason ?? null,
-            'student' => $this->user->fullname ?? null,
-            'course' => $this->course->name ?? null,
-            'teacher' => $this->teacher->user->fullname ?? null,
+            'transaction' => $this->transaction ?? null,
             'status' => $this->status ?? null,
             'created_at' => $this->created_at ?? null,
         ];
