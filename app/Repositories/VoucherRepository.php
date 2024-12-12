@@ -12,7 +12,7 @@ class VoucherRepository implements VoucherRepositoryInterface
     }
 
     public function getAllByCourse(int $id) {
-        return Voucher::where('course_id', $id)->get();
+        return Voucher::where('course_id', $id)->orderBy('created_at', 'desc')->get();
     }
 
     public function getByCode($code) {
@@ -24,6 +24,6 @@ class VoucherRepository implements VoucherRepositoryInterface
     }
 
     public function getAllVoucher($perPage) {
-        return Voucher::where('creator_type', 'admin')->paginate($perPage);
+        return Voucher::where('creator_type', 'admin')->orderBy('created_at', 'desc')->paginate($perPage);
     }
 }

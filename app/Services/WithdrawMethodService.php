@@ -56,7 +56,7 @@ class WithdrawMethodService
             $query->whereBetween('created_at', [$startDate, $endDate]);
         }
     
-        return $query->paginate($perPage);
+        return $query->orderBy('created_at', 'desc')->paginate($perPage);
     }
 
     public function updateStatus($id, $status) {

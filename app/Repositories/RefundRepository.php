@@ -8,7 +8,7 @@ use App\Repositories\Interfaces\RefundRepositoryInterface;
 class RefundRepository implements RefundRepositoryInterface
 {
     public function getAll($perPage) {
-        return RefundRequest::paginate($perPage);
+        return RefundRequest::orderBy('created_at', 'desc')->paginate($perPage);
     }
 
     public function find(int $id) {

@@ -26,6 +26,7 @@ class VoucherResource extends JsonResource
                 'id' => $this->course->id ?? null,
                 'name' => $this->course->name ?? null
             ],
+            'created_at' => $this->created_at ?? null
         ];
     }
 }

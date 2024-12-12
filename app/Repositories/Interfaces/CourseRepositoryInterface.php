@@ -23,5 +23,4 @@ interface CourseRepositoryInterface
     public function getByCategory(int $id, $perPage);
     public function filter($params);
     public function getAllCourse($perPage);
-    public function getCourseOfStudentTransaction($user, $perPage);
 }

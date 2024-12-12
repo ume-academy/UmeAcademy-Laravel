@@ -12,7 +12,7 @@ class TeacherWalletTransactionRepository implements TeacherWalletTransactionRepo
     }
 
     public function getByWalletId(int $id, $perPage) {
-        return TeacherWalletTransaction::where('teacher_wallet_id', $id)->paginate($perPage);
+        return TeacherWalletTransaction::where('teacher_wallet_id', $id)->orderBy('created_at', 'desc')->paginate($perPage);
     }
 
     public function filterRevenue(int $id, $startDate, $endDate) {

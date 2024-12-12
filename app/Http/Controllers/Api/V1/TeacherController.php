@@ -145,4 +145,14 @@ class TeacherController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function getInformationTeacher($id) {
+        try {
+            $teacher = $this->teacherService->getInformationTeacher($id);
+
+            return new TeacherResource($teacher);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }

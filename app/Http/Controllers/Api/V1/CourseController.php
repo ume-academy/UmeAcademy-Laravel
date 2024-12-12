@@ -267,4 +267,13 @@ class CourseController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function coursePrice() {
+        try {
+            $price = $this->courseService->coursePrice();
+            return response()->json(['data' => $price]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }
