@@ -24,7 +24,7 @@ class CourseRepository implements CourseRepositoryInterface
     }
 
     public function getCourseOfTeacher(int $id) {
-        return Course::where('teacher_id', $id)->where('status', 2)->get();
+        return Course::where('teacher_id', $id)->orderBy('created_at', 'desc')->where('status', 2)->get();
     }
 
     // Chỉ tìm được khóa học đã xuất bản
@@ -63,24 +63,15 @@ class CourseRepository implements CourseRepositoryInterface
     {
         return Course::whereHas('wishList', function ($query) use ($id) {
             $query->where('user_id', $id);
-        })->paginate($perPage);
+        })->orderBy('created_at', 'desc')->paginate($perPage);
     }
 
     // Lấy khóa học đã mua của học sinh
     public function getCourseOfStudent($user, $perPage) {
-        return $user->enrolledCourses()->paginate($perPage);
-    }
-
-    public function getCourseOfStudentTransaction($user, $perPage) {
-        return Course::whereHas('transactions', function ($query) use ($user) {
-            $query->where('user_id', $user->id)
-                  ->where('status', 2); // Lọc giao dịch thành công
-        })
-        ->with(['transactions' => function ($query) use ($user) {
-            $query->where('user_id', $user->id)
-                  ->where('status', 2); // Lấy giao dịch thành công
-        }])
-        ->paginate($perPage);
+        return $user->enrolledCourses()
+            ->withPivot('created_at')
+            ->orderBy('pivot_created_at', 'desc')
+            ->paginate($perPage);
     }
 
     public function update(int $id, array $data) {
@@ -101,7 +92,7 @@ class CourseRepository implements CourseRepositoryInterface
     }
 
     public function getByCategory(int $id, $perPage) {
-        return Course::where('category_id', $id)->where('status', 2)->paginate($perPage);
+        return Course::where('category_id', $id)->where('status', 2)->orderBy('created_at', 'desc')->paginate($perPage);
     }
 
     public function filter($params)
@@ -121,8 +112,12 @@ class CourseRepository implements CourseRepositoryInterface
         }
 
         // Lọc theo giá
-        if (!empty($params['price'])) {
-            $query->where('price', '<=', $params['price']);
+        if (!empty($params['price_min'])) {
+            $query->where('price', '>=', $params['price_min']);
+        }
+    
+        if (!empty($params['price_max'])) {
+            $query->where('price', '<=', $params['price_max']);
         }
 
         // Lọc theo trình độ
@@ -134,7 +129,7 @@ class CourseRepository implements CourseRepositoryInterface
 
         $query->where('status', 2);
 
-        $courses = $query->get();
+        $courses = $query->orderBy('created_at', 'desc')->get();
 
         if (!empty($params['rating'])) {
             $courses = $courses->filter(function ($course) use ($params) {
@@ -157,6 +152,6 @@ class CourseRepository implements CourseRepositoryInterface
     }
 
     public function getAllCourse($perPage) {
-        return Course::paginate($perPage);
+        return Course::orderBy('created_at', 'desc')->paginate($perPage);
     }
 }

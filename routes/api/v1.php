@@ -208,7 +208,7 @@ Route::prefix('/teacher')
         Route::get('/course/{id}/students', [CourseController::class, 'getStudentsOfCourse']);
 
         Route::get('/statistic', [TeacherController::class, 'getStatistic']);
-        Route::post('/revenue', [TeacherController::class, 'getRevenue']);
+        Route::get('/revenue', [TeacherController::class, 'getRevenue']);
 
         Route::get('/profile', [TeacherController::class, 'getProfile']);
         Route::put('/profile', [TeacherController::class, 'updateProfile']);
@@ -256,6 +256,8 @@ Route::get('/course/{id}/overview', [CourseController::class, 'getOverviewCourse
 Route::get('/course/{id}/teacher-information', [CourseController::class, 'getCourseTeacherInformation']);
 Route::get('/course/{id}/reviews', [ReviewController::class, 'getReviewCourse']);
 Route::get('/courses', [CourseController::class, 'getCourseByIds']);
+Route::get('/teacher/{id}', [TeacherController::class, 'getInformationTeacher']);
+Route::get('/course-price', [CourseController::class, 'coursePrice']);
 
 // Payment
 Route::get('/payment-methods', [PaymentMethodController::class, 'getAllPaymentMethod']);

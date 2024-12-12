@@ -26,8 +26,8 @@ class StoreVoucherRequest extends FormRequest
         return [
             'code' => 'required|max:10|unique:vouchers,code', 
             'quantity' => 'required|integer|min:1',  
-            'discount' => 'required|numeric|between:0,100',   
-            'start_date' => 'required|date|before:end_date',
+            'discount' => 'required|integer|between:1,100',   
+            'start_date' => 'required|date|after_or_equal:today|before:end_date',
             'end_date' => 'required|date|after:start_date',
         ];
     }
@@ -44,11 +44,11 @@ class StoreVoucherRequest extends FormRequest
             'quantity.min' => 'Số lượng phải lớn hơn hoặc bằng 1.',
 
             'discount.required' => 'Giảm giá là bắt buộc.',
-            'discount.numeric' => 'Giảm giá phải là một số.',
-            'discount.between' => 'Giảm giá phải trong khoảng từ 0 đến 100.',
+            'discount.integer' => 'Giảm giá phải là một số nguyên.',
+            'discount.between' => 'Giảm giá phải trong khoảng từ 1 đến 100.',
 
             'start_date.required' => 'Ngày bắt đầu là bắt buộc.',
-            'start_date.date' => 'Ngày bắt đầu phải là ngày hợp lệ.',
+            'start_date.after_or_equal' => 'Ngày bắt đầu phải là hôm nay trở đi.',
             'start_date.before' => 'Ngày bắt đầu phải trước ngày kết thúc.',
             
             'end_date.required' => 'Ngày kết thúc là bắt buộc.',

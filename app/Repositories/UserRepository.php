@@ -57,7 +57,7 @@ class UserRepository implements UserRepositoryInterface
     }
 
     public function getAllUser($perPage) {
-        return User::paginate($perPage);
+        return User::orderBy('created_at', 'desc')->paginate($perPage);
     }
 
     public function lock(int $id) {
@@ -84,7 +84,7 @@ class UserRepository implements UserRepositoryInterface
     }
 
     public function getUserRoles(array $roles, $perPage) {
-        return User::role($roles)->paginate($perPage);
+        return User::role($roles)->orderBy('created_at', 'desc')->paginate($perPage);
     }
 
     public function isSystemUser(int $id) {

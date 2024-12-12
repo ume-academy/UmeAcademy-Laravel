@@ -32,6 +32,10 @@ class ChapterService
         $course = $this->validateCourse($teacher, $data['course_id']);
         $this->validateChapter($course, $chapterId);
 
+        if($course->status == 2) {
+            throw new \Exception('Không thể cập nhật khóa học vì khóa học đã được phê duyệt.');
+        }
+
         $data = ['name' => $data['name']];
         
         return $this->chapterRepo->update($chapterId, $data);

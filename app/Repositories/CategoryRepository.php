@@ -10,7 +10,7 @@ class CategoryRepository implements CategoryRepositoryInterface
 {
     public function all($perPage)
     {
-        return Category::paginate($perPage);
+        return Category::orderBy('created_at', 'desc')->paginate($perPage);
     }
 
     public function create($data) {

@@ -73,6 +73,10 @@ class LessonService
         $chapter = $this->validateChapter($course, $data['chapter_id']);
         $this->validateLesson($chapter, $lessonId);
 
+        if($course->status == 2) {
+            throw new \Exception('Không thể cập nhật khóa học vì khóa học đã được phê duyệt.');
+        }
+
         $data = ['name' => $data['name']];
 
         return $this->lessonRepo->update($lessonId, $data);
