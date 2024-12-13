@@ -59,6 +59,10 @@ class UserRepository implements UserRepositoryInterface
     public function getAllUser($perPage) {
         return User::orderBy('created_at', 'desc')->paginate($perPage);
     }
+    
+    public function getAllTeacher($perPage) {
+        return User::whereHas('teacher')->orderBy('created_at', 'desc')->paginate($perPage);
+    }
 
     public function lock(int $id) {
         $user = $this->findById($id);

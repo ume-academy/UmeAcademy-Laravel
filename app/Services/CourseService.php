@@ -271,9 +271,8 @@ class CourseService
         return $updatedCourse;
     }
 
-    public function getCourseByIds($ids) {
-        $data = explode(',', $ids);
-        return $this->courseRepo->getByIds($data);
+    public function getAllCoursePublic($perPage) {
+        return $this->courseRepo->getAllCoursePublic($perPage);
     }
 
     public function getStudentsOfCourse($id, $perPage) {

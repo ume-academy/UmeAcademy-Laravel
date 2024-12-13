@@ -53,6 +53,11 @@ class Course extends Model
         return $this->hasMany(Review::class);
     }
 
+    public function checkReview($userId)
+    {
+        return $this->reviews()->where('user_id', $userId)->get();
+    }
+
     public function lessons() {
         return $this->hasManyThrough(Lesson::class, Chapter::class);
     }

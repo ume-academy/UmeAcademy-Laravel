@@ -10,6 +10,7 @@ interface UserRepositoryInterface
     public function update(int $id, array $data);
     // public function delete(int $id): bool;
     public function getAllUser($perPage);
+    public function getAllTeacher($perPage);
     public function lock(int $id);
     public function unlock(int $id);
 

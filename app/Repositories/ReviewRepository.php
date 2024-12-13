@@ -10,4 +10,8 @@ class ReviewRepository implements ReviewRepositoryInterface
     public function getReviewByCourse(int $id, int $perPage) {
         return Review::where('course_id', $id)->orderBy('created_at', 'desc')->paginate($perPage);
     }
+
+    public function create(array $data) {
+        return Review::create($data);
+    }
 }

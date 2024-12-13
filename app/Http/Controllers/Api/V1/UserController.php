@@ -29,6 +29,18 @@ class UserController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+    
+    public function getListTeacher(Request $req) {
+        try {
+            $perPage = $req->input('per_page', 10);
+
+            $users = $this->userService->getListTeacher($perPage);
+
+            return UserResource::collection($users);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 
     public function updateProfile(UpdateProfileRequest $req) {
         try {

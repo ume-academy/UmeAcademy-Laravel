@@ -17,7 +17,7 @@ interface CourseRepositoryInterface
     public function getWishlistByUser(int $id, $perPage);
     public function getCourseOfStudent($user, $perPage);
     public function update(int $id, array $data);
-    public function getByIds(array $ids);
+    public function getAllCoursePublic($perPage);
     public function updateStatus(int $id, $status);
     public function getCourseOfTeacher(int $id);
     public function getByCategory(int $id, $perPage);

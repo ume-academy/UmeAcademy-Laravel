@@ -34,6 +34,10 @@ class UserService
     public function getListUser($perPage) {
         return $this->userRepo->getAllUser($perPage);
     }
+
+    public function getListTeacher($perPage) {
+        return $this->userRepo->getAllTeacher($perPage);
+    }
     
     public function updateProfile($data)
     {

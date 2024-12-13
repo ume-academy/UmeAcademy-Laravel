@@ -80,8 +80,8 @@ class CourseRepository implements CourseRepositoryInterface
         return $course->update($data);
     }
     
-    public function getByIds(array $ids) {
-        return Course::whereIn('id', $ids)->where('status', 2)->get();
+    public function getAllCoursePublic($perPage) {
+        return Course::where('status', 2)->orderBy('created_at', 'desc')->paginate($perPage);
     }
     
     public function updateStatus(int $id, $status) {
