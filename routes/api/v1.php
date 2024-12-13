@@ -75,7 +75,6 @@ Route::middleware('verify.jwt.token')->group(function() {
 
     // Student refund request
     Route::post('/refund/{transactionCode}', [RefundController::class, 'createRefundRequest']);
-
 });
 
 
@@ -106,6 +105,7 @@ Route::prefix('admin')
 
         Route::get('/users', [UserController::class, 'getListUser'])->middleware('can:view-users');
         Route::get('/user/{id}', [UserController::class, 'getUser'])->middleware('can:view-user');
+        Route::get('/teachers', [UserController::class, 'getListTeacher'])->middleware('can:view-teachers');
 
         Route::post('user/{id}/lock', [UserController::class, 'lock'])->middleware('can:lock-user');
         Route::post('user/{id}/unlock', [UserController::class, 'unlock'])->middleware('can:unlock-user');
@@ -239,6 +239,9 @@ Route::middleware('verify.jwt.token')
         Route::post('/course/{id}/add-wishlist', [CourseController::class, 'addWishlist']);
         Route::post('/course/{id}/remove-wishlist', [CourseController::class, 'removeWishlist']);
         Route::get('/course/wishlist', [CourseController::class, 'getWishlist']);
+
+        // Review
+        Route::post('/course/{id}/reviews', [ReviewController::class, 'createReviewCourse']);
     }
 );
 
@@ -255,7 +258,7 @@ Route::get('/course/{id}/content', [CourseController::class, 'getContentCourse']
 Route::get('/course/{id}/overview', [CourseController::class, 'getOverviewCourse']);
 Route::get('/course/{id}/teacher-information', [CourseController::class, 'getCourseTeacherInformation']);
 Route::get('/course/{id}/reviews', [ReviewController::class, 'getReviewCourse']);
-Route::get('/courses', [CourseController::class, 'getCourseByIds']);
+Route::get('/courses', [CourseController::class, 'getAllCoursePublic']);
 Route::get('/teacher/{id}', [TeacherController::class, 'getInformationTeacher']);
 Route::get('/course-price', [CourseController::class, 'coursePrice']);
 

@@ -169,11 +169,11 @@ class CourseController extends Controller
         }
     }
 
-    public function getCourseByIds(Request $req) {
+    public function getAllCoursePublic(Request $req) {
         try {
-            $ids = $req->input('ids');
+            $perPage = $req->input('per_page', 10);
 
-            $courses = $this->courseService->getCourseByIds($ids);
+            $courses = $this->courseService->getAllCoursePublic($perPage);
             return CourseResource::collection($courses);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
