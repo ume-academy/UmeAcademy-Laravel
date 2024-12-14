@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\ArticleController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\FeeController;
 use App\Http\Controllers\Api\V1\AuthController;
@@ -157,6 +158,11 @@ Route::prefix('admin')
         Route::get('/refund-request', [RefundController::class, 'getAllRefundRequest'])->middleware('can:view-refund-requests');
         
         Route::post('/refund/{transactionCode}/review', [RefundController::class, 'reviewRefundRequest'])->middleware('can:update-refund-status');
+
+        // Article
+        Route::get('/articles', [ArticleController::class, 'getAllArticle'])->middleware('can:view-articles');
+        Route::get('/articles/{id}', [ArticleController::class, 'getArticle'])->middleware('can:view-article');
+        Route::post('/articles', [ArticleController::class, 'createArticle'])->middleware('can:create-article');
     }
 );
 
@@ -273,10 +279,14 @@ Route::get('teacher/{id}', [TeacherController::class, 'getInfoTeacher']);
 
 // Search 
 Route::get('/courses/category/{id}', [SearchController::class, 'searchByCategory']);
-Route::get('/courses/search', [SearchController::class, 'searchCourse']);
+Route::get('/courses', [SearchController::class, 'searchCourse']);
 
 // Bank 
 Route::get('/banks', [WithdrawMethodController::class, 'getBanks']);
+
+Route::get('/articles', [ArticleController::class, 'getAllArticlePublished']);
+Route::get('/articles/{id}', [ArticleController::class, 'getArticlePublished']);
+Route::post('/upload-image', [ArticleController::class, 'uploadImage']);
 
 // Auto Update Status Withdraw Request
 Route::post('/webhook-sepay', [WebhookSepayController::class, 'autoUpdateStatusWithdrawRequest']);
