@@ -120,4 +120,20 @@ class LessonController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function deleteLesson($id, $chapterId, $lessonId) {
+        try {
+            $data['chapter_id'] = $chapterId;
+            $data['course_id'] = $id;
+
+            $lesson = $this->lessonService->deleteLesson($lessonId, $data);
+
+            if($lesson) {
+                return response()->json(['message' => 'Xóa bài học thành công'], 200);
+            }
+            
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }

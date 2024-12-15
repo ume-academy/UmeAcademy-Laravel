@@ -163,6 +163,8 @@ Route::prefix('admin')
         Route::get('/articles', [ArticleController::class, 'getAllArticle'])->middleware('can:view-articles');
         Route::get('/articles/{id}', [ArticleController::class, 'getArticle'])->middleware('can:view-article');
         Route::post('/articles', [ArticleController::class, 'createArticle'])->middleware('can:create-article');
+        Route::put('/articles/{id}', [ArticleController::class, 'updateArticle'])->middleware('can:update-article');
+        Route::delete('/articles/{id}', [ArticleController::class, 'deleteArticle'])->middleware('can:delete-article');
     }
 );
 
@@ -171,14 +173,17 @@ Route::prefix('/teacher')
     ->middleware('verify.jwt.token')
     ->group(function () {
         Route::get('/courses', [CourseController::class, 'getCoursesOfTeacher']);
+        Route::get('/courses/top-5-best-seller', [CourseController::class, 'getTop5CourseBestSeller']);
 
         Route::post('/courses', [CourseController::class, 'createCourse']);
 
         Route::post('/course/{id}/chapters', [ChapterController::class, 'createChapter']);
         Route::put('/course/{id}/chapter/{chapterId}', [ChapterController::class, 'updateChapter']);
+        Route::delete('/course/{id}/chapter/{chapterId}', [ChapterController::class, 'deleteChapter']);
 
         Route::post('/course/{id}/chapter/{chapterId}/lessons', [LessonController::class, 'createLesson']);
         Route::put('/course/{id}/chapter/{chapterId}/lesson/{lessonId}', [LessonController::class, 'updateLesson']);
+        Route::delete('/course/{id}/chapter/{chapterId}/lesson/{lessonId}', [LessonController::class, 'deleteLesson']);
         
         Route::post('/course/{id}/chapter/{chapterId}/lesson/{lessonId}/videos', [LessonController::class, 'createVideo']);
         Route::put('/course/{id}/chapter/{chapterId}/lesson/{lessonId}/videos', [LessonController::class, 'updateVideo']);

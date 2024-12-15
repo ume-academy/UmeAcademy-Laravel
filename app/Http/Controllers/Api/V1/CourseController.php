@@ -276,4 +276,14 @@ class CourseController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function getTop5CourseBestSeller() {
+        try {
+            $courses = $this->courseService->getTop5CourseBestSeller();
+            
+            return CourseResource::collection($courses);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }

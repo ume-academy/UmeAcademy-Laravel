@@ -36,4 +36,10 @@ class LessonRepository implements LessonRepositoryInterface
 
         return $lesson->update($data);
     }
+
+    public function delete(int $id) {
+        $lesson = $this->find($id);
+
+        return $lesson->delete($id);
+    }
 }
