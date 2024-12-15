@@ -154,4 +154,15 @@ class CourseRepository implements CourseRepositoryInterface
     public function getAllCourse($perPage) {
         return Course::orderBy('created_at', 'desc')->paginate($perPage);
     }
+
+    public function getTop5CourseBestSeller(int $id) {
+        $courses = Course::where('teacher_id', $id)->get();
+    
+        // Sắp xếp các khóa học theo total_student và lấy 5 bản ghi đầu tiên
+        $topCourses = $courses->sortByDesc(function ($course) {
+            return $course->total_student;
+        })->take(5);
+    
+        return $topCourses;
+    }
 }

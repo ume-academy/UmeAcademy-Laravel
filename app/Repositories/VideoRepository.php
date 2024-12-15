@@ -19,4 +19,10 @@ class VideoRepository implements VideoRepositoryInterface
 
         return $video;
     }
+
+    public function deleteVideo(int $id) {
+        $video = Video::findOrFail($id);
+
+        return $video->delete();
+    }
 }

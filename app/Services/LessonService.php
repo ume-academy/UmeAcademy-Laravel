@@ -5,8 +5,11 @@ namespace App\Services;
 use App\Repositories\Interfaces\ChapterRepositoryInterface;
 use App\Repositories\Interfaces\CourseRepositoryInterface;
 use App\Repositories\Interfaces\LessonRepositoryInterface;
+use App\Repositories\Interfaces\ResourceRepositoryInterface;
+use App\Repositories\Interfaces\VideoRepositoryInterface;
 use App\Services\Email\EmailService;
 use App\Traits\ValidationTrait;
+use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class LessonService
@@ -19,6 +22,8 @@ class LessonService
         private CourseRepositoryInterface $courseRepo,
         private ChapterRepositoryInterface $chapterRepo,
         private PDFService $pdfService,
+        private VideoRepositoryInterface $videoRepo,
+        private ResourceRepositoryInterface $resourceRepo,
     ){
         $this->emailSender = new EmailService(); 
     }
@@ -80,5 +85,40 @@ class LessonService
         $data = ['name' => $data['name']];
 
         return $this->lessonRepo->update($lessonId, $data);
+    }
+
+    public function deleteLesson($lessonId, $data) {
+        $teacher = $this->validateTeacher();
+
+        // Kiểm tra khóa học và chapter
+        $course = $this->validateCourse($teacher, $data['course_id']);
+        $chapter = $this->validateChapter($course, $data['chapter_id']);
+        $lesson = $this->validateLesson($chapter, $lessonId);
+        $video = $lesson->video;
+        $resources = $lesson->resources;
+
+        DB::beginTransaction();
+        try {
+            // Xóa bài học
+            $this->lessonRepo->delete($lesson->id);
+
+            // Xóa video nếu tồn tại
+            if ($video) {
+                $this->videoRepo->deleteVideo($video->id);
+            }
+
+            if ($resources->isNotEmpty()) {
+                foreach ($resources as $resource) {
+                    $this->resourceRepo->delete($resource->id);
+                }
+            }
+
+            DB::commit();
+            return true;
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json(['error' => 'Xóa thất bại'], 500);
+        }
     }
 }

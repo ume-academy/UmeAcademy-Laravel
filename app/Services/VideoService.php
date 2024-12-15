@@ -99,6 +99,17 @@ class VideoService
         return $video = $this->videoRepo->updateVideo($video->id, $data['is_preview']);
     }
 
+    public function deleteVideo($data) {
+        $teacher = $this->validateTeacher();
+
+        $course = $this->validateCourse($teacher, $data['course_id']);
+        $chapter = $this->validateChapter($course, $data['chapter_id']);
+        $lesson = $this->validateLesson($chapter, $data['lesson_id']);
+        $video = $lesson->video;
+        
+        return $video = $this->videoRepo->deleteVideo($video->id);
+    }
+
     // Lưu video tạm thời
     private function getPathVideo($file)
     {

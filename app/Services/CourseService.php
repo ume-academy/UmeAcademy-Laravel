@@ -355,6 +355,12 @@ class CourseService
         ];
     }
 
+    public function getTop5CourseBestSeller() {
+        $teacher = $this->validateTeacher();
+
+        return $this->courseRepo->getTop5CourseBestSeller($teacher->id, 5);
+    }
+
     // Xử lý ảnh thumbnail
     private function handleThumbnail($file)
     {

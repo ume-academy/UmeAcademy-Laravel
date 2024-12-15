@@ -40,4 +40,18 @@ class ChapterService
         
         return $this->chapterRepo->update($chapterId, $data);
     }
+
+    public function deleteChapter($chapterId, $data) {
+        $teacher = $this->validateTeacher();
+        
+        // Kiểm tra quyền sở hữu của khóa học
+        $course = $this->validateCourse($teacher, $data['course_id']);
+        $chapter = $this->validateChapter($course, $chapterId);
+
+        if($chapter->lessons->isNotEmpty()) {
+            throw new \Exception('Không thể xóa chương học vì chương học đã có bài học.');
+        }
+
+        return $this->chapterRepo->delete($chapter->id);
+    }
 }

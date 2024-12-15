@@ -37,6 +37,31 @@ class ArticleService
         return Article::create($data);
     }
 
+    public function updateArticle($id, $data) {
+        $article = Article::findOrFail($id);
+
+        $user = JWTAuth::parseToken()->authenticate();
+        $data['user_id'] = $user->id;
+
+        // Kiểm tra nếu không up ảnh mới thì sẽ dùng lại ảnh cũ 
+        if (isset($data['thumbnail'])) {
+            $data['thumbnail'] = $this->handleThumbnail($data['thumbnail']);
+        } else {
+            $data['thumbnail'] = $article->thumbnail;
+        }
+
+        // Cập nhật vào db
+        $article->update($data);
+
+        return $article;
+    }
+
+    public function deleteArticle($id) {
+        $article = Article::findOrFail($id);
+
+        return $article->delete();
+    }
+
     public function uploadImage($data) {
         if ($data['upload']) {
             $image = $this->handleThumbnail($data['upload']);

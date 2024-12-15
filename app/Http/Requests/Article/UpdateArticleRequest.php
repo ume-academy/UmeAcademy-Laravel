@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class StoreArticleRequest extends FormRequest
+class UpdateArticleRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,7 +26,7 @@ class StoreArticleRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'max:255'],
             'content' => ['required', 'string', 'min:10'],
-            'thumbnail' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:5120'],
+            'thumbnail' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:5120'],
             'status' => ['required', 'in:draft,published']
         ];
     }
@@ -42,7 +42,6 @@ class StoreArticleRequest extends FormRequest
             'content.string' => 'Nội dung bài viết phải là chuỗi ký tự.',
             'content.min' => 'Nội dung bài viết phải có ít nhất 10 ký tự.',
 
-            'thumbnail.required' => 'Hình thu nhỏ là bắt buộc.',
             'thumbnail.image' => 'Hình thu nhỏ phải là một tệp hình ảnh.',
             'thumbnail.mimes' => 'Hình thu nhỏ chỉ hỗ trợ các định dạng: jpeg, png, jpg, gif.',
             'thumbnail.max' => 'Hình thu nhỏ không được vượt quá 5MB.',
