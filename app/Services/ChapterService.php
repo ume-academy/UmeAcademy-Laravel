@@ -20,7 +20,11 @@ class ChapterService
         $teacher = $this->validateTeacher();
 
         // Kiểm tra quyền sở hữu của khóa học
-        $this->validateCourse($teacher, $data['course_id']);
+        $course = $this->validateCourse($teacher, $data['course_id']);
+
+        if($course->status == 2) {
+            throw new \Exception('Không thể thêm mới chương vì khóa học đã được phê duyệt.');
+        }
 
         return $this->chapterRepo->create($data);
     }

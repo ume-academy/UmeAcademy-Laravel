@@ -36,6 +36,10 @@ class LessonService
         $course = $this->validateCourse($teacher, $data['course_id']);
         $this->validateChapter($course, $data['chapter_id']);
 
+        if($course->status == 2) {
+            throw new \Exception('Không thể thêm mới bài học vì khóa học đã được phê duyệt.');
+        }
+
         return $this->lessonRepo->create($data);
     }
 

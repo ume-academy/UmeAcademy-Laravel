@@ -150,8 +150,15 @@ class CourseController extends Controller
 
     public function requestApprovalCourse($id) {
         try {
-            $this->courseService->requestApprovalCourse($id);
-            return response()->json(['message' => 'Gửi yêu cầu phê duyệt khóa học thành công']);
+            $response = $this->courseService->requestApprovalCourse($id);
+
+            if (isset($response['errors'])) {
+                return response()->json($response, 422);
+            }
+    
+            return response()->json([
+                'message' => 'Gửi yêu cầu phê duyệt khóa học thành công',
+            ], 200);
 
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
