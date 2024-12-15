@@ -22,6 +22,7 @@ class ArticleResource extends JsonResource
                 'fullname' => $this->user->fullname ?? null,
                 'email' => $this->user->email ?? null,
             ],
+            'status' => $this->status ?? null,
             'created_at' => $this->created_at ?? null,
         ];
     }

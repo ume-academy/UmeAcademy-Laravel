@@ -223,9 +223,9 @@ class CourseService
         ]);
 
         if ($courseValidator->fails()) {
-            return response()->json([
+            return [
                 'errors' => $courseValidator->errors()->toArray(),
-            ], 422);
+            ];
         }
         $lessons = $course->lessons;
 
