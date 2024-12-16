@@ -30,6 +30,8 @@ class PaymentService
         private VoucherUsageRepositoryInterface $voucherUsageRepo,
         private TeacherWalletRepositoryInterface $teacherWalletRepo,
         private TeacherWalletTransactionRepositoryInterface $teacherWalletTransactionRepo,
+        private TeacherNotificationService $teacherNotificationService,
+        private UserNotificationService $userNotificationService,
     ){}
 
     public function checkout($data)
@@ -115,6 +117,20 @@ class PaymentService
                 'teacher_wallet_id' => $teacherWallet->id,
             ];
             $this->teacherWalletTransactionRepo->create($dataTeacherWalletTransaction);
+
+            $dataTeacherNotify = [
+                'message' => "Học viên {$transaction->user->fullname} vừa mua khóa học {$course->name} của bạn!",
+                'is_read' => 0,
+                'teacher_id' => $course->teacher_id,
+            ];
+            $this->teacherNotificationService->create($dataTeacherNotify);
+
+            $dataUserNotify = [
+                'message' => "Chúc mừng bạn đã mua thành công khóa học {$course->name}!",
+                'is_read' => 0,
+                'user_id' => $transaction->user_id,
+            ];
+            $this->userNotificationService->create($dataUserNotify);
 
             DB::commit();
             return response()->json(['data' => 'success']);
