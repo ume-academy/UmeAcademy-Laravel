@@ -22,6 +22,7 @@ use App\Http\Controllers\Api\V1\PaymentMethodController;
 use App\Http\Controllers\Api\V1\ForgotPasswordController;
 use App\Http\Controllers\Api\V1\WithdrawMethodController;
 use App\Http\Controllers\Api\V1\EmailVerificationController;
+use App\Http\Controllers\Api\V1\NotificationController;
 use App\Http\Controllers\Api\V1\PermissionController;
 use App\Http\Controllers\Api\V1\RefundController;
 use App\Http\Controllers\Api\V1\RoleController;
@@ -233,6 +234,10 @@ Route::prefix('/teacher')
 
         Route::get('/profile', [TeacherController::class, 'getProfile']);
         Route::put('/profile', [TeacherController::class, 'updateProfile']);
+
+        // Notification 
+        Route::get('/notifications', [NotificationController::class, 'getAllByTeacher']);
+        Route::post('/notifications/{id}', [NotificationController::class, 'updateNotifyTeacher']);
     }
 );
 
@@ -261,6 +266,10 @@ Route::middleware('verify.jwt.token')
 
         // Review
         Route::post('/course/{id}/reviews', [ReviewController::class, 'createReviewCourse']);
+
+        // Notification 
+        Route::get('/notifications', [NotificationController::class, 'getAllByUser']);
+        Route::post('/notifications/{id}', [NotificationController::class, 'updateNotifyUser']);
     }
 );
 
