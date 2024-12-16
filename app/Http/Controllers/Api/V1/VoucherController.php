@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Voucher\CheckVoucherRequest;
 use App\Http\Requests\Voucher\StoreVoucherRequest;
+use App\Http\Requests\Voucher\UpdateVoucherRequest;
 use App\Http\Resources\Voucher\VoucherResource;
 use App\Services\VoucherService;
 use Illuminate\Database\QueryException;
@@ -90,6 +91,48 @@ class VoucherController extends Controller
             $vouchers = $this->voucherService->getVoucherSystem($perPage);
 
             return VoucherResource::collection($vouchers);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function detailVoucherSystem($id) {
+        try {
+            $voucher = $this->voucherService->detailVoucherSystem($id);
+
+            return new VoucherResource($voucher);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function updateVoucherSystem(UpdateVoucherRequest $req, $id) {
+        try {
+            $data = $req->only([
+                'code',
+                'quantity',
+                'discount',
+                'start_date',
+                'end_date',
+            ]);
+
+            $voucher = $this->voucherService->updateVoucherSystem($id, $data);
+
+            if($voucher) {
+                return response()->json(['message' => 'Cập nhật thành công']);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function deleteVoucherSystem($id) {
+        try {
+            $voucher = $this->voucherService->deleteVoucherSystem($id);
+
+            if($voucher) {
+                return response()->json(['message' => 'Xóa thành công']);
+            }
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }

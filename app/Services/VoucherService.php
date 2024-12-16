@@ -54,4 +54,16 @@ class VoucherService
     public function getVoucherSystem($perPage) {
         return $this->voucherRepo->getAllVoucher($perPage);
     }
+
+    public function detailVoucherSystem($id) {
+        return $this->voucherRepo->getById($id);
+    }
+
+    public function updateVoucherSystem($id, $data) {
+        return $this->voucherRepo->update($id, $data);
+    }
+
+    public function deleteVoucherSystem($id) {
+        return $this->voucherRepo->delete($id);
+    }
 }

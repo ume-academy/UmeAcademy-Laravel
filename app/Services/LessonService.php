@@ -101,6 +101,10 @@ class LessonService
         $video = $lesson->video;
         $resources = $lesson->resources;
 
+        if($course->status == 2) {
+            throw new \Exception('Không thể xóa bài học vì khóa học đã được phê duyệt.');
+        }
+
         DB::beginTransaction();
         try {
             // Xóa bài học
