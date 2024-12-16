@@ -10,8 +10,15 @@ class ArticleService
 {
     use HandleFileTrait;
 
-    public function getAllArticle($perPage) {
-        return Article::orderBy('created_at', 'desc')->paginate($perPage);
+    public function getAllArticle($perPage, $status = null) {
+        $query = Article::orderBy('created_at', 'desc'); // Sắp xếp theo ngày tạo
+        
+        if ($status !== null) {
+            $query->where('status', $status);
+        }
+    
+        // Phân trang kết quả
+        return $query->paginate($perPage);
     }
 
     public function getAllArticlePublished($perPage) {

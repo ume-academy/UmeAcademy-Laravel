@@ -27,7 +27,15 @@ class TransactionRepository implements TransactionRepositoryInterface
         return Transaction::where('user_id', $id)->orderBy('created_at', 'desc')->paginate($perPage);
     }
 
-    public function getAll($perPage) {
-        return Transaction::orderBy('created_at', 'desc')->paginate($perPage);
+    public function getAll($perPage, $status = null) {
+        $query = Transaction::orderBy('created_at', 'desc'); // Sắp xếp theo ngày tạo
+    
+        // Lọc theo status nếu có
+        if ($status !== null) {
+            $query->where('status', $status);
+        }
+    
+        // Phân trang kết quả
+        return $query->paginate($perPage);
     }
 }

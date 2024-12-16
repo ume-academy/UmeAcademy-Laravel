@@ -151,8 +151,27 @@ class CourseRepository implements CourseRepositoryInterface
         return $paginatedCourses;
     }
 
-    public function getAllCourse($perPage) {
-        return Course::orderBy('created_at', 'desc')->paginate($perPage);
+    public function getAllCourse($perPage, $status = null) {
+        $query = Course::orderBy('created_at', 'desc'); // Sắp xếp theo ngày tạo
+    
+        // Lọc theo status nếu có
+        if ($status !== null) {
+            switch ($status) {
+                case 'draft':
+                    $query->where('status', Course::DRAFT);
+                    break;
+                case 'pending':
+                    $query->where('status', Course::PENDING);
+                    break;
+                case 'published':
+                    $query->where('status', Course::PUBLISHED);
+                    break;
+                default:
+                    break;
+            }
+        }
+    
+        return $query->paginate($perPage);
     }
 
     public function getTop5CourseBestSeller(int $id) {

@@ -8,5 +8,5 @@ interface TransactionRepositoryInterface
     public function getByCode($code);
     public function updateStatus(int $id, string $status);
     public function getByUserId(int $id, $perPage);
-    public function getAll($perPage);
+    public function getAll($perPage, $status);
 }

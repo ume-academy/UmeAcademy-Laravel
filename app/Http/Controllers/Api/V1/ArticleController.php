@@ -19,7 +19,8 @@ class ArticleController extends Controller
     public function getAllArticle(Request $req) {
         try {
             $perPage = $req->input('per_page', 10);
-            $articles = $this->articleService->getAllArticle($perPage);
+            $status = $req->input('status');
+            $articles = $this->articleService->getAllArticle($perPage, $status);
             
             return ArticleResource::collection($articles);
         } catch (\Exception $e) {

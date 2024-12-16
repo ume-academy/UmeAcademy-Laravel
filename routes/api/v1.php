@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\V1\LevelController;
 use App\Http\Controllers\Api\V1\SearchController;
 use App\Http\Controllers\Api\V1\Teacher\TeacherRegistrationController;
 use App\Http\Controllers\Api\V1\CategoryController;
+use App\Http\Controllers\Api\V1\DashboardController;
 use App\Http\Controllers\Api\V1\TransactionController;
 use App\Http\Controllers\Api\V1\PaymentMethodController;
 use App\Http\Controllers\Api\V1\ForgotPasswordController;
@@ -55,6 +56,8 @@ Route::prefix('/auth')
                 Route::post('/me', [AuthController::class, 'me']);
             }
         );
+
+        Route::post('/login-admin/{type}', [AuthController::class, 'loginAdmin']);
     }
 );
 
@@ -165,6 +168,10 @@ Route::prefix('admin')
         Route::post('/articles', [ArticleController::class, 'createArticle'])->middleware('can:create-article');
         Route::put('/articles/{id}', [ArticleController::class, 'updateArticle'])->middleware('can:update-article');
         Route::delete('/articles/{id}', [ArticleController::class, 'deleteArticle'])->middleware('can:delete-article');
+
+        // Dashboard
+        Route::get('/statistics/top-teachers', [DashboardController::class, 'getTopTeacher']);
+        Route::get('/statistics/top-courses', [DashboardController::class, 'getTopCourses']);
     }
 );
 
@@ -270,7 +277,7 @@ Route::get('/course/{id}/overview', [CourseController::class, 'getOverviewCourse
 Route::get('/course/{id}/teacher-information', [CourseController::class, 'getCourseTeacherInformation']);
 Route::get('/course/{id}/reviews', [ReviewController::class, 'getReviewCourse']);
 Route::get('/courses', [CourseController::class, 'getAllCoursePublic']);
-Route::get('/teacher/{id}', [TeacherController::class, 'getInformationTeacher']);
+Route::get('teacher/{id}', [TeacherController::class, 'getInfoTeacher']);
 Route::get('/course-price', [CourseController::class, 'coursePrice']);
 
 // Payment
@@ -280,7 +287,6 @@ Route::post('/vouchers/check', [VoucherController::class, 'checkVoucher']);
 Route::post('/confirm-webhook', [PaymentController::class, 'confirmWebhook']);
 Route::get('/cancel', [PaymentController::class, 'cancel']);
 
-Route::get('teacher/{id}', [TeacherController::class, 'getInfoTeacher']);
 
 // Search 
 Route::get('/courses/category/{id}', [SearchController::class, 'searchByCategory']);

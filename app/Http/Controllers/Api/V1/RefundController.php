@@ -22,8 +22,9 @@ class RefundController extends Controller
     public function getAllRefundRequest(Request $req) {
         try {
             $perPage = $req->input('per_page', 10);
+            $status = $req->input('status');
 
-            $transactions = $this->refundService->getAllRefundRequest($perPage);
+            $transactions = $this->refundService->getAllRefundRequest($perPage, $status);
             return RefundResource::collection($transactions);
 
         } catch (\Exception $e) {

@@ -54,6 +54,20 @@ class AuthController extends Controller
         } 
     }
 
+    public function loginAdmin(LoginRequest $request, string $type)
+    {
+        try {
+            $credentials = $request->only(['email', 'password']);
+
+            $token = $this->authService->loginAdmin($type, $credentials);
+
+            return $token;
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], $e->getCode());
+        } 
+    }
+
     public function logout()
     {
         try {

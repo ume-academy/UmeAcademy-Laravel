@@ -166,8 +166,4 @@ class TeacherService
     
         return $allDates;
     }
-
-    public function getInformationTeacher($id) {
-        return $this->teacherRepo->getById($id);
-    }
 }
