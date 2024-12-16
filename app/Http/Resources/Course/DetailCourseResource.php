@@ -24,7 +24,7 @@ class DetailCourseResource extends JsonResource
             'price' => $this->price ?? null,
             'course_requirement' => $this->course_requirement,
             'course_learning_benefit' => $this->course_learning_benefit,
-            'content' => new ContentCourseResource($this),
+            'content' => new ContentCourseDetailResource($this),
             'voucher' => $this->vouchers,
             'status' => $this->status,
             'category' => [

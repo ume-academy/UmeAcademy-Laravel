@@ -15,14 +15,32 @@ class DashboardController extends Controller
 
     public function getTopTeacher()
     {
-        $topTeachers = $this->dashboardService->getTopTeacher();
+        try {
+            $topTeachers = $this->dashboardService->getTopTeacher();
 
-        return TopTeacherResource::collection($topTeachers);
+            return TopTeacherResource::collection($topTeachers);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     public function getTopCourses() {
-        $topCourses = $this->dashboardService->getTopCourses();
+        try {
+            $topCourses = $this->dashboardService->getTopCourses();
 
-        return CourseResource::collection($topCourses);
+            return CourseResource::collection($topCourses);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function getStatistics() {
+        try {
+            $statistic = $this->dashboardService->getStatistics();
+
+            return response()->json(['data' => $statistic]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 }

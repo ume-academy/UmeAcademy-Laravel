@@ -130,7 +130,7 @@ class CourseService
     
         foreach ($courses as &$course) {
             // Lọc transaction có status = 'success'
-            $transaction = $course->transactions->firstWhere('status', 'success'); 
+            $transaction = $course->transactions->where('user_id', $user->id)->firstWhere('status', 'success'); 
     
             if ($transaction) {
                 // Kiểm tra điều kiện thời gian giao dịch

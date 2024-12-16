@@ -9,4 +9,7 @@ interface VoucherRepositoryInterface
     public function getByCode($code);
     public function find(int $id);
     public function getAllVoucher($perPage);
+    public function getById($id);
+    public function update($id, $data);
+    public function delete($id);
 }

@@ -26,7 +26,6 @@ use App\Http\Controllers\Api\V1\PermissionController;
 use App\Http\Controllers\Api\V1\RefundController;
 use App\Http\Controllers\Api\V1\RoleController;
 use App\Http\Controllers\Api\V1\StudentController;
-use App\Models\Certificate;
 use App\Http\Controllers\Api\V1\WithdrawRequestController;
 use App\Http\Controllers\Api\V1\WebhookSepayController;
 
@@ -156,6 +155,9 @@ Route::prefix('admin')
         // Voucher
         Route::post('/voucher', [VoucherController::class, 'createVoucherSystem'])->middleware('can:create-voucher');
         Route::get('/voucher', [VoucherController::class, 'getVoucherSystem'])->middleware('can:view-vouchers');
+        Route::get('/voucher/{id}', [VoucherController::class, 'detailVoucherSystem'])->middleware('can:view-voucher');
+        Route::put('/voucher/{id}', [VoucherController::class, 'updateVoucherSystem'])->middleware('can:update-voucher');
+        Route::delete('/voucher/{id}', [VoucherController::class, 'deleteVoucherSystem'])->middleware('can:delete-voucher');
 
         // review refund request (xét duyệt yêu cầu hoàn tiền)
         Route::get('/refund-request', [RefundController::class, 'getAllRefundRequest'])->middleware('can:view-refund-requests');
@@ -172,6 +174,7 @@ Route::prefix('admin')
         // Dashboard
         Route::get('/statistics/top-teachers', [DashboardController::class, 'getTopTeacher']);
         Route::get('/statistics/top-courses', [DashboardController::class, 'getTopCourses']);
+        Route::get('/statistics', [DashboardController::class, 'getStatistics']);
     }
 );
 
@@ -230,8 +233,6 @@ Route::prefix('/teacher')
 
         Route::get('/profile', [TeacherController::class, 'getProfile']);
         Route::put('/profile', [TeacherController::class, 'updateProfile']);
-
-
     }
 );
 
