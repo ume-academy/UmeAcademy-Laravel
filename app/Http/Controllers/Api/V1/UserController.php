@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\User\ChagePasswordRequest;
 use App\Http\Requests\User\UserSystemRequest;
 use App\Http\Resources\User\UserSystemResource;
+use App\Http\Resources\UserTeacherResource;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserController extends Controller
@@ -21,8 +22,9 @@ class UserController extends Controller
     public function getListUser(Request $req) {
         try {
             $perPage = $req->input('per_page', 10);
+            $status = $req->input('status');
 
-            $users = $this->userService->getListUser($perPage);
+            $users = $this->userService->getListUser($perPage, $status);
 
             return UserResource::collection($users);
         } catch (\Exception $e) {
@@ -33,10 +35,11 @@ class UserController extends Controller
     public function getListTeacher(Request $req) {
         try {
             $perPage = $req->input('per_page', 10);
+            $status = $req->input('status');
 
-            $users = $this->userService->getListTeacher($perPage);
+            $users = $this->userService->getListTeacher($perPage, $status);
 
-            return UserResource::collection($users);
+            return UserTeacherResource::collection($users);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
@@ -105,8 +108,10 @@ class UserController extends Controller
     public function getListUserSystem(Request $req) {
         try {
             $perPage = $req->input('per_page', 10);
+            $status = $req->input('status');
+            $roles = $req->input('role');
 
-            $users = $this->userService->getListUserSystem($perPage);
+            $users = $this->userService->getListUserSystem($perPage, $status, $roles);
 
             return UserSystemResource::collection($users);
         } catch (\Exception $e) {

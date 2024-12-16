@@ -216,8 +216,9 @@ class CourseController extends Controller
     public function getAllCourse(Request $req) {
         try {
             $perPage = $req->input('per_page', 10);
+            $status = $req->input('status');
 
-            $courses = $this->courseService->getAllCourse($perPage);
+            $courses = $this->courseService->getAllCourse($perPage, $status);
 
             return CourseResource::collection($courses);
         } catch (\Exception $e) {

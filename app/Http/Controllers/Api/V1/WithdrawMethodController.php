@@ -69,8 +69,9 @@ class WithdrawMethodController extends Controller {
             $perPage = $req->input('per_page', 10);
             $startDate = $req->input('start_date');
             $endDate = $req->input('end_date');
+            $status = $req->input('status');
 
-            $requests = $this->withdrawMethodService->getWithdrawRequest($startDate, $endDate, $perPage);
+            $requests = $this->withdrawMethodService->getWithdrawRequest($startDate, $endDate, $perPage, $status);
             return WithdrawRequestResource::collection($requests);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);

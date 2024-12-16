@@ -10,6 +10,10 @@ class Course extends Model
 {
     use HasFactory, SoftDeletes;
 
+    const DRAFT = 0;
+    const PENDING = 1;
+    const PUBLISHED = 2;
+
     protected $fillable = [
         'name',
         'description',

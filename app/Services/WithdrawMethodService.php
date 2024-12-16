@@ -48,12 +48,28 @@ class WithdrawMethodService
         return $this->withdrawMethodRepo->update($id, $data);
     }
 
-    public function getWithdrawRequest($startDate, $endDate, $perPage) {
+    public function getWithdrawRequest($startDate, $endDate, $perPage, $status) {
         $query = WithdrawalRequest::query();
 
         // Nếu có start_date và end_date, áp dụng lọc theo khoảng ngày
         if ($startDate && $endDate) {
             $query->whereBetween('created_at', [$startDate, $endDate]);
+        }
+
+        if ($status !== null) {
+            switch ($status) {
+                case 'reject':
+                    $query->where('status', WithdrawalRequest::REJECT);
+                    break;
+                case 'pending':
+                    $query->where('status', WithdrawalRequest::PENDING);
+                    break;
+                case 'success':
+                    $query->where('status', WithdrawalRequest::SUCCESS);
+                    break;
+                default:
+                    break;
+            }
         }
     
         return $query->orderBy('created_at', 'desc')->paginate($perPage);

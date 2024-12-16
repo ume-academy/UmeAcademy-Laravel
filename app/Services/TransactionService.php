@@ -18,7 +18,7 @@ class TransactionService
         return $this->transactionRepo->getByUserId($user->id, $perPage);
     }
 
-    public function getAllTransaction($perPage) {
-        return $this->transactionRepo->getAll($perPage);
+    public function getAllTransaction($perPage, $status) {
+        return $this->transactionRepo->getAll($perPage, $status);
     }
 }

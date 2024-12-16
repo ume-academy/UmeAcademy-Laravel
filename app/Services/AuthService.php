@@ -7,6 +7,7 @@ use App\Factories\LoginFactory;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Factories\RegistrationFactory;
 use Illuminate\Support\Facades\Cookie;
+use Spatie\Permission\Models\Role;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 
@@ -85,5 +86,26 @@ class AuthService
         return $this->tokenService->refreshTokens($refreshToken);
     }
 
-    // forgotPassword
+    public function loginAdmin(string $type, array $credentials)
+    {
+        // Tạo đối tượng dựa trên loại phương thức đăng nhập
+        $loginMethod = $this->loginFactory->createLoginMethod($type);
+
+        // Đăng nhập và trả về người dùng
+        $user = $loginMethod->login($credentials);
+
+        // Kiểm tra xem tài khoản có bị khóa không
+        if ($user->is_lock) {
+            throw new \Exception('Tài khoản của bạn đã bị khóa.', 403);
+        }
+
+        $systemRoles = Role::pluck('name')->toArray(); 
+        
+        if(!$user->hasAnyRole($systemRoles)) {
+            throw new \Exception('Tài khoản của bạn không có quyền truy cập.', 403);
+        }
+
+        // Tạo token sau khi đăng nhập thành công
+        return $this->tokenService->generateTokens($user);
+    }
 }

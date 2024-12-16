@@ -305,8 +305,8 @@ class CourseService
         return $this->courseRepo->updateStatus($id, $status);
     }
 
-    public function getAllCourse($perPage) {
-        return $this->courseRepo->getAllCourse($perPage);
+    public function getAllCourse($perPage, $status) {
+        return $this->courseRepo->getAllCourse($perPage, $status);
     }
 
     public function getDetailCourse($id) {

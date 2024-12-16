@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Revenue\RevenueRequest;
 use App\Http\Resources\Course\CourseResource;
+use App\Http\Resources\Teacher\InfoTeacherResource;
 use App\Http\Resources\Teacher\TeacherResource;
 use App\Http\Resources\Wallet\WalletResource;
 use App\Services\TeacherService;
@@ -42,7 +43,7 @@ class TeacherController extends Controller
     public function getInfoTeacher($id) {
         try {
             $teacher = $this->teacherService->getInfoTeacher($id);
-            return new TeacherResource($teacher);
+            return new InfoTeacherResource($teacher);
 
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
@@ -139,16 +140,6 @@ class TeacherController extends Controller
             $data = $req->only(['bio', 'job_title', 'facebook', 'twitter', 'linkedin', 'youtube']);
 
             $teacher = $this->teacherService->updateProfile($data);
-
-            return new TeacherResource($teacher);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
-    }
-
-    public function getInformationTeacher($id) {
-        try {
-            $teacher = $this->teacherService->getInformationTeacher($id);
 
             return new TeacherResource($teacher);
         } catch (\Exception $e) {

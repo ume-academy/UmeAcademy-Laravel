@@ -31,12 +31,12 @@ class UserService
         return $user;
     }
 
-    public function getListUser($perPage) {
-        return $this->userRepo->getAllUser($perPage);
+    public function getListUser($perPage, $status) {
+        return $this->userRepo->getAllUser($perPage, $status);
     }
 
-    public function getListTeacher($perPage) {
-        return $this->userRepo->getAllTeacher($perPage);
+    public function getListTeacher($perPage, $status) {
+        return $this->userRepo->getAllTeacher($perPage, $status);
     }
     
     public function updateProfile($data)
@@ -86,12 +86,16 @@ class UserService
         return $this->userRepo->findById($id);
     }
 
-    public function getListUserSystem($perPage) {
+    public function getListUserSystem($perPage, $status, $roles) {
         // Lấy tất cả vai trò
-        $roles = Role::pluck('name')->toArray();
+        if(!$roles) {
+            $roles = Role::pluck('name')->toArray();
+        } else {
+            $roles = [$roles];
+        }
     
         // Lấy danh sách người dùng có bất kỳ vai trò nào trong danh sách
-        return $this->userRepo->getUserRoles($roles, $perPage);
+        return $this->userRepo->getUserRoles($roles, $perPage, $status);
     }
 
     public function assignRole($id, $role) {

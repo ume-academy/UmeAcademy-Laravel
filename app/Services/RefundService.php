@@ -12,8 +12,8 @@ class RefundService
         private RefundRepositoryInterface $refundRepo
     ){}
 
-    public function getAllRefundRequest($perPage) {
-        return $this->refundRepo->getAll($perPage);
+    public function getAllRefundRequest($perPage, $status) {
+        return $this->refundRepo->getAll($perPage, $status);
     }
 
     public function updateStatus($id, $status) {

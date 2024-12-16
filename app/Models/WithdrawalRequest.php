@@ -10,6 +10,10 @@ class WithdrawalRequest extends Model
 {
     use HasFactory, SoftDeletes;
 
+    const REJECT = 0;
+    const SUCCESS = 1;
+    const PENDING = 2;
+
     protected $fillable = [
         'money',
         'status',
