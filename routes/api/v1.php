@@ -176,6 +176,7 @@ Route::prefix('admin')
         Route::get('/statistics/top-teachers', [DashboardController::class, 'getTopTeacher']);
         Route::get('/statistics/top-courses', [DashboardController::class, 'getTopCourses']);
         Route::get('/statistics', [DashboardController::class, 'getStatistics']);
+        Route::get('/statistics/revenue', [DashboardController::class, 'getRevenue']);
     }
 );
 

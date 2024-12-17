@@ -47,7 +47,7 @@ class ContentCourseDetailResource extends JsonResource
                 'resources' => $lesson->resources->map(function($resource) {
                     return [
                         'id' => $resource['id'] ?? null,
-                        'name' => $resource['name'] ?? null,
+                        'name' => url('resources/courses/'. $resource['name']) ?? null,
                         'created_at' => $resource['created_at'] ?? null,
                     ];
                 })
