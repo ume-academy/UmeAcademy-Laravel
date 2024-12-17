@@ -28,7 +28,7 @@ class StoreVideoRequest extends FormRequest
                 'required',
                 'file',
                 'mimetypes:video/mp4,video/mpeg,video/avi',
-                'max:10240',
+                'max:512000',
             ],
         ];
     }
@@ -39,7 +39,7 @@ class StoreVideoRequest extends FormRequest
             'name.required' => 'Video là trường bắt buộc.',
             'name.file' => 'Video phải là một file hợp lệ.',
             'name.mimetypes' => 'Chỉ chấp nhận các định dạng video: mp4, mpeg, avi.',
-            'name.max' => 'Dung lượng video không được vượt quá 10MB.',
+            'name.max' => 'Dung lượng video không được vượt quá 500MB.',
         ];
     }
 

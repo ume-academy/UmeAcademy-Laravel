@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\V1\PaymentMethodController;
 use App\Http\Controllers\Api\V1\Teacher\TeacherRegistrationController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Services\EmailVerificationService;
+use App\Http\Controllers\Api\V1\AzureStorageController;
 
 Route::prefix('/auth')
     ->group(function () {
@@ -144,3 +145,6 @@ Route::get('/cancel', [PaymentController::class, 'cancel']);
 Route::get('teacher/{id}', [TeacherController::class, 'getInfoTeacher']);
 
 Route::get('/payment-methods', [PaymentMethodController::class, 'getAllPaymentMethod']);
+
+// 
+Route::post('/generate-upload-url', [AzureStorageController::class, 'generateUploadUrl']);
