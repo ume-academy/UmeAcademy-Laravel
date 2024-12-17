@@ -72,6 +72,23 @@ class LessonController extends Controller
         }
     }
 
+    public function deleteVideo($id, $chapterId, $lessonId) {
+        try {
+            $data = [
+                'course_id' => $id,
+                'chapter_id' => $chapterId,
+                'lesson_id' => $lessonId,
+            ];
+            $video = $this->videoService->deleteVideo($data);
+            
+            if($video) {
+                return response()->json(['message' => 'Xóa video thành công']);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
     public function createResource(StoreResourceRequest $req, $id, $chapterId, $lessonId) {
         try {
             $data = [
@@ -84,6 +101,24 @@ class LessonController extends Controller
             $resource = $this->resourceService->createResource($data);
 
             return new ResourceResource($resource);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function deleteResource($id, $chapterId, $lessonId, $resourceId) {
+        try {
+            $data = [
+                'course_id' => $id,
+                'chapter_id' => $chapterId,
+                'lesson_id' => $lessonId,
+            ];
+
+            $resource = $this->resourceService->deleteResource($resourceId, $data);
+            
+            if($resource) {
+                return response()->json(['message' => 'Xóa tài nguyên thành công']);
+            }
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }

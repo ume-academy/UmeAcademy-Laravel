@@ -199,8 +199,10 @@ Route::prefix('/teacher')
         
         Route::post('/course/{id}/chapter/{chapterId}/lesson/{lessonId}/videos', [LessonController::class, 'createVideo']);
         Route::put('/course/{id}/chapter/{chapterId}/lesson/{lessonId}/videos', [LessonController::class, 'updateVideo']);
+        Route::delete('/course/{id}/chapter/{chapterId}/lesson/{lessonId}/videos', [LessonController::class, 'deleteVideo']);
 
         Route::post('/course/{id}/chapter/{chapterId}/lesson/{lessonId}/resources', [LessonController::class, 'createResource']);
+        Route::delete('/course/{id}/chapter/{chapterId}/lesson/{lessonId}/resources/{resourceId}', [LessonController::class, 'deleteResource']);
 
         Route::post('/course/{id}/vouchers', [VoucherController::class, 'createVoucher']);
 
