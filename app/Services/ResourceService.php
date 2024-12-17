@@ -32,6 +32,10 @@ class ResourceService
             $chapter = $this->validateChapter($course, $data['chapter_id']);
             $lesson = $this->validateLesson($chapter, $data['lesson_id']);
 
+            if($course->status == 2) {
+                throw new \Exception('Không thể tạo vì khóa học đã được phê duyệt.');
+            }
+
             $resourceData = [
                 'name' => HandleFileTrait::generateName($data['resource']),
                 'lesson_id' => $lesson->id,
@@ -52,5 +56,24 @@ class ResourceService
 
             throw new \Exception('Lỗi khi tạo tài nguyên: ' . $e->getMessage());
         }
+    }
+
+    public function deleteResource($resourceId, $data) {
+        $teacher = $this->validateTeacher();
+
+        $course = $this->validateCourse($teacher, $data['course_id']);
+        $chapter = $this->validateChapter($course, $data['chapter_id']);
+        $lesson = $this->validateLesson($chapter, $data['lesson_id']);
+        $resourceIds = $lesson->resources->pluck('id');
+
+        if (!$resourceIds->contains($resourceId)) {
+            throw new \Exception('Tài nguyên không thuộc bài học này.');
+        }
+
+        if($course->status == 2) {
+            throw new \Exception('Không thể xóa vì khóa học đã được phê duyệt.');
+        }
+
+        return $this->resourceRepo->deleteResource($resourceId);
     }
 }

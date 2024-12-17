@@ -34,6 +34,10 @@ class VideoService
             $chapter = $this->validateChapter($course, $data['chapter_id']);
             $lesson = $this->validateLesson($chapter, $data['lesson_id']);
 
+            if($course->status == 2) {
+                throw new \Exception('Không thể tạo vì khóa học đã được phê duyệt.');
+            }
+
             // Lấy đường dẫn tạm thời
             $path = $this->getPathVideo($data['video']);
 
@@ -95,6 +99,10 @@ class VideoService
         $chapter = $this->validateChapter($course, $data['chapter_id']);
         $lesson = $this->validateLesson($chapter, $data['lesson_id']);
         $video = $lesson->video;
+
+        if($course->status == 2) {
+            throw new \Exception('Không thể chỉnh sửa vì khóa học đã được phê duyệt.');
+        }
         
         return $video = $this->videoRepo->updateVideo($video->id, $data['is_preview']);
     }
@@ -106,6 +114,10 @@ class VideoService
         $chapter = $this->validateChapter($course, $data['chapter_id']);
         $lesson = $this->validateLesson($chapter, $data['lesson_id']);
         $video = $lesson->video;
+
+        if($course->status == 2) {
+            throw new \Exception('Không thể xóa vì khóa học đã được phê duyệt.');
+        }
         
         return $video = $this->videoRepo->deleteVideo($video->id);
     }

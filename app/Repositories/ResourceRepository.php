@@ -17,4 +17,10 @@ class ResourceRepository implements ResourceRepositoryInterface
 
         return $resource->delete();
     }
+
+    public function deleteResource(int $id) {
+        $resource = Resource::findOrFail($id);
+
+        return $resource->delete();
+    }
 }
