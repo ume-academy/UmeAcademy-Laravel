@@ -27,11 +27,11 @@ class DashboardService
     }
 
     public function getStatistics() {
-        $revenue = intval(Transaction::sum('discount_price'));
-        $profit = intval(Transaction::sum(DB::raw('discount_price - revenue_teacher')));
+        $revenue = intval(Transaction::where('status', 'success')->sum('discount_price'));
+        $profit = intval(Transaction::where('status', 'success')->sum(DB::raw('discount_price - revenue_teacher')));
         $totalTransaction = Transaction::count();
-        $totalUser = User::count();
-        $totalTeacher = User::whereHas('teacher')->count();
+        $totalUser = User::whereNotNull('email_verified_at')->count();
+        $totalTeacher = User::whereNotNull('email_verified_at')->whereHas('teacher')->count();
         $totalCourse = Course::where('status', 2)->count();
 
         $data = [
@@ -44,5 +44,55 @@ class DashboardService
         ];
 
         return $data;
+    }
+
+    public function getRevenue($year) 
+    {
+        $months = range(1, 12); 
+        $data = collect($months)->map(function ($month) use ($year) {
+
+            // Lấy số lượng khóa học đã bán trong tháng
+            $coursesSold = Transaction::whereYear('created_at', $year)
+                ->whereMonth('created_at', $month)
+                ->where('status', 'success')
+                ->distinct('course_id')
+                ->count();
+
+            $revenue = Transaction::whereYear('created_at', $year)
+                ->whereMonth('created_at', $month)
+                ->where('status', 'success')
+                ->sum('discount_price');
+
+            // Lấy số lượng user mới đăng ký trong tháng
+            $newStudents = User::whereYear('created_at', $year)
+                ->whereMonth('created_at', $month)
+                ->whereNotNull('email_verified_at')
+                ->count();
+
+            // Tính tỷ lệ hoàn tiền: refund_count / total_transaction_count
+            $refundCount = Transaction::whereYear('created_at', $year)
+                ->whereMonth('created_at', $month)
+                ->where('status', 'refunded')
+                ->count();
+
+            $totalTransactions = Transaction::whereYear('created_at', $year)
+                ->whereMonth('created_at', $month)
+                ->count();
+
+            $refundRate = $totalTransactions > 0 
+                ? round(($refundCount / $totalTransactions) * 100, 2) 
+                : 0;
+
+            return [
+                'month' => $month,
+                'courses_sold' => $coursesSold,
+                'revenue' => $revenue,
+                'new_students' => $newStudents,
+                'total_transaction' => $totalTransactions,
+                'refund_rate' => $refundRate,
+            ];
+        });
+
+        return$data;
     }
 }

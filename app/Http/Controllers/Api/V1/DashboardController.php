@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Course\CourseResource;
 use App\Http\Resources\Statistic\TopTeacherResource;
 use App\Services\DashboardService;
+use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
@@ -39,6 +40,17 @@ class DashboardController extends Controller
             $statistic = $this->dashboardService->getStatistics();
 
             return response()->json(['data' => $statistic]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function getRevenue(Request $req) {
+        try {
+            $year = $req->input('year', now()->year);
+            $revenues = $this->dashboardService->getRevenue($year);
+
+            return response()->json(['data' => $revenues]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
