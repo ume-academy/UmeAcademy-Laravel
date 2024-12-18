@@ -3,8 +3,9 @@
 namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
-use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Http\Controllers\Api\V1\RefundController;
+use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Log;
 
 class Kernel extends ConsoleKernel
 {
@@ -14,7 +15,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->call(fn() => (new RefundController)->processPendingRefunds())->everyMinute();
-        // $schedule->call(fn() => (new PaymentService)->releasePaymentsToInstructor())->daily();
+        $schedule->call(fn() => (Log::info('Scheduled Task Executed')))->everyMinute();
     }
 
     /**

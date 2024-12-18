@@ -11,6 +11,7 @@ use App\Models\RefundRequest;
 use App\Models\StudentWallet;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class RefundController extends Controller
 {
@@ -107,10 +108,9 @@ class RefundController extends Controller
 
             // Lấy hành động từ tham số trong request
             $status = $request->input('status'); 
-
-            if (empty($status)) {
-                return response()->json(['error'=> 'Status không được cung cấp.'],400);
-            }
+            // if ($status == '' || $status == null) {
+            //     return response()->json(['error'=> 'Status không được cung cấp.'],400);
+            // }
 
             if ($status == 1) { // Chap nhan yeu cau hoan tien
                 // dd($refund);
@@ -140,8 +140,8 @@ class RefundController extends Controller
                 }
 
                 // Lấy ví của giáo viên 
-                $teacherWallet = $teacher->wallet;
-                // return $transaction;
+                $teacherWallet = $teacher->teacherWallet;
+                // return $teacherWallet;
 
                 if (!$teacherWallet) {
                     throw new \Exception('Không tìm thấy ví của giáo viên.');
@@ -150,7 +150,7 @@ class RefundController extends Controller
                 // Số tiền hoàn
                 $refundAmount = $transaction->discount_price;
 
-                if ($teacherWallet->balance < $refundAmount) {
+                if ($teacherWallet->temporary_balance < $refundAmount) {
                     throw new \Exception('Số dư ví của giáo viên không đủ để hoàn tiền.');
                 }
 
@@ -193,20 +193,65 @@ class RefundController extends Controller
 
         // Kiểm tra nếu có yêu cầu hoàn tiền
         if ($pendingRefunds->isEmpty()) {
-            return; 
+            Log::warning('Không có yêu cầu hoàn tiền');; 
         }
 
         foreach ($pendingRefunds as $refund) {
+            try {
+            DB::beginTransaction();
             $transaction = $refund->transaction;
-            
+
+            // Lấy khóa học liên quan đến giao dịch
+            $course = $transaction->course;
+
+            if (!$course) {
+                Log::warning('Khóa học không tồn tại cho giao dịch này.');
+            }
+
+            // Lấy giáo viên từ khóa học
+            $teacher = $course->teacher;
+
+            if (!$teacher) {
+                Log::warning('Không tìm thấy giáo viên liên quan.');
+            }
+
+            // Lấy ví của giáo viên 
+            $teacherWallet = $teacher->teacherWallet;
+            // return $teacherWallet;
+
+            if (!$teacherWallet) {
+                Log::warning('Không tìm thấy ví của giáo viên.');
+            }
+
+            // Số tiền hoàn
+            $refundAmount = $transaction->discount_price;
+
+            if ($teacherWallet->temporary_balance < $refundAmount) {
+                Log::warning('Số dư ví của giáo viên không đủ để hoàn tiền.');
+            }
+
+            // Trừ tiền trong ví tạm thời của giáo viên
+            $teacherWallet->temporary_balance -= $refundAmount;
+            $teacherWallet->save();
+
             // Hoàn tiền cho học viên
             $wallet = StudentWallet::firstOrCreate(['user_id' => $transaction->user_id]);
-            $wallet->increment('balance', $transaction->discount_price);
+            $wallet->increment('balance', $refundAmount);
 
-            // Cập nhật trạng thái
-            $refund->update(['status' => 1]); // completed
-            $transaction->update(['status' => 'refunded']);
+            // Cập nhật trạng thái giao dịch
+            $transaction->status = 'refunded';
+            $transaction->save();
+
+            $refund->status = 1;
+            $refund->save();
+            DB::commit();
+            Log::warning('OK');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::warning($e->getMessage());
+        }
         }
     }
-
+// select những KH có trạng thái 'success' và không có yêu cầu hoàn tiền
+// course_id => teacher_id
 }
