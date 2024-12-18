@@ -42,7 +42,8 @@ class LessonController extends Controller
     public function createVideo(StoreVideoRequest $req, $id, $chapterId, $lessonId) {
         try {
             $data = [
-                'video' => $req->file('name'),
+                // 'video' => $req->file('name'),
+                'video' => $req->video,
                 'course_id' => $id,
                 'chapter_id' => $chapterId,
                 'lesson_id' => $lessonId,

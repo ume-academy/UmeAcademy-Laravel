@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\ArticleController;
+use App\Http\Controllers\Api\V1\AzureStorageController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\FeeController;
 use App\Http\Controllers\Api\V1\AuthController;
@@ -241,6 +242,9 @@ Route::prefix('/teacher')
         // Notification 
         Route::get('/notifications', [NotificationController::class, 'getAllByTeacher']);
         Route::post('/notifications/{id}', [NotificationController::class, 'updateNotifyTeacher']);
+
+        // 
+        Route::post('/generate-upload-url', [AzureStorageController::class, 'generateUploadUrl']);
     }
 );
 
