@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Events\LessonCompleted;
 use App\Repositories\Interfaces\ChapterRepositoryInterface;
 use App\Repositories\Interfaces\CourseRepositoryInterface;
 use App\Repositories\Interfaces\LessonRepositoryInterface;
@@ -43,35 +44,73 @@ class LessonService
         return $this->lessonRepo->create($data);
     }
 
+    // public function markLessonCompleted(array $data) {
+    //     $user = JWTAuth::parseToken()->authenticate();
+
+    //     $course = $this->courseRepo->getById($data['course_id']);
+    //     $chapter = $this->validateChapter($course, $data['chapter_id']);
+    //     $lesson = $this->validateLesson($chapter, $data['lesson_id']);
+
+    //     // Kiểm tra xem người dùng đã đk khóa học chưa
+    //     if($course->checkEnrolled($user->id)) {
+    //         $result = $this->lessonRepo->syncLessonCompleted($lesson, [$user->id]);
+
+    //         $totalLessons = $course->total_lesson;
+
+    //         $progress = $totalLessons > 0
+    //             ? $this->courseRepo->completedLessons($course->id, $user->id)->count() / $totalLessons * 100
+    //             : 0;
+
+    //         if ($progress == 100) {
+    //             $fileName = $this->pdfService->createCertificate($course, $user);
+                
+    //             // Gửi email
+    //             $this->emailSender->sendCertificate($user, $fileName);
+    //         }
+
+    //         return $result;
+    //     } else {
+    //         throw new \Exception('Bạn chưa mua khóa học'); 
+    //     }
+        
+    // }
+
     public function markLessonCompleted(array $data) {
         $user = JWTAuth::parseToken()->authenticate();
-
+    
+        // Lấy thông tin khóa học, chương, và bài học
         $course = $this->courseRepo->getById($data['course_id']);
         $chapter = $this->validateChapter($course, $data['chapter_id']);
         $lesson = $this->validateLesson($chapter, $data['lesson_id']);
-
-        // Kiểm tra xem người dùng đã đk khóa học chưa
-        if($course->checkEnrolled($user->id)) {
+    
+        // Kiểm tra xem người dùng đã đăng ký khóa học chưa
+        if ($course->checkEnrolled($user->id)) {
+            // Đánh dấu bài học hoàn thành
             $result = $this->lessonRepo->syncLessonCompleted($lesson, [$user->id]);
-
+    
+            // Tổng số bài học trong khóa
             $totalLessons = $course->total_lesson;
-
-            $progress = $totalLessons > 0
-                ? $this->courseRepo->completedLessons($course->id, $user->id)->count() / $totalLessons * 100
-                : 0;
-
+    
+            // Tính tiến độ
+            $completedLessonsCount = $this->courseRepo->completedLessons($course->id, $user->id)->count();
+            $progress = $totalLessons > 0 ? ($completedLessonsCount / $totalLessons) * 100 : 0;
+    
+            // Nếu hoàn thành 100% khóa học
             if ($progress == 100) {
+                // Tạo chứng chỉ PDF
                 $fileName = $this->pdfService->createCertificate($course, $user);
                 
                 // Gửi email
                 $this->emailSender->sendCertificate($user, $fileName);
             }
-
+    
+            // Phát sự kiện realtime
+            event(new LessonCompleted($course->id, $lesson->id, $user->id, $progress, $completedLessonsCount));
+    
             return $result;
         } else {
             throw new \Exception('Bạn chưa mua khóa học'); 
         }
-        
     }
 
     public function updateLesson($lessonId, $data) {
