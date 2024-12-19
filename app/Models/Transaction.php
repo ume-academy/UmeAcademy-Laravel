@@ -33,4 +33,8 @@ class Transaction extends Model
     public function paymentMethod() {
         return $this->belongsTo(PaymentMethod::class);
     }
+
+    public function teacherWallet() {
+        return $this->belongsTo(PaymentMethod::class);
+    }
 }

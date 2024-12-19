@@ -16,6 +16,8 @@ class Kernel extends ConsoleKernel
     {
         $schedule->call(fn() => (new RefundController)->processPendingRefunds())->everyMinute();
         $schedule->call(fn() => (Log::info('Scheduled Task Executed')))->everyMinute();
+        $schedule->call(fn() => (new RefundController)->processExpiredTransactions())->everyMinute();
+
     }
 
     /**

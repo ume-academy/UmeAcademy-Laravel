@@ -194,7 +194,8 @@ class RefundController extends Controller
 
         // Kiểm tra nếu có yêu cầu hoàn tiền
         if ($pendingRefunds->isEmpty()) {
-            Log::warning('Không có yêu cầu hoàn tiền');; 
+            Log::warning('Không có yêu cầu hoàn tiền');
+            return;
         }
 
         foreach ($pendingRefunds as $refund) {
@@ -255,4 +256,19 @@ class RefundController extends Controller
     }
 // select những KH có trạng thái 'success' và không có yêu cầu hoàn tiền
 // course_id => teacher_id
+
+    public function processExpiredTransactions()
+    {
+        $expiredTransactions = Transaction::with('teacherWallet')
+            ->doesntHave('requestRefund') // Không có yêu cầu hoàn tiền
+            ->where('status', 'completed')
+            ->where('created_at', '<=', now()->subDays(7)) // Quá hạn 7 ngày
+            ->get();
+
+        // Kiểm tra nếu có yêu cầu hoàn tiền
+        // if ($pendingRefunds->isEmpty()) {
+            Log::warning($expiredTransactions);
+            // return;
+        // }
+    }
 }
