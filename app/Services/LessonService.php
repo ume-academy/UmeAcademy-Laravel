@@ -93,7 +93,7 @@ class LessonService
     
             // Tính tiến độ
             $completedLessonsCount = $this->courseRepo->completedLessons($course->id, $user->id)->count();
-            $progress = $totalLessons > 0 ? ($completedLessonsCount / $totalLessons) * 100 : 0;
+            $progress = $totalLessons > 0 ? floor(($completedLessonsCount / $totalLessons) * 100) : 0;
     
             // Nếu hoàn thành 100% khóa học
             if ($progress == 100) {

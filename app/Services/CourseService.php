@@ -287,7 +287,9 @@ class CourseService
 
         // Duyệt qua từng học viên và thêm thông tin về tiến độ
         $students->getCollection()->transform(function ($user) use ($course) {
-            $user->progress = $this->courseRepo->completedLessons($course->id, $user->pivot->user_id)->count() / $course->total_lesson * 100;
+            $user->progress = floor(
+                $this->courseRepo->completedLessons($course->id, $user->pivot->user_id)->count() / $course->total_lesson * 100
+            );
             
             return $user;
         });

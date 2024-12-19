@@ -69,7 +69,10 @@ class TeacherService
     public function getWalletBalance() {
         $teacher = $this->validateTeacher();
         $wallet =  $this->teacherWalletRepo->getByTeacherId($teacher->id);
-        return $wallet->available_balance;
+        return [
+            'available_balance' => $wallet->available_balance,
+            'temporary_balance' => $wallet->temporary_balance,
+        ];
     }
 
     public function getWalletTransaction($perPage) {
