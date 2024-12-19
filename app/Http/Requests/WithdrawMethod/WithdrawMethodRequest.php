@@ -26,7 +26,7 @@ class WithdrawMethodRequest extends FormRequest
         return [
             'name_bank' => 'required|max:255',
             'name_account' => 'required|string|max:255',
-            'number_account' => 'required|numeric|digits_between:10,20',
+            'number_account' => 'required|numeric|digits_between:8,20',
         ];
     }
 
@@ -42,7 +42,7 @@ class WithdrawMethodRequest extends FormRequest
             
             'number_account.required' => 'Số tài khoản không được để trống.',
             'number_account.numeric' => 'Số tài khoản phải là số.',
-            'number_account.digits_between' => 'Số tài khoản phải có từ 10 đến 20 chữ số.',
+            'number_account.digits_between' => 'Số tài khoản phải có từ 8 đến 20 chữ số.',
         ];
     }
 

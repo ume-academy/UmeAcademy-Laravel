@@ -17,10 +17,11 @@ interface CourseRepositoryInterface
     public function getWishlistByUser(int $id, $perPage);
     public function getCourseOfStudent($user, $perPage);
     public function update(int $id, array $data);
-    public function getByIds(array $ids);
+    public function getAllCoursePublic($perPage);
     public function updateStatus(int $id, $status);
     public function getCourseOfTeacher(int $id);
     public function getByCategory(int $id, $perPage);
     public function filter($params);
-    public function getAllCourse($perPage);
+    public function getAllCourse($perPage, $status);
+    public function getTop5CourseBestSeller(int $id);
 }

@@ -28,8 +28,9 @@ class TransactionController extends Controller
     public function getAllTransaction(Request $req) {
         try {
             $perPage = $req->input('per_page', 10);
+            $status = $req->input('status');
 
-            $transactions = $this->transactionService->getAllTransaction($perPage);
+            $transactions = $this->transactionService->getAllTransaction($perPage, $status);
             return TransactionResource::collection($transactions);
 
         } catch (\Exception $e) {

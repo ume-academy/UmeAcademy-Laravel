@@ -21,7 +21,7 @@ class ContentCoursePurchasedResource extends JsonResource
             'total_lesson' => $this->total_lesson ?? 0,
             'total_duration' => $this->duration ?? 0,
             'total_lesson_completed' => $this->completed_lesson ?? 0,
-            'progress' => $this->total_lesson > 0 ? ($this->completed_lesson / $this->total_lesson * 100) : 0,
+            'progress' => $this->total_lesson > 0 ? floor($this->completed_lesson / $this->total_lesson * 100) : 0,
             'chapters' => $this->formatChapters(),
         ];
     }
@@ -55,6 +55,13 @@ class ContentCoursePurchasedResource extends JsonResource
                 'video_link' => $lesson->video ? url('videos/courses/' . $lesson->video->name) : null,
                 'video_duration' => $lesson->video ? $lesson->video->duration : 0,
                 'is_completed' => in_array($lesson->id, $completedLessonIds),
+                'resources' => $lesson->resources->map(function($resource) {
+                    return [
+                        'id' => $resource['id'] ?? null,
+                        'name' => url('resources/courses/'. $resource['name']) ?? null,
+                        'created_at' => $resource['created_at'] ?? null,
+                    ];
+                })
             ];
         })->toArray();
     }

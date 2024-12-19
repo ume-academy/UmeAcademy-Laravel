@@ -30,6 +30,8 @@ class PaymentService
         private VoucherUsageRepositoryInterface $voucherUsageRepo,
         private TeacherWalletRepositoryInterface $teacherWalletRepo,
         private TeacherWalletTransactionRepositoryInterface $teacherWalletTransactionRepo,
+        private TeacherNotificationService $teacherNotificationService,
+        private UserNotificationService $userNotificationService,
     ){}
 
     public function checkout($data)
@@ -102,7 +104,7 @@ class PaymentService
             // Teacher wallet
             $teacherWallet = $this->teacherWalletRepo->getByTeacher($course->teacher_id);
             $dataTeacherWallet = [
-                'available_balance' => intval($teacherWallet->available_balance) + intval($transaction->revenue_teacher),
+                'temporary_balance' => intval($teacherWallet->temporary_balance) + intval($transaction->revenue_teacher),
                 'total_earnings' => intval($teacherWallet->total_earnings) + intval($transaction->revenue_teacher),
             ];
             $this->teacherWalletRepo->update($course->teacher_id, $dataTeacherWallet);
@@ -110,11 +112,25 @@ class PaymentService
             // Transaction wallet teacher
             $dataTeacherWalletTransaction = [
                 'code' => $this->generateTransactionCode(),
-                'type' => 'available_receive_money',
+                'type' => 'temporary_receive_money',
                 'balance_tracking' => $transaction->revenue_teacher,
                 'teacher_wallet_id' => $teacherWallet->id,
             ];
             $this->teacherWalletTransactionRepo->create($dataTeacherWalletTransaction);
+
+            $dataTeacherNotify = [
+                'message' => "Học viên {$transaction->user->fullname} vừa mua khóa học {$course->name} của bạn!",
+                'is_read' => 0,
+                'teacher_id' => $course->teacher_id,
+            ];
+            $this->teacherNotificationService->create($dataTeacherNotify);
+
+            $dataUserNotify = [
+                'message' => "Chúc mừng bạn đã mua thành công khóa học {$course->name}!",
+                'is_read' => 0,
+                'user_id' => $transaction->user_id,
+            ];
+            $this->userNotificationService->create($dataUserNotify);
 
             DB::commit();
             return response()->json(['data' => 'success']);

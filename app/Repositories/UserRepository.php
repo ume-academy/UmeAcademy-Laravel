@@ -56,8 +56,34 @@ class UserRepository implements UserRepositoryInterface
         $user->save();
     }
 
-    public function getAllUser($perPage) {
-        return User::paginate($perPage);
+    public function getAllUser($perPage, $status = null) {
+        $query = User::query();
+    
+        // Lọc theo trạng thái nếu có
+        if ($status !== null) {
+            if ($status == 'active') {
+                $query->where('is_lock', false);
+            } elseif ($status == 'locked') {
+                $query->where('is_lock', true);
+            }
+        }
+    
+        return $query->orderBy('created_at', 'desc')->paginate($perPage);
+    }
+    
+    public function getAllTeacher($perPage, $status = null) {
+        $query = User::whereHas('teacher');
+    
+        if ($status !== null) {
+            if ($status == 'active') {
+                $query->where('is_lock', false);
+            } elseif ($status == 'locked') {
+                $query->where('is_lock', true);
+            }
+        }
+    
+        // Sắp xếp và phân trang
+        return $query->orderBy('created_at', 'desc')->paginate($perPage);
     }
 
     public function lock(int $id) {
@@ -83,8 +109,18 @@ class UserRepository implements UserRepositoryInterface
         return $user->save();
     }
 
-    public function getUserRoles(array $roles, $perPage) {
-        return User::role($roles)->paginate($perPage);
+    public function getUserRoles(array $roles, $perPage, $status) {
+        $query = User::role($roles);
+
+        if ($status !== null) {
+            if ($status == 'active') {
+                $query->where('is_lock', false);
+            } elseif ($status == 'locked') {
+                $query->where('is_lock', true);
+            }
+        }
+
+        return $query->orderBy('created_at', 'desc')->paginate($perPage);
     }
 
     public function isSystemUser(int $id) {

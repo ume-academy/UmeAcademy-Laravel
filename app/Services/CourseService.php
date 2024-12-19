@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Course;
 use App\Repositories\Interfaces\ChapterRepositoryInterface;
 use App\Repositories\Interfaces\CourseApprovalRepositoryInterface;
 use App\Repositories\Interfaces\CourseRepositoryInterface;
@@ -124,8 +125,24 @@ class CourseService
 
     public function getPurchasedCourses($perPage) {
         $user = JWTAuth::parseToken()->authenticate();
-
-        return $this->courseRepo->getCourseOfStudent($user, $perPage);
+    
+        $courses = $this->courseRepo->getCourseOfStudent($user, $perPage);
+    
+        foreach ($courses as &$course) {
+            // Lọc transaction có status = 'success'
+            $transaction = $course->transactions->where('user_id', $user->id)->firstWhere('status', 'success'); 
+    
+            if ($transaction) {
+                // Kiểm tra điều kiện thời gian giao dịch
+                $course['refund'] = $transaction->created_at->diffInDays(now()) > 7 ? false : true;
+                $course['transaction_code'] = $transaction->transaction_code;
+            } else {
+                $course['refund'] = null;
+                $course['transaction_code'] = null;
+            }
+        }
+    
+        return $courses;
     }
 
     public function getCourse($id) {
@@ -143,7 +160,11 @@ class CourseService
         // Kiểm tra quyền sở hữu của khóa học
         $this->validateCourse($teacher, $id);
 
-        $course = $this->courseRepo->find($id);      
+        $course = $this->courseRepo->find($id);
+
+        if($course->status == 2) {
+            throw new \Exception('Không thể cập nhật khóa học vì khóa học đã được phê duyệt.');
+        }
 
         // Kiểm tra nếu không up ảnh mới thì sẽ dùng lại ảnh cũ 
         if (isset($data['thumbnail'])) {
@@ -173,8 +194,13 @@ class CourseService
         $courseValidator = Validator::make($course->toArray(), [
             'name' => 'required',
             'summary' => 'required',
-            'price' => 'required|numeric|gt:0',
-            'thumbnail' => 'required'
+            'price' => 'required|numeric|min:10000',
+            'thumbnail' => 'required',
+            'course_requirement' => 'required',
+            'course_learning_benefit' => 'required',
+            'level_id' => 'required',
+            'category_id' => 'required',
+            'total_lesson' => 'integer|min:5',
         ], [
             'name.required' => 'name không được bỏ trống.',
 
@@ -182,20 +208,39 @@ class CourseService
 
             'price.required' => 'price không được bỏ trống.',
             'price.numeric' => 'price phải là số.',
-            'price.gt' => 'price phải > 0.',
+            'price.min' => 'Giá thấp nhất là 10000.',
 
-            'thumbnail.required' => 'thumbnail không được bỏ trống.'
+            'thumbnail.required' => 'thumbnail không được bỏ trống.',
+
+            'course_requirement.required' => 'Khóa học phải có yêu cầu',
+            'course_learning_benefit.required' => 'Khóa học phải có lợi ích',
+
+            'level.required' => 'Cấp độ là bắt buộc',
+            'category.required' => 'Danh mục là bắt buộc',
+
+            'total_lesson.integer' => 'Tổng bài học phải là số nguyên', 
+            'total_lesson.min' => 'Khóa học phải có ít nhất 5 bài học', 
         ]);
 
         if ($courseValidator->fails()) {
-            throw new ValidationException($courseValidator);
+            return [
+                'errors' => $courseValidator->errors()->toArray(),
+            ];
+        }
+        $lessons = $course->lessons;
+
+        // Kiểm tra mỗi lesson
+        foreach ($lessons as $lesson) {
+            if (empty($lesson->video)) {
+                throw new \Exception("Lesson '{$lesson->name}' không có video.");
+            }
         }
 
         $data = [
             'teacher_id' => $teacher->id,
             'course_id' => $course->id,
         ];
-
+        
         $courseApproval = $this->courseApprovalRepo->create($data);
         if($courseApproval) {
             $this->courseRepo->updateStatus($course->id, 1);
@@ -210,6 +255,12 @@ class CourseService
         // Kiểm tra quyền sở hữu của khóa học
         $this->validateCourse($teacher, $id);
 
+        $course = $this->courseRepo->find($id);
+
+        if($course->status == 2) {
+            throw new \Exception('Không thể cập nhật khóa học vì khóa học đã được phê duyệt.');
+        }
+
         $data['course_requirement'] = $data['data']['course_requirement'];
         $data['course_learning_benefit'] = $data['data']['course_learning_benefit'];
 
@@ -220,9 +271,8 @@ class CourseService
         return $updatedCourse;
     }
 
-    public function getCourseByIds($ids) {
-        $data = explode(',', $ids);
-        return $this->courseRepo->getByIds($data);
+    public function getAllCoursePublic($perPage) {
+        return $this->courseRepo->getAllCoursePublic($perPage);
     }
 
     public function getStudentsOfCourse($id, $perPage) {
@@ -233,11 +283,13 @@ class CourseService
         // Kiểm tra quyền sở hữu của khóa học
         $this->validateCourse($teacher, $id);
 
-        $students = $course->courseEnrolled()->paginate($perPage);
+        $students = $course->courseEnrolled()->withPivot('created_at')->orderBy('pivot_created_at', 'desc')->paginate($perPage);
 
         // Duyệt qua từng học viên và thêm thông tin về tiến độ
         $students->getCollection()->transform(function ($user) use ($course) {
-            $user->progress = $this->courseRepo->completedLessons($course->id, $user->pivot->user_id)->count() / $course->total_lesson * 100;
+            $user->progress = floor(
+                $this->courseRepo->completedLessons($course->id, $user->pivot->user_id)->count() / $course->total_lesson * 100
+            );
             
             return $user;
         });
@@ -255,8 +307,8 @@ class CourseService
         return $this->courseRepo->updateStatus($id, $status);
     }
 
-    public function getAllCourse($perPage) {
-        return $this->courseRepo->getAllCourse($perPage);
+    public function getAllCourse($perPage, $status) {
+        return $this->courseRepo->getAllCourse($perPage, $status);
     }
 
     public function getDetailCourse($id) {
@@ -293,6 +345,22 @@ class CourseService
         }
 
         return $courses;
+    }
+
+    public function coursePrice() {
+        $maxPrice = Course::where('status', 2)->max('price'); // Lấy giá cao nhất
+        $minPrice = Course::where('status', 2)->min('price'); // Lấy giá thấp nhất
+    
+        return [
+            'min_price' => $minPrice,
+            'max_price' => $maxPrice,
+        ];
+    }
+
+    public function getTop5CourseBestSeller() {
+        $teacher = $this->validateTeacher();
+
+        return $this->courseRepo->getTop5CourseBestSeller($teacher->id, 5);
     }
 
     // Xử lý ảnh thumbnail

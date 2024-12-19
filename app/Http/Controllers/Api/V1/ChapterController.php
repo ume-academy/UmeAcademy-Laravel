@@ -44,4 +44,19 @@ class ChapterController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function deleteChapter($id, $chapterId) {
+        try {
+            $data['course_id'] = $id;
+
+            $chapter = $this->chapterService->deleteChapter($chapterId, $data);
+
+            if($chapter) {
+                return response()->json(['message' => 'Xóa chương học thành công'], 200);
+            }
+            
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }

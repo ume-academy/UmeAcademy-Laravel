@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\V1\ArticleController;
+use App\Http\Controllers\Api\V1\AzureStorageController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\FeeController;
 use App\Http\Controllers\Api\V1\AuthController;
@@ -15,16 +17,17 @@ use App\Http\Controllers\Api\V1\LevelController;
 use App\Http\Controllers\Api\V1\SearchController;
 use App\Http\Controllers\Api\V1\Teacher\TeacherRegistrationController;
 use App\Http\Controllers\Api\V1\CategoryController;
+use App\Http\Controllers\Api\V1\DashboardController;
 use App\Http\Controllers\Api\V1\TransactionController;
 use App\Http\Controllers\Api\V1\PaymentMethodController;
 use App\Http\Controllers\Api\V1\ForgotPasswordController;
 use App\Http\Controllers\Api\V1\WithdrawMethodController;
 use App\Http\Controllers\Api\V1\EmailVerificationController;
+use App\Http\Controllers\Api\V1\NotificationController;
 use App\Http\Controllers\Api\V1\PermissionController;
 use App\Http\Controllers\Api\V1\RefundController;
 use App\Http\Controllers\Api\V1\RoleController;
 use App\Http\Controllers\Api\V1\StudentController;
-use App\Models\Certificate;
 use App\Http\Controllers\Api\V1\WithdrawRequestController;
 use App\Http\Controllers\Api\V1\WebhookSepayController;
 
@@ -54,6 +57,8 @@ Route::prefix('/auth')
                 Route::post('/me', [AuthController::class, 'me']);
             }
         );
+
+        Route::post('/login-admin/{type}', [AuthController::class, 'loginAdmin']);
     }
 );
 
@@ -75,7 +80,6 @@ Route::middleware('verify.jwt.token')->group(function() {
 
     // Student refund request
     Route::post('/refund/{transactionCode}', [RefundController::class, 'createRefundRequest']);
-
 });
 
 
@@ -106,6 +110,7 @@ Route::prefix('admin')
 
         Route::get('/users', [UserController::class, 'getListUser'])->middleware('can:view-users');
         Route::get('/user/{id}', [UserController::class, 'getUser'])->middleware('can:view-user');
+        Route::get('/teachers', [UserController::class, 'getListTeacher'])->middleware('can:view-teachers');
 
         Route::post('user/{id}/lock', [UserController::class, 'lock'])->middleware('can:lock-user');
         Route::post('user/{id}/unlock', [UserController::class, 'unlock'])->middleware('can:unlock-user');
@@ -131,10 +136,6 @@ Route::prefix('admin')
         Route::get('/teacher/{id}/wallet-transactions', [TeacherController::class, 'getWalletTransactionByTeacher'])->middleware('can:view-teacher-wallet-transactions');
         Route::get('/teacher/{id}/courses', [TeacherController::class, 'getCoursesByTeacher'])->middleware('can:view-teacher-courses');
 
-        // Refund request
-        Route::get('/refund-request', [RefundController::class, 'getAllRefundRequest'])->middleware('can:view-refund-requests');
-        Route::put('/refund-request/{id}', [RefundController::class, 'updateStatus'])->middleware('can:update-refund-status');
-
         // Role
         Route::get('/roles', [RoleController::class, 'getAllRole'])->middleware('can:view-roles');
         Route::post('/roles', [RoleController::class, 'createRole'])->middleware('can:create-role');
@@ -156,12 +157,27 @@ Route::prefix('admin')
         // Voucher
         Route::post('/voucher', [VoucherController::class, 'createVoucherSystem'])->middleware('can:create-voucher');
         Route::get('/voucher', [VoucherController::class, 'getVoucherSystem'])->middleware('can:view-vouchers');
-
-        // Approve or reject a request
-        Route::put('/withdraw-requests/{id}', [WithdrawRequestController::class, 'update']);
+        Route::get('/voucher/{id}', [VoucherController::class, 'detailVoucherSystem'])->middleware('can:view-voucher');
+        Route::put('/voucher/{id}', [VoucherController::class, 'updateVoucherSystem'])->middleware('can:update-voucher');
+        Route::delete('/voucher/{id}', [VoucherController::class, 'deleteVoucherSystem'])->middleware('can:delete-voucher');
 
         // review refund request (xét duyệt yêu cầu hoàn tiền)
-        Route::post('/refund/{transactionCode}/review', [RefundController::class, 'reviewRefundRequest']);
+        Route::get('/refund-request', [RefundController::class, 'getAllRefundRequest'])->middleware('can:view-refund-requests');
+        
+        Route::post('/refund/{transactionCode}/review', [RefundController::class, 'reviewRefundRequest'])->middleware('can:update-refund-status');
+
+        // Article
+        Route::get('/articles', [ArticleController::class, 'getAllArticle'])->middleware('can:view-articles');
+        Route::get('/articles/{id}', [ArticleController::class, 'getArticle'])->middleware('can:view-article');
+        Route::post('/articles', [ArticleController::class, 'createArticle'])->middleware('can:create-article');
+        Route::put('/articles/{id}', [ArticleController::class, 'updateArticle'])->middleware('can:update-article');
+        Route::delete('/articles/{id}', [ArticleController::class, 'deleteArticle'])->middleware('can:delete-article');
+
+        // Dashboard
+        Route::get('/statistics/top-teachers', [DashboardController::class, 'getTopTeacher']);
+        Route::get('/statistics/top-courses', [DashboardController::class, 'getTopCourses']);
+        Route::get('/statistics', [DashboardController::class, 'getStatistics']);
+        Route::get('/statistics/revenue', [DashboardController::class, 'getRevenue']);
     }
 );
 
@@ -170,18 +186,24 @@ Route::prefix('/teacher')
     ->middleware('verify.jwt.token')
     ->group(function () {
         Route::get('/courses', [CourseController::class, 'getCoursesOfTeacher']);
+        Route::get('/courses/top-5-best-seller', [CourseController::class, 'getTop5CourseBestSeller']);
 
         Route::post('/courses', [CourseController::class, 'createCourse']);
 
         Route::post('/course/{id}/chapters', [ChapterController::class, 'createChapter']);
         Route::put('/course/{id}/chapter/{chapterId}', [ChapterController::class, 'updateChapter']);
+        Route::delete('/course/{id}/chapter/{chapterId}', [ChapterController::class, 'deleteChapter']);
 
         Route::post('/course/{id}/chapter/{chapterId}/lessons', [LessonController::class, 'createLesson']);
         Route::put('/course/{id}/chapter/{chapterId}/lesson/{lessonId}', [LessonController::class, 'updateLesson']);
+        Route::delete('/course/{id}/chapter/{chapterId}/lesson/{lessonId}', [LessonController::class, 'deleteLesson']);
         
         Route::post('/course/{id}/chapter/{chapterId}/lesson/{lessonId}/videos', [LessonController::class, 'createVideo']);
+        Route::put('/course/{id}/chapter/{chapterId}/lesson/{lessonId}/videos', [LessonController::class, 'updateVideo']);
+        Route::delete('/course/{id}/chapter/{chapterId}/lesson/{lessonId}/videos', [LessonController::class, 'deleteVideo']);
 
         Route::post('/course/{id}/chapter/{chapterId}/lesson/{lessonId}/resources', [LessonController::class, 'createResource']);
+        Route::delete('/course/{id}/chapter/{chapterId}/lesson/{lessonId}/resources/{resourceId}', [LessonController::class, 'deleteResource']);
 
         Route::post('/course/{id}/vouchers', [VoucherController::class, 'createVoucher']);
 
@@ -204,7 +226,6 @@ Route::prefix('/teacher')
 
         // Create a withdrawal request
         Route::post('/withdraw-requests', [WithdrawRequestController::class, 'create']);
-        // Route::post('/withdraw-requests', [WithdrawRequestController::class, 'create']); 
 
         // History withdrawal
         Route::get('/withdraw-histories', [WithdrawRequestController::class, 'history']); 
@@ -213,12 +234,17 @@ Route::prefix('/teacher')
         Route::get('/course/{id}/students', [CourseController::class, 'getStudentsOfCourse']);
 
         Route::get('/statistic', [TeacherController::class, 'getStatistic']);
-        Route::post('/revenue', [TeacherController::class, 'getRevenue']);
+        Route::get('/revenue', [TeacherController::class, 'getRevenue']);
 
         Route::get('/profile', [TeacherController::class, 'getProfile']);
         Route::put('/profile', [TeacherController::class, 'updateProfile']);
 
+        // Notification 
+        Route::get('/notifications', [NotificationController::class, 'getAllByTeacher']);
+        Route::post('/notifications/{id}', [NotificationController::class, 'updateNotifyTeacher']);
 
+        // 
+        Route::post('/generate-upload-url', [AzureStorageController::class, 'generateUploadUrl']);
     }
 );
 
@@ -244,6 +270,13 @@ Route::middleware('verify.jwt.token')
         Route::post('/course/{id}/add-wishlist', [CourseController::class, 'addWishlist']);
         Route::post('/course/{id}/remove-wishlist', [CourseController::class, 'removeWishlist']);
         Route::get('/course/wishlist', [CourseController::class, 'getWishlist']);
+
+        // Review
+        Route::post('/course/{id}/reviews', [ReviewController::class, 'createReviewCourse']);
+
+        // Notification 
+        Route::get('/notifications', [NotificationController::class, 'getAllByUser']);
+        Route::post('/notifications/{id}', [NotificationController::class, 'updateNotifyUser']);
     }
 );
 
@@ -260,7 +293,9 @@ Route::get('/course/{id}/content', [CourseController::class, 'getContentCourse']
 Route::get('/course/{id}/overview', [CourseController::class, 'getOverviewCourse']);
 Route::get('/course/{id}/teacher-information', [CourseController::class, 'getCourseTeacherInformation']);
 Route::get('/course/{id}/reviews', [ReviewController::class, 'getReviewCourse']);
-Route::get('/courses', [CourseController::class, 'getCourseByIds']);
+Route::get('/courses', [CourseController::class, 'getAllCoursePublic']);
+Route::get('teacher/{id}', [TeacherController::class, 'getInfoTeacher']);
+Route::get('/course-price', [CourseController::class, 'coursePrice']);
 
 // Payment
 Route::get('/payment-methods', [PaymentMethodController::class, 'getAllPaymentMethod']);
@@ -269,14 +304,17 @@ Route::post('/vouchers/check', [VoucherController::class, 'checkVoucher']);
 Route::post('/confirm-webhook', [PaymentController::class, 'confirmWebhook']);
 Route::get('/cancel', [PaymentController::class, 'cancel']);
 
-Route::get('teacher/{id}', [TeacherController::class, 'getInfoTeacher']);
 
 // Search 
 Route::get('/courses/category/{id}', [SearchController::class, 'searchByCategory']);
-Route::get('/courses/search', [SearchController::class, 'searchCourse']);
+Route::get('/courses', [SearchController::class, 'searchCourse']);
 
 // Bank 
 Route::get('/banks', [WithdrawMethodController::class, 'getBanks']);
+
+Route::get('/articles', [ArticleController::class, 'getAllArticlePublished']);
+Route::get('/articles/{id}', [ArticleController::class, 'getArticlePublished']);
+Route::post('/upload-image', [ArticleController::class, 'uploadImage']);
 
 // Auto Update Status Withdraw Request
 Route::post('/webhook-sepay', [WebhookSepayController::class, 'autoUpdateStatusWithdrawRequest']);

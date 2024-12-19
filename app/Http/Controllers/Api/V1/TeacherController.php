@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Revenue\RevenueRequest;
 use App\Http\Resources\Course\CourseResource;
+use App\Http\Resources\Teacher\InfoTeacherResource;
 use App\Http\Resources\Teacher\TeacherResource;
 use App\Http\Resources\Wallet\WalletResource;
 use App\Services\TeacherService;
@@ -42,7 +43,7 @@ class TeacherController extends Controller
     public function getInfoTeacher($id) {
         try {
             $teacher = $this->teacherService->getInfoTeacher($id);
-            return new TeacherResource($teacher);
+            return new InfoTeacherResource($teacher);
 
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);

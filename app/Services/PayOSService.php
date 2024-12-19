@@ -40,6 +40,7 @@ class PayOSService
                     'quantity' => 1
                 ]
             ],
+            "expiredAt" => now()->addMinute(15)->timestamp,
             "returnUrl" => "https://umeacademy.online/course/$course->id",
             "cancelUrl" => env('APP_URL') . "/api/v1/cancel"
         ];

@@ -10,9 +10,14 @@ class RefundRequest extends Model
 {
     use HasFactory, SoftDeletes;
 
+    const REJECT = 0;
+    const SUCCESS = 1;
+    const PENDING = 2;
+
     protected $fillable = [
         'status',
         'transaction_code',
+        'refund_reason'
     ];
 
     public function user() {

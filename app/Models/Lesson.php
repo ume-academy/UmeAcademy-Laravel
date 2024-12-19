@@ -24,6 +24,10 @@ class Lesson extends Model
         return $this->hasOne(Video::class);
     }
 
+    public function resources() {
+        return $this->hasMany(Resource::class);
+    }
+
     public function lessonCompleted() {
         return $this->belongsToMany(User::class, 'lesson_completeds', 'lesson_id', 'user_id');
     }

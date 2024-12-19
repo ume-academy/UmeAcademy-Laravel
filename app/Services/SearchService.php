@@ -49,7 +49,8 @@ class SearchService
             $params = [
                 'categories' => isset($data['categories']) ? explode(',', $data['categories']) : [],
                 'name'       => $data['name'] ?? null,
-                'price'      => $data['price'] ?? null,
+                'price_min'  => $data['price_min'] ?? null,
+                'price_max'  => $data['price_max'] ?? null,
                 'rating'     => $data['rating'] ?? null,
                 'levels'     => isset($data['levels']) ? explode(',', $data['levels']) : [],
                 'per_page'   => $data['per_page'] ?? 10,
@@ -71,7 +72,8 @@ class SearchService
             $params = [
                 'categories' => isset($data['categories']) ? explode(',', $data['categories']) : [],
                 'name'       => $data['name'] ?? null,
-                'price'      => $data['price'] ?? null,
+                'price_min'  => $data['price_min'] ?? null,
+                'price_max'  => $data['price_max'] ?? null,
                 'rating'     => $data['rating'] ?? null,
                 'levels'     => isset($data['levels']) ? explode(',', $data['levels']) : [],
                 'per_page'   => $data['per_page'] ?? 10,

@@ -34,6 +34,10 @@ class VideoService
             $chapter = $this->validateChapter($course, $data['chapter_id']);
             $lesson = $this->validateLesson($chapter, $data['lesson_id']);
 
+            if($course->status == 2) {
+                throw new \Exception('Không thể tạo vì khóa học đã được phê duyệt.');
+            }
+
             // Lấy đường dẫn tạm thời
             $path = $this->getPathVideo($data['video']);
 
@@ -84,6 +88,38 @@ class VideoService
 
             throw new \Exception('Lỗi khi tạo video: ' . $e->getMessage());
         }
+    }
+
+    public function updateVideo(array $data)
+    {
+
+        $teacher = $this->validateTeacher();
+
+        $course = $this->validateCourse($teacher, $data['course_id']);
+        $chapter = $this->validateChapter($course, $data['chapter_id']);
+        $lesson = $this->validateLesson($chapter, $data['lesson_id']);
+        $video = $lesson->video;
+
+        if($course->status == 2) {
+            throw new \Exception('Không thể chỉnh sửa vì khóa học đã được phê duyệt.');
+        }
+        
+        return $video = $this->videoRepo->updateVideo($video->id, $data['is_preview']);
+    }
+
+    public function deleteVideo($data) {
+        $teacher = $this->validateTeacher();
+
+        $course = $this->validateCourse($teacher, $data['course_id']);
+        $chapter = $this->validateChapter($course, $data['chapter_id']);
+        $lesson = $this->validateLesson($chapter, $data['lesson_id']);
+        $video = $lesson->video;
+
+        if($course->status == 2) {
+            throw new \Exception('Không thể xóa vì khóa học đã được phê duyệt.');
+        }
+        
+        return $video = $this->videoRepo->deleteVideo($video->id);
     }
 
     // Lưu video tạm thời

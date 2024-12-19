@@ -10,6 +10,10 @@ class Course extends Model
 {
     use HasFactory, SoftDeletes;
 
+    const DRAFT = 0;
+    const PENDING = 1;
+    const PUBLISHED = 2;
+
     protected $fillable = [
         'name',
         'description',
@@ -45,8 +49,17 @@ class Course extends Model
         return $this->hasMany(Chapter::class);
     }
 
+    public function transactions() {
+        return $this->hasMany(Transaction::class);
+    }
+
     public function reviews() {
         return $this->hasMany(Review::class);
+    }
+
+    public function checkReview($userId)
+    {
+        return $this->reviews()->where('user_id', $userId)->get();
     }
 
     public function lessons() {

@@ -111,7 +111,7 @@ class WithdrawRequestController extends Controller
         $user = JWTAuth::parseToken()->authenticate();
         $teacher = Teacher::where("user_id", $user->id)->first();
 
-        $histories = WithdrawalRequest::where("teacher_id", $teacher->id)->paginate($perPage);
+        $histories = WithdrawalRequest::where("teacher_id", $teacher->id)->orderBy('created_at', 'desc')->paginate($perPage);
         return WithdrawRequestResource::collection($histories);
     }
 }

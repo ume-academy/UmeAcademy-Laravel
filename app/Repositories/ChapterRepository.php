@@ -21,4 +21,10 @@ class ChapterRepository implements ChapterRepositoryInterface
 
         return $chapter->update($data);
     }
+
+    public function delete(int $id) {
+        $chapter = $this->find($id);
+
+        return $chapter->delete();
+    }
 }

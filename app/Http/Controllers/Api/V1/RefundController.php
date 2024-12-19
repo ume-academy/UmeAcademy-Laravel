@@ -15,32 +15,33 @@ use Illuminate\Support\Facades\Log;
 
 class RefundController extends Controller
 {
-    // public function __construct(
-    //     private RefundService $refundService
-    // ){}
+    public function __construct(
+        private RefundService $refundService
+    ){}
 
-    // public function getAllRefundRequest(Request $req) {
-    //     try {
-    //         $perPage = $req->input('per_page', 10);
+    public function getAllRefundRequest(Request $req) {
+        try {
+            $perPage = $req->input('per_page', 10);
+            $status = $req->input('status');
 
-    //         $transactions = $this->refundService->getAllRefundRequest($perPage);
-    //         return RefundResource::collection($transactions);
+            $transactions = $this->refundService->getAllRefundRequest($perPage, $status);
+            return RefundResource::collection($transactions);
 
-    //     } catch (\Exception $e) {
-    //         return response()->json(['error' => $e->getMessage()], 500);
-    //     }
-    // }
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 
-    // public function updateStatus(Request $req, $id) {
-    //     try {
-    //         $status = $req->input('status');
+    public function updateStatus(Request $req, $id) {
+        try {
+            $status = $req->input('status');
             
-    //         $request = $this->refundService->updateStatus($id, $status);
-    //         return new RefundResource($request);
-    //     } catch (\Exception $e) {
-    //         return response()->json(['error' => $e->getMessage()], 500);
-    //     }
-    // }
+            $request = $this->refundService->updateStatus($id, $status);
+            return new RefundResource($request);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 
     // Create a refund request
     public function createRefundRequest(Request $request, $transactionCode) 

@@ -121,6 +121,7 @@ class CourseController extends Controller
             $perPage = $req->input('per_page', 8);
 
             $courses = $this->courseService->getPurchasedCourses($perPage);
+        
             return CourseResource::collection($courses);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
@@ -149,8 +150,15 @@ class CourseController extends Controller
 
     public function requestApprovalCourse($id) {
         try {
-            $this->courseService->requestApprovalCourse($id);
-            return response()->json(['message' => 'Gửi yêu cầu phê duyệt khóa học thành công']);
+            $response = $this->courseService->requestApprovalCourse($id);
+
+            if (isset($response['errors'])) {
+                return response()->json($response, 422);
+            }
+    
+            return response()->json([
+                'message' => 'Gửi yêu cầu phê duyệt khóa học thành công',
+            ], 200);
 
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
@@ -168,11 +176,11 @@ class CourseController extends Controller
         }
     }
 
-    public function getCourseByIds(Request $req) {
+    public function getAllCoursePublic(Request $req) {
         try {
-            $ids = $req->input('ids');
+            $perPage = $req->input('per_page', 10);
 
-            $courses = $this->courseService->getCourseByIds($ids);
+            $courses = $this->courseService->getAllCoursePublic($perPage);
             return CourseResource::collection($courses);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
@@ -208,8 +216,9 @@ class CourseController extends Controller
     public function getAllCourse(Request $req) {
         try {
             $perPage = $req->input('per_page', 10);
+            $status = $req->input('status');
 
-            $courses = $this->courseService->getAllCourse($perPage);
+            $courses = $this->courseService->getAllCourse($perPage, $status);
 
             return CourseResource::collection($courses);
         } catch (\Exception $e) {
@@ -261,6 +270,25 @@ class CourseController extends Controller
             $perPage = $req->input('per_page', 10);
 
             $courses = $this->courseService->getWishlist($perPage);
+            return CourseResource::collection($courses);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function coursePrice() {
+        try {
+            $price = $this->courseService->coursePrice();
+            return response()->json(['data' => $price]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function getTop5CourseBestSeller() {
+        try {
+            $courses = $this->courseService->getTop5CourseBestSeller();
+            
             return CourseResource::collection($courses);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
