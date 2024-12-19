@@ -21,7 +21,7 @@ class ContentCoursePurchasedResource extends JsonResource
             'total_lesson' => $this->total_lesson ?? 0,
             'total_duration' => $this->duration ?? 0,
             'total_lesson_completed' => $this->completed_lesson ?? 0,
-            'progress' => $this->total_lesson > 0 ? ($this->completed_lesson / $this->total_lesson * 100) : 0,
+            'progress' => $this->total_lesson > 0 ? floor($this->completed_lesson / $this->total_lesson * 100) : 0,
             'chapters' => $this->formatChapters(),
         ];
     }

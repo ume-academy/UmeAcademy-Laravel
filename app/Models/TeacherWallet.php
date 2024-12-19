@@ -23,4 +23,11 @@ class TeacherWallet extends Model
     public function teacherWalletTransactions() {
         return $this->hasMany(TeacherWalletTransaction::class);
     }
+
+    public function getTotalEarningsAttribute()
+    {
+        return intval($this->teacherWalletTransactions()
+        ->where('type', '!=', 'return_money')
+        ->sum('balance_tracking'));
+    }
 }
