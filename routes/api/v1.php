@@ -307,7 +307,7 @@ Route::get('/cancel', [PaymentController::class, 'cancel']);
 
 // Search 
 Route::get('/courses/category/{id}', [SearchController::class, 'searchByCategory']);
-Route::get('/courses', [SearchController::class, 'searchCourse']);
+// Route::get('/courses', [SearchController::class, 'searchCourse']);
 
 // Bank 
 Route::get('/banks', [WithdrawMethodController::class, 'getBanks']);

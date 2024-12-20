@@ -16,8 +16,8 @@ class WalletResource extends JsonResource
     {
         return [
             'code' => $this->code ?? null,
-            // 'type' => $this->type ?? null,
-            'type' => 'Chuyển khoản ngân hàng',
+            'type' => $this->type ?? null,
+            // 'type' => 'Chuyển khoản ngân hàng',
             'balance_tracking' => $this->balance_tracking ?? null,
             'note' => $this->note ?? null,
             'created_at' => $this->created_at ?? null

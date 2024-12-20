@@ -18,7 +18,7 @@ class TeacherWalletTransactionRepository implements TeacherWalletTransactionRepo
     public function filterRevenue(int $id, $startDate, $endDate) {
         return TeacherWalletTransaction::query()
                 ->where('teacher_wallet_id', $id) // Lấy theo giao dịch của ví
-                ->where('type', 'available_receive_money') // Loại nhận tiền khả dụng
+                ->whereIn('type', ['available_receive_money', 'temporary_receive_money'])
                 ->whereBetween('created_at', [$startDate, $endDate]) // lọc theo ngày
                 ->selectRaw('DATE(created_at) as date, SUM(balance_tracking) as total_revenue')
                 ->groupBy('date') // Nhóm theo ngày

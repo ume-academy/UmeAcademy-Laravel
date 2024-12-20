@@ -11,8 +11,14 @@ use Illuminate\Support\Facades\DB;
 class DashboardService
 {
     public function getTopTeacher() {
-        $topTeachers = TeacherWallet::with('teacher')->orderBy('total_earnings', 'desc')->limit(5)->get();
-
+        $topTeachers = TeacherWallet::with('teacher')
+            ->withSum(['teacherWalletTransactions as total_earnings' => function ($query) {
+                $query->where('type', '!=', 'return_money');
+            }], 'balance_tracking')
+            ->orderBy('total_earnings', 'desc')
+            ->limit(5)
+            ->get();
+    
         return $topTeachers;
     }
 

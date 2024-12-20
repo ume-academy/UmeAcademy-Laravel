@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\WithdrawalRequest;
 use App\Http\Resources\WithdrawMethod\WithdrawRequestResource;
+use App\Models\TeacherWallet;
 
 class WebhookSepayController extends Controller
 {
@@ -23,6 +24,10 @@ class WebhookSepayController extends Controller
             $code = $parts[0];
 
             $q = WithdrawalRequest::where('code', $code)->first();
+            $available_balance = TeacherWallet::where('teacher_id', $q->teacher_id)->pluck('available_balance')->first();
+            $walletTeacher = TeacherWallet::where('teacher_id', $q->teacher_id)->first();
+            $walletTeacher->available_balance = (int)$available_balance - (int)$q->money;
+            $walletTeacher->save();
             $q->status = 1;
             $q->save();
             
