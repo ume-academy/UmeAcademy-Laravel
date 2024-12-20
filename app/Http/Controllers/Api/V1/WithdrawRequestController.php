@@ -44,9 +44,9 @@ class WithdrawRequestController extends Controller
         }
 
         // tru tien cua teacher
-        $walletTeacher = TeacherWallet::where('teacher_id', $teacher->id)->first();
-        $walletTeacher->available_balance = (int)$available_balance - (int)$request->input('money');
-        $walletTeacher->save();
+        // $walletTeacher = TeacherWallet::where('teacher_id', $teacher->id)->first();
+        // $walletTeacher->available_balance = (int)$available_balance - (int)$request->input('money');
+        // $walletTeacher->save();
 
         // Tạo yêu cầu rút tiền
         $withdrawRequest = WithdrawalRequest::create([
