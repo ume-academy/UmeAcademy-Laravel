@@ -184,6 +184,21 @@ class CourseService
         return $updatedCourse;
     }
 
+    public function deleteCourse($id) {
+        $teacher = $this->validateTeacher();
+
+        // Kiểm tra quyền sở hữu của khóa học
+        $this->validateCourse($teacher, $id);
+
+        $course = $this->courseRepo->find($id);
+
+        if($course->courseEnrolled()->exists()) {
+            throw new \Exception('Không thể xóa khóa học vì khóa học đã có học viên.');
+        }
+
+        return $this->courseRepo->delete($id);
+    }
+
     public function requestApprovalCourse($id) {
         $teacher = $this->validateTeacher();
 
@@ -272,7 +287,21 @@ class CourseService
     }
 
     public function getAllCoursePublic($perPage) {
-        return $this->courseRepo->getAllCoursePublic($perPage);
+        $courses = $this->courseRepo->getAllCoursePublic($perPage);
+
+        try {
+            $user = JWTAuth::parseToken()->authenticate();
+    
+            $courses->getCollection()->transform(function ($course) use ($user) {
+                $course['is_wishlist'] = $course->checkWishlist($user->id);
+                $course['is_enrolled'] = $course->checkEnrolled($user->id);
+                return $course;
+            });
+
+            return $courses;
+        } catch (JWTException $e) {
+            return $courses;
+        }
     }
 
     public function getStudentsOfCourse($id, $perPage) {

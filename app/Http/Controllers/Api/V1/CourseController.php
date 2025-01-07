@@ -15,6 +15,7 @@ use App\Http\Resources\Course\StatisticCourseResource;
 use App\Http\Resources\Course\StudentCourseResource;
 use App\Http\Resources\UserResource;
 use App\Services\CourseService;
+use App\Services\SearchService;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
@@ -22,6 +23,7 @@ class CourseController extends Controller
 {
     public function __construct(
         private CourseService $courseService,
+        private SearchService $searchService
     ){}
 
     public function createCourse(StoreCourseRequest $req) {
@@ -148,6 +150,18 @@ class CourseController extends Controller
         }
     }
 
+    public function deleteCourse($id) {
+        try {
+            $course = $this->courseService->deleteCourse($id);
+
+            if($course) {
+                return response()->json(['message' => 'Xóa khóa học thành công'], 200);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
     public function requestApprovalCourse($id) {
         try {
             $response = $this->courseService->requestApprovalCourse($id);
@@ -180,7 +194,14 @@ class CourseController extends Controller
         try {
             $perPage = $req->input('per_page', 10);
 
-            $courses = $this->courseService->getAllCoursePublic($perPage);
+            $data = $req->except(['page', 'per_page']);
+            
+             if (!empty($data)) {
+                $courses = $this->searchService->searchCourse($data);
+            } else {
+                $courses = $this->courseService->getAllCoursePublic($perPage);
+            }
+
             return CourseResource::collection($courses);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
