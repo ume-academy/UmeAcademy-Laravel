@@ -211,6 +211,7 @@ Route::prefix('/teacher')
 
         Route::get('/course/{id}', [CourseController::class, 'getCourse']);
         Route::put('/course/{id}', [CourseController::class, 'updateCourse']);
+        Route::delete('/course/{id}', [CourseController::class, 'deleteCourse']);
 
         Route::put('/course/{id}/target-course', [CourseController::class, 'updateTargetCourse']);
 

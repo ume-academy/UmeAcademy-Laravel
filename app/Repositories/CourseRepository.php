@@ -20,7 +20,7 @@ class CourseRepository implements CourseRepositoryInterface
     }
 
     public function getByTeacher(int $id, int $perPage) {
-        return Course::where('teacher_id', $id)->paginate($perPage);
+        return Course::where('teacher_id', $id)->orderBy('created_at', 'desc')->paginate($perPage);
     }
 
     public function getCourseOfTeacher(int $id) {
@@ -78,6 +78,12 @@ class CourseRepository implements CourseRepositoryInterface
         $course = $this->find($id);
 
         return $course->update($data);
+    }
+
+    public function delete(int $id) {
+        $course = $this->find($id);
+
+        return $course->delete();
     }
     
     public function getAllCoursePublic($perPage) {
