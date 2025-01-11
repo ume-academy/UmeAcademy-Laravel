@@ -2,6 +2,10 @@
 
 namespace App\Services;
 
+use App\Events\BuyCourse;
+use App\Events\CoursePurchased;
+use App\Models\TeacherNotification;
+use App\Models\UserNotification;
 use App\Repositories\Interfaces\CourseRepositoryInterface;
 use App\Repositories\Interfaces\FeePlatformRepositoryInterface;
 use App\Repositories\Interfaces\TeacherWalletRepositoryInterface;
@@ -131,6 +135,12 @@ class PaymentService
                 'user_id' => $transaction->user_id,
             ];
             $this->userNotificationService->create($dataUserNotify);
+
+            $notifyUser = UserNotification::where('user_id', $transaction->user_id)->orderBy('created_at', 'desc')->paginate(10);
+            broadcast(new BuyCourse($notifyUser, $transaction->user_id));
+            
+            $notifyTeacher = TeacherNotification::where('teacher_id', $course->teacher_id)->orderBy('created_at', 'desc')->paginate(10);;
+            broadcast(new CoursePurchased($notifyTeacher, $course->teacher_id));
 
             DB::commit();
             return response()->json(['data' => 'success']);
