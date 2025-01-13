@@ -96,6 +96,12 @@ class Course extends Model
         return $this->courseEnrolled()->count();
     }
 
+    // Tính tổng số học sinh không trùng lặp
+    public function getTotalStudentDistAttribute()
+    {
+        return $this->courseEnrolled()->distinct('user_id')->count('user_id');
+    }
+
     // Tính tổng thời gian của khóa học
     public function getDurationAttribute() {
         return $this->lessons()->with('video')->get()->sum(function($lesson) {

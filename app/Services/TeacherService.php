@@ -84,16 +84,21 @@ class TeacherService
 
     public function getStatistic() {
         $teacher = $this->validateTeacher();
-
-        $wallet =  $this->teacherWalletRepo->getByTeacherId($teacher->id);
+    
+        $wallet = $this->teacherWalletRepo->getByTeacherId($teacher->id);
         $courses = $this->courseRepo->getCourseOfTeacher($teacher->id);
-
+    
+        // Lấy danh sách học viên không trùng lặp từ tất cả các khóa học
+        $uniqueStudents = $courses->flatMap(function ($course) {
+            return $course->courseEnrolled->pluck('id');
+        })->unique();
+    
         $data = [
             'revenue' => $wallet->total_earnings,
-            'total_student' => $courses->sum('total_student'),
+            'total_student' => $uniqueStudents->count(),
             'total_rating' => $courses->count() > 0 ? round($courses->sum('rating') / $courses->count(), 2) : 5
         ];
-
+    
         return $data;
     }
 
