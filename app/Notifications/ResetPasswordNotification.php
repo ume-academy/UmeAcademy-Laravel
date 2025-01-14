@@ -39,7 +39,7 @@ class ResetPasswordNotification extends Notification //implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         // $url = url(config('app.url')); // Sửa lại tên miền sang bên FE
-        $url = 'https://umeacademy.online'; 
+        $url = 'http://localhost:5173'; 
 
         $resetUrl = $url . "/reset-password?token={$this->token}&email={$this->email}"; 
 

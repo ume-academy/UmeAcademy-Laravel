@@ -46,6 +46,6 @@ class PaymentController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
 
-        return redirect()->to('https://umeacademy.online/course-payment-method');
+        return redirect()->to('http://localhost:5173/course-payment-method');
     }
 }

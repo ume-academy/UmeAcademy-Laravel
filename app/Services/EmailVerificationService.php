@@ -42,7 +42,7 @@ class EmailVerificationService implements EmailVerificationInterface
             $this->userWalletRepository->createWallet($user->id);
 
             // 
-            return redirect()->away('https://umeacademy.online/login');
+            return redirect()->away('http://localhost:5173/login');
 
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
